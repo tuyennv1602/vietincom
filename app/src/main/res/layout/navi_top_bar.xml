@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/root_topbar"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:id="@+id/topLayout"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/topbar_height">
+
+		<com.app.vietincom.view.HighLightImageView
+			android:id="@+id/imgLeft"
+			android:layout_width="@dimen/width_image"
+			android:layout_height="@dimen/topbar_height"
+			android:padding="15dp"
+			android:src="@drawable/pie_chart"/>
+
+		<com.app.vietincom.view.HighLightImageView
+			android:id="@+id/imgRight"
+			android:layout_width="@dimen/width_image"
+			android:layout_height="@dimen/topbar_height"
+			android:layout_alignParentRight="true"
+			android:padding="15dp"
+			android:src="@drawable/icn_search"/>
+
+		<com.app.vietincom.view.HighLightImageView
+			android:id="@+id/imgAdditionalRight"
+			android:layout_width="@dimen/width_image"
+			android:layout_height="@dimen/topbar_height"
+			android:layout_toLeftOf="@id/imgRight"
+			android:padding="15dp"
+			android:src="@drawable/icn_search"
+			android:visibility="gone"/>
+
+		<TextView
+			android:id="@+id/tvTitle"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_toLeftOf="@id/imgRight"
+			android:layout_toRightOf="@id/imgLeft"
+			android:ellipsize="end"
+			android:fontFamily="@font/avenir_bold_font"
+			android:gravity="center"
+			android:maxLines="1"
+			android:text="@string/app_name"
+			android:textSize="25sp"
+			/>
+
+		<RelativeLayout
+			android:id="@+id/layoutSearch"
+			android:visibility="gone"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_toRightOf="@id/imgLeft">
+
+
+			<EditText
+				android:id="@+id/edtSearch"
+				style="@style/DefaultEditText"
+				android:layout_marginRight="10dp"
+				android:hint="Search"
+				android:imeOptions="actionSearch"
+				android:paddingRight="40dp"
+				android:textCursorDrawable="@null"
+				/>
+
+			<com.app.vietincom.view.HighLightImageView
+				android:id="@+id/imgClose"
+				android:layout_width="@dimen/width_image"
+				android:layout_height="match_parent"
+				android:layout_alignParentRight="true"
+				android:padding="18dp"
+				android:src="@drawable/close"
+				android:visibility="gone"/>
+
+		</RelativeLayout>
+
+
+	</RelativeLayout>
+
+	<me.zhanghai.android.materialprogressbar.MaterialProgressBar
+		android:id="@+id/progress_bar"
+		style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding"
+		android:layout_width="match_parent"
+		android:layout_height="3dp"
+		android:layout_gravity="bottom"
+		android:indeterminate="true"
+		android:visibility="gone"
+		custom:mpb_progressStyle="horizontal"
+		custom:mpb_useIntrinsicPadding="false"
+		/>
+
+</LinearLayout>

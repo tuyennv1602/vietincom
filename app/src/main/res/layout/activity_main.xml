@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:id="@+id/main_content"
+	android:background="@color/dark_background"
+	android:layout_height="match_parent"
+	tools:context=".activity.MainActivity">
+
+	<LinearLayout
+		android:id="@+id/layoutBottom"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/bottom_height"
+		android:layout_alignParentBottom="true"
+		android:elevation="4dp"
+		android:orientation="vertical">
+
+		<include layout="@layout/view_line"/>
+
+		<android.support.design.widget.TabLayout
+			android:id="@+id/tabLayoutBottom"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:tabIndicatorHeight="0dp"
+			app:tabGravity="fill"
+			app:tabMode="fixed"
+			app:tabPaddingBottom="0dp"
+			app:tabPaddingEnd="0dp"
+			app:tabPaddingStart="0dp"
+			app:tabPaddingTop="0dp"/>
+
+	</LinearLayout>
+
+	<com.app.vietincom.view.NoneSwipeViewpager
+		android:id="@+id/viewPagerMain"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@id/layoutBottom"/>
+
+</RelativeLayout>

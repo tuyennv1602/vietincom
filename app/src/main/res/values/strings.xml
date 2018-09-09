@@ -1,0 +1,12 @@
+<resources>
+	<string name="app_name">Vietincom</string>
+	<string name="ok">Ok</string>
+	<string name="press_one_more_to_exit">Press one more to exit</string>
+	<string name="message_title">Message</string>
+	<string name="news">News</string>
+	<string name="event">Events</string>
+	<string name="home">Home</string>
+	<string name="alert">Alerts</string>
+	<string name="setting">Settings</string>
+	<string name="all_coin">All Coins</string>
+</resources>

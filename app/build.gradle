@@ -1,0 +1,105 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/'}
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.11.0, 0.99.99]'
+    }
+}
+
+repositories {
+    maven { url 'https://maven.google.com' }
+}
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.app.vietincom"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                onesignal_app_id: 'f9b33b8e-7d36-4738-99e5-a193352aee53',
+                // Project number pulled from dashboard, local value is ignored.
+                onesignal_google_project_number: 'REMOTE'
+        ]
+    }
+    signingConfigs {
+        keystore {
+            keyAlias 'vietincom'
+            keyPassword 'vietincom2018'
+            storeFile file('./key/keystore.js')
+            storePassword 'vietincom2018'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.keystore
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Vietincom_release${variant.versionName}.${variant.versionCode}.apk"
+                }
+            }
+        }
+        debug {
+            signingConfig signingConfigs.keystore
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    final RETROFIT_VERSION = '2.3.0'
+    final OKHTTP_VERSION = '3.6.0'
+    final BUTTER_KNIFE_VERSION = '8.8.1'
+    final GLIDE_VERSION = '4.7.1'
+    final GSON_VERSION = '2.8.2'
+    final EVENTBUS_VERSION = '3.1.1'
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //butter knife
+    implementation "com.jakewharton:butterknife:$BUTTER_KNIFE_VERSION"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$BUTTER_KNIFE_VERSION"
+
+    //network
+    implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
+
+    //GlideImage
+    implementation "com.github.bumptech.glide:glide:$GLIDE_VERSION"
+    annotationProcessor "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
+
+    //Gson
+    implementation "com.google.code.gson:gson:$GSON_VERSION"
+
+    //EvenBus
+    implementation "org.greenrobot:eventbus:$EVENTBUS_VERSION"
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
+
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
+    implementation 'com.onesignal:OneSignal:[3.9.1, 3.99.99]'
+
+}
