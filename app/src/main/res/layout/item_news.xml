@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/rootLayout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="15dp">
+
+	<com.app.vietincom.view.HighLightImageView
+		android:id="@+id/imgNews"
+		android:layout_centerVertical="true"
+		android:layout_alignParentLeft="true"
+		android:layout_width="@dimen/img_news_width"
+		android:layout_height="@dimen/img_news_height"
+		android:scaleType="centerCrop"
+		/>
+
+	<ImageView
+		android:id="@+id/imgRead"
+		android:layout_width="5dp"
+		android:layout_alignParentRight="true"
+		android:src="@drawable/circle"
+		android:layout_marginTop="10dp"
+		android:layout_height="5dp"/>
+
+	<LinearLayout
+		android:layout_toRightOf="@id/imgNews"
+		android:layout_toLeftOf="@id/imgRead"
+		android:layout_centerVertical="true"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<com.app.vietincom.view.HighLightTextView
+			android:id="@+id/tvTitleNews"
+			style="@style/DefaultTextView"
+			android:text="Title"
+			android:layout_marginRight="5dp"
+			android:layout_width="match_parent"
+			android:layout_marginLeft="15dp"
+			android:lines="3"
+			android:maxLines="3"
+			android:textSize="18sp"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:textColor="@color/black"/>
+
+		<com.app.vietincom.view.HighLightTextView
+			android:id="@+id/tvTimeNews"
+			style="@style/DefaultTextView"
+			android:text="1 minute ago"
+			android:layout_marginTop="5dp"
+			android:layout_marginLeft="15dp"
+			android:textColor="@color/gray"
+			/>
+	</LinearLayout>
+
+
+
+</RelativeLayout>

@@ -89,18 +89,18 @@ public class NavigationTopBar {
 		progressBar.setVisibility(View.GONE);
 	}
 
-	private void initTheme(boolean isDarkTheme){
+	public void initTheme(boolean isDarkTheme){
 		topLayout.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		layoutSearch.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
-		ColorStateList colorStateList = ColorStateList.valueOf(isDarkTheme ? getColor(R.color.colorPrimaryDark) : getColor(R.color.light_image));
+		ColorStateList colorStateList = ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		ViewCompat.setBackgroundTintList(edtSearch, colorStateList);
 		edtSearch.setHintTextColor(isDarkTheme ? getColor(R.color.text_gray) : getColor(R.color.gray));
-		edtSearch.setTextColor(isDarkTheme ? getColor(R.color.white) : getColor(R.color.black));
+		edtSearch.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 		imgLeft.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		imgRight.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		imgClose.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		imgAdditonalRight.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
-		tvTitle.setTextColor(isDarkTheme ? getColor(R.color.white) : getColor(R.color.black));
+		tvTitle.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 	}
 
 	public int getColor(int color){
@@ -109,7 +109,7 @@ public class NavigationTopBar {
 
 	public void playTitleAnimation(){
 		YoYo.with(Techniques.Bounce)
-				.duration(1500)
+				.duration(3000)
 				.repeat(YoYo.INFINITE)
 				.playOn(tvTitle);
 	}

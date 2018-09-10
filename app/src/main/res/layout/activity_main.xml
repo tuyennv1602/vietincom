@@ -5,7 +5,6 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:id="@+id/main_content"
-	android:background="@color/dark_background"
 	android:layout_height="match_parent"
 	tools:context=".activity.MainActivity">
 
@@ -23,7 +22,7 @@
 			android:id="@+id/tabLayoutBottom"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			app:tabIndicatorHeight="0dp"
+			app:tabIndicatorHeight="1dp"
 			app:tabGravity="fill"
 			app:tabMode="fixed"
 			app:tabPaddingBottom="0dp"

@@ -2,10 +2,7 @@ package com.app.vietincom.bases;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -29,11 +26,14 @@ import android.widget.Toast;
 
 import com.app.vietincom.R;
 import com.app.vietincom.manager.AppPreference;
+import com.app.vietincom.manager.EventBusListener;
 import com.app.vietincom.manager.interfaces.AlertListener;
 import com.app.vietincom.manager.interfaces.NavigationTopListener;
 import com.app.vietincom.view.NavigationTopBar;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Objects;
 
@@ -47,6 +47,13 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 	public boolean isDarkTheme = true;
 	public NavigationTopBar navigationTopBar;
 
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onEventUpdatedTheme(EventBusListener.UpdatedTheme event) {
+		isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
+		navigationTopBar.initTheme(isDarkTheme);
+		onUpdatedTheme();
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,12 +65,24 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 		super.onViewCreated(view, savedInstanceState);
 		ButterKnife.bind(this, view);
 		isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
-		onFragmentReady(view);
 		if (view.findViewById(R.id.root_topbar) != null) {
 			navigationTopBar = new NavigationTopBar(view, getContext(), this);
 			onNavigationTopUpdate(navigationTopBar);
 		}
 		isFirstLoad = false;
+		onFragmentReady(view);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		registerEventBus();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		unRegisterEventBus();
 	}
 
 	public abstract int getLayoutId();
@@ -72,7 +91,7 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 
 	public abstract void onNavigationTopUpdate(NavigationTopBar navitop);
 
-	public abstract void updateData();
+	public abstract void onUpdatedTheme();
 
 	@Override
 	public void onLeftClicked() {
@@ -139,11 +158,9 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 		getActivity().runOnUiThread(runnable);
 	}
 
-
 	public boolean isShowProgressDialog() {
 		return dialog != null && dialog.isShowing();
 	}
-
 
 	protected void showAlert(final String title, final String message, final AlertListener listener) {
 		runOnUiThread(() ->

@@ -4,13 +4,21 @@ import android.view.View;
 
 import com.app.vietincom.R;
 import com.app.vietincom.bases.BaseFragment;
+import com.app.vietincom.manager.EventBusListener;
 import com.app.vietincom.view.NavigationTopBar;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class EventFragment extends BaseFragment {
 
 	public static EventFragment newInstance(){
 		EventFragment fragment = new EventFragment();
 		return fragment;
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onEventRefreshData(EventBusListener.RefreshData event) {
 	}
 
 	@Override
@@ -36,7 +44,7 @@ public class EventFragment extends BaseFragment {
 	}
 
 	@Override
-	public void updateData() {
+	public void onUpdatedTheme() {
 
 	}
 }

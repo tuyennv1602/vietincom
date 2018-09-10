@@ -7,4 +7,10 @@
 
 	<include layout="@layout/navi_top_bar"/>
 
+	<Button
+		android:id="@+id/btnChangeTheme"
+		android:layout_width="wrap_content"
+		android:text="Test Change theme"
+		android:layout_height="wrap_content"/>
+
 </LinearLayout>

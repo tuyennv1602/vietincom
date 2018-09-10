@@ -4,7 +4,14 @@ import android.view.View;
 
 import com.app.vietincom.R;
 import com.app.vietincom.bases.BaseFragment;
+import com.app.vietincom.manager.AppPreference;
+import com.app.vietincom.manager.EventBusListener;
 import com.app.vietincom.view.NavigationTopBar;
+
+import org.greenrobot.eventbus.EventBus;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 public class SettingFragment extends BaseFragment {
 
@@ -31,7 +38,12 @@ public class SettingFragment extends BaseFragment {
 	}
 
 	@Override
-	public void updateData() {
+	public void onUpdatedTheme() {
+	}
 
+	@OnClick(R.id.btnChangeTheme)
+	void changeTheme(){
+		AppPreference.INSTANCE.changeTheme();
+		EventBus.getDefault().post(new EventBusListener.UpdatedTheme());
 	}
 }

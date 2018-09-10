@@ -9,4 +9,5 @@
 	<string name="alert">Alerts</string>
 	<string name="setting">Settings</string>
 	<string name="all_coin">All Coins</string>
+	<string name="failed">Failed</string>
 </resources>

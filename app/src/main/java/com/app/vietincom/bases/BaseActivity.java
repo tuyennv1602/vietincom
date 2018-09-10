@@ -491,6 +491,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 		Window window = this.getWindow();
 		window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 		window.setStatusBarColor(ContextCompat.getColor(this, isDarkTheme ? R.color.dark_background : R.color.light_background));
 	}
 

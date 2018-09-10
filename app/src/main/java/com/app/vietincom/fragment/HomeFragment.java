@@ -4,7 +4,11 @@ import android.view.View;
 
 import com.app.vietincom.R;
 import com.app.vietincom.bases.BaseFragment;
+import com.app.vietincom.manager.EventBusListener;
 import com.app.vietincom.view.NavigationTopBar;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class HomeFragment extends BaseFragment {
 
@@ -12,6 +16,10 @@ public class HomeFragment extends BaseFragment {
 	public static HomeFragment newInstance(){
 		HomeFragment fragment = new HomeFragment();
 		return fragment;
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onEventRefreshData(EventBusListener.RefreshData event) {
 	}
 
 	@Override
@@ -25,13 +33,24 @@ public class HomeFragment extends BaseFragment {
 	}
 
 	@Override
+	public void onLeftClicked() {
+		super.onLeftClicked();
+		hideKeyboard();
+	}
+
+	@Override
+	public void onSearchDone() {
+		super.onSearchDone();
+		hideKeyboard();
+	}
+
+	@Override
 	public void onNavigationTopUpdate(NavigationTopBar navitop) {
 		navitop.setTvTitle(R.string.all_coin);
 		navitop.setImgRight(R.drawable.favourite);
 		navitop.setImgLeft(R.drawable.pie_chart);
 		navitop.showAdditionalRight(true);
 		navitop.playTitleAnimation();
-		navitop.showProgressBar();
 	}
 
 	@Override
@@ -46,7 +65,7 @@ public class HomeFragment extends BaseFragment {
 	}
 
 	@Override
-	public void updateData() {
+	public void onUpdatedTheme() {
 
 	}
 }

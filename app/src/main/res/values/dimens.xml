@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<dimen name="default_text_size">15sp</dimen>
-	<dimen name="line_spacing_normal">3dp</dimen>
+	<dimen name="line_spacing_normal">2dp</dimen>
 	<dimen name="topbar_height">55dp</dimen>
 	<dimen name="width_image">55dp</dimen>
 	<dimen name="bottom_height">55dp</dimen>
-	<dimen name="image_bottom_size">20dp</dimen>
+	<dimen name="image_bottom_size">23dp</dimen>
 	<dimen name="line_height_small">0.5dp</dimen>
 	<dimen name="badge_size">18dp</dimen>
+	<dimen name="img_news_width">120dp</dimen>
+	<dimen name="img_news_height">90dp</dimen>
 </resources>
