@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:orientation="horizontal"
+	android:weightSum="8"
+	android:paddingTop="10dp"
+	android:paddingBottom="10dp"
+	android:paddingLeft="5dp"
+	android:paddingRight="5dp"
+	android:background="@color/dark_background"
+	android:gravity="center_vertical"
+	android:layout_height="wrap_content">
+
+	<TextView
+		android:layout_weight="0.7"
+		android:text="0"
+		android:gravity="center"
+		android:textColor="@color/white"
+		style="@style/DefaultTextView"
+		android:fontFamily="@font/helvetica_neue_light"
+		android:layout_width="0dp"
+		android:textSize="11sp"/>
+
+	<RelativeLayout
+		android:layout_width="0dp"
+		android:layout_weight="3.7"
+		android:layout_marginLeft="5dp"
+		android:layout_height="wrap_content">
+
+		<TextView
+			android:id="@+id/tvPrice"
+			android:text="12233232"
+			android:layout_centerVertical="true"
+			android:textSize="@dimen/small_text"
+			android:fontFamily="@font/helvetica_neue_bold"
+			android:layout_alignParentRight="true"
+			android:textColor="@color/white"
+			android:paddingLeft="10dp"
+			style="@style/DefaultTextView"
+			/>
+
+		<LinearLayout
+			android:layout_toLeftOf="@id/tvPrice"
+			android:layout_width="match_parent"
+			android:orientation="vertical"
+			android:layout_height="wrap_content">
+
+			<TextView
+				style="@style/DefaultTextView"
+				android:text="Bitcoin"
+				android:fontFamily="@font/helvetica_neue_light"
+				android:textColor="@color/white"
+				/>
+
+			<TextView
+				style="@style/DefaultTextView"
+				android:text="BTC"
+				android:textSize="@dimen/small_text"
+				android:textColor="@color/text_gray"
+				/>
+
+		</LinearLayout>
+
+	</RelativeLayout>
+
+	<TextView
+		android:layout_weight="1.2"
+		android:layout_width="0dp"
+		android:text="+0.23%"
+		android:textColor="@color/white"
+		android:gravity="center_vertical|right"
+		android:textSize="@dimen/small_text"
+		style="@style/DefaultTextView"/>
+
+	<TextView
+		android:layout_weight="1.2"
+		android:layout_width="0dp"
+		android:text="+0.23%"
+		android:textColor="@color/white"
+		android:gravity="center_vertical|right"
+		android:textSize="@dimen/small_text"
+		style="@style/DefaultTextView"/>
+
+	<TextView
+		android:layout_weight="1.2"
+		android:layout_width="0dp"
+		android:text="+0.23%"
+		android:textColor="@color/white"
+		android:gravity="center_vertical|right"
+		android:textSize="@dimen/small_text"
+		style="@style/DefaultTextView"/>
+
+</LinearLayout>

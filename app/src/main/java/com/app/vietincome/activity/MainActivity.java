@@ -41,6 +41,7 @@ public class MainActivity extends BaseActivity {
 	private HomeViewpagerAdapter homeViewPagerAdapter;
 	private int selectedTab = 2;
 	private Stack<Fragment> backStack = new Stack<>();
+	private int numNews = AppPreference.INSTANCE.getNumNews();
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventUpdatedTheme(EventBusListener.UpdatedTheme event) {
@@ -51,6 +52,13 @@ public class MainActivity extends BaseActivity {
 			TabLayout.Tab tab = tabLayoutBottom.getTabAt(i);
 			changeHighLightTab(tab, i == selectedTab);
 		}
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onEventUpdateNews(EventBusListener.UpdateNews event) {
+		numNews ++;
+		AppPreference.INSTANCE.setNumNews();
+		setBadge(Constant.TAB_NEWS, numNews);
 	}
 
 	@Override
@@ -133,6 +141,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onTabSelected(TabLayout.Tab tab) {
 				changeHighLightTab(tab, true);
+				clearNews();
 			}
 
 			@Override
@@ -142,9 +151,10 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onTabReselected(TabLayout.Tab tab) {
-
+				clearNews();
 			}
 		});
+		setBadge(Constant.TAB_NEWS, numNews);
 	}
 
 	private void changeHighLightTab(TabLayout.Tab tab, boolean isSelected) {
@@ -165,6 +175,14 @@ public class MainActivity extends BaseActivity {
 		TextView textView = (TextView) layout.getChildAt(2);
 		textView.setVisibility(numBadger > 0 ? View.VISIBLE : View.GONE);
 		textView.setText(String.valueOf(numBadger));
+	}
+
+	private void clearNews(){
+		if(selectedTab == Constant.TAB_NEWS || numNews > 0){
+			numNews = 0;
+			AppPreference.INSTANCE.clearNumNews();
+			setBadge(Constant.TAB_NEWS, numNews);
+		}
 	}
 
 }

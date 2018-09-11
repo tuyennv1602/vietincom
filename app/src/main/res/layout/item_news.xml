@@ -43,8 +43,7 @@
 			android:lines="3"
 			android:maxLines="3"
 			android:text="Title"
-			android:textColor="@color/black"
-			android:textSize="15sp"/>
+			android:textColor="@color/black"/>
 
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -60,7 +59,7 @@
 				android:fontFamily="@font/helvetica_neue_light"
 				android:text="1 minute ago"
 				android:textColor="@color/gray"
-				android:textSize="13sp"
+				android:textSize="12sp"
 				/>
 
 			<ImageView
@@ -79,7 +78,7 @@
 				android:fontFamily="@font/helvetica_neue_light"
 				android:text="Abc"
 				android:textColor="@color/gray"
-				android:textSize="13sp"
+				android:textSize="12sp"
 				/>
 		</LinearLayout>
 

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="45dp"
+	android:paddingLeft="5dp"
+	android:id="@+id/layoutTopAllCoin"
+	android:paddingRight="5dp"
+	android:orientation="horizontal"
+	android:weightSum="8">
+
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="0.7"
+		android:gravity="right|center_vertical">
+
+		<TextView
+			android:id="@+id/tvSortName"
+			style="@style/DefaultTextView"
+			android:text="#"
+			android:textColor="@color/black"/>
+
+		<ImageView
+			android:id="@+id/imgSortName"
+			android:layout_width="@dimen/size_image_sort"
+			android:layout_height="@dimen/size_image_sort"
+			android:padding="3dp"
+			android:scaleY="1.5"
+			android:src="@drawable/sort_down"/>
+
+	</LinearLayout>
+
+	<RelativeLayout
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="3.7">
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:gravity="right|center_vertical"
+			android:orientation="horizontal"
+			android:paddingLeft="10dp">
+
+			<TextView
+				android:id="@+id/tvPrice"
+				style="@style/DefaultTextView"
+				android:text="Price"
+				android:textColor="@color/black"/>
+
+			<ImageView
+				android:id="@+id/imgDot"
+				android:layout_width="4dp"
+				android:layout_height="4dp"
+				android:layout_marginLeft="4dp"
+				android:src="@drawable/circle"/>
+
+			<ImageView
+				android:id="@+id/imgCurrency"
+				android:layout_width="@dimen/size_image_sort"
+				android:layout_height="@dimen/size_image_sort"
+				android:src="@drawable/usd"/>
+
+		</LinearLayout>
+
+		<TextView
+			android:id="@+id/tvName"
+			android:layout_centerVertical="true"
+			android:text="Name"
+			android:paddingLeft="5dp"
+			style="@style/DefaultTextView"/>
+
+	</RelativeLayout>
+
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1.2"
+		android:gravity="right|center_vertical">
+
+		<TextView
+			android:id="@+id/tv1H"
+			style="@style/DefaultTextView"
+			android:text="1H"
+			android:textColor="@color/black"/>
+
+		<ImageView
+			android:id="@+id/imgSort1H"
+			android:layout_width="@dimen/size_image_sort"
+			android:layout_height="@dimen/size_image_sort"
+			android:padding="3dp"
+			android:scaleY="1.5"
+			android:src="@drawable/sort_down"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1.2"
+		android:gravity="right|center_vertical">
+
+		<TextView
+			android:id="@+id/tv24H"
+			style="@style/DefaultTextView"
+			android:text="24H"
+			android:textColor="@color/black"/>
+
+		<ImageView
+			android:id="@+id/imgSort24H"
+			android:layout_width="@dimen/size_image_sort"
+			android:layout_height="@dimen/size_image_sort"
+			android:padding="3dp"
+			android:scaleY="1.5"
+
+			android:src="@drawable/sort_down"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1.2"
+		android:gravity="right|center_vertical">
+
+		<TextView
+			android:id="@+id/tv7D"
+			style="@style/DefaultTextView"
+			android:text="7D"
+			android:textColor="@color/black"/>
+
+		<ImageView
+			android:id="@+id/imgSort7D"
+			android:layout_width="@dimen/size_image_sort"
+			android:layout_height="@dimen/size_image_sort"
+			android:padding="3dp"
+			android:scaleY="1.5"
+			android:src="@drawable/sort_down"/>
+
+	</LinearLayout>
+
+</LinearLayout>

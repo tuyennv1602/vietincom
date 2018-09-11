@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:orientation="vertical"
 	android:layout_height="match_parent">
 
-	<include layout="@layout/navi_top_bar"/>
+	<android.support.design.widget.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:layout_collapseMode="parallax">
 
-</LinearLayout>
+		<android.support.design.widget.CollapsingToolbarLayout
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+			<include layout="@layout/navi_top_bar"/>
+
+		</android.support.design.widget.CollapsingToolbarLayout>
+
+		<include layout="@layout/item_top_allcoin"/>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<android.support.v4.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:fillViewport="true"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+		<com.cooltechworks.views.shimmer.ShimmerRecyclerView
+			android:id="@+id/rcvAllCoin"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/black"
+			app:shimmer_demo_child_count="20"
+			app:shimmer_demo_layout="@layout/layout_demo_coin_dark"
+			app:shimmer_demo_layout_manager_type="linear_vertical"
+			app:shimmer_demo_view_holder_item_background="@color/dark_background"
+			/>
+	</android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

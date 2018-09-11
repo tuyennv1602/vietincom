@@ -95,9 +95,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
 		public void onBind(News new_){
 			rootLayout.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
-			tvTimeNews.setTextColor(isDarkTheme ? getColor(R.color.text_gray) : getColor(R.color.gray));
-			tvAuthor.setTextColor(isDarkTheme ? getColor(R.color.text_gray) : getColor(R.color.gray));
-			imgDot.setColorFilter(isDarkTheme ? getColor(R.color.text_gray) : getColor(R.color.gray));
+			tvTimeNews.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+			tvAuthor.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+			imgDot.setColorFilter(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 			tvTitleNews.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			imgRead.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 			imgNews.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
