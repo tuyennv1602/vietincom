@@ -32,7 +32,7 @@
 
 	</LinearLayout>
 
-	<com.app.vietincom.view.NoneSwipeViewpager
+	<com.app.vietincome.view.NoneSwipeViewpager
 		android:id="@+id/viewPagerMain"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

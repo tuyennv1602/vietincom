@@ -12,14 +12,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/topbar_height">
 
-		<com.app.vietincom.view.HighLightImageView
+		<com.app.vietincome.view.HighLightImageView
 			android:id="@+id/imgLeft"
 			android:layout_width="@dimen/width_image"
 			android:layout_height="@dimen/topbar_height"
 			android:padding="15dp"
 			android:src="@drawable/pie_chart"/>
 
-		<com.app.vietincom.view.HighLightImageView
+		<com.app.vietincome.view.HighLightImageView
 			android:id="@+id/imgRight"
 			android:layout_width="@dimen/width_image"
 			android:layout_height="@dimen/topbar_height"
@@ -27,7 +27,7 @@
 			android:padding="15dp"
 			android:src="@drawable/icn_search"/>
 
-		<com.app.vietincom.view.HighLightImageView
+		<com.app.vietincome.view.HighLightImageView
 			android:id="@+id/imgAdditionalRight"
 			android:layout_width="@dimen/width_image"
 			android:layout_height="@dimen/topbar_height"
@@ -69,7 +69,7 @@
 				android:textCursorDrawable="@null"
 				/>
 
-			<com.app.vietincom.view.HighLightImageView
+			<com.app.vietincome.view.HighLightImageView
 				android:id="@+id/imgClose"
 				android:layout_width="@dimen/width_image"
 				android:layout_height="match_parent"

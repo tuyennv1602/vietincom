@@ -15,9 +15,9 @@
 	<style name="DefaultTextView">
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
-		<item name="android:letterSpacing">0.04</item>
+		<item name="android:letterSpacing">0.05</item>
 		<item name="android:textSize">@dimen/default_text_size</item>
-		<item name="android:fontFamily">@font/helvetica_neue_medium</item>
+		<item name="android:fontFamily">@font/helvetica_neue</item>
 		<item name="android:ellipsize">end</item>
 	</style>
 

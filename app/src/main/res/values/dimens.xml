@@ -8,6 +8,6 @@
 	<dimen name="image_bottom_size">23dp</dimen>
 	<dimen name="line_height_small">0.5dp</dimen>
 	<dimen name="badge_size">18dp</dimen>
-	<dimen name="img_news_width">120dp</dimen>
-	<dimen name="img_news_height">90dp</dimen>
+	<dimen name="img_news_width">110dp</dimen>
+	<dimen name="img_news_height">80dp</dimen>
 </resources>
