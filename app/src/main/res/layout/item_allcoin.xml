@@ -63,6 +63,7 @@
 				android:id="@+id/tvSymbol"
 				style="@style/DefaultTextView"
 				android:text="BTC"
+				android:scaleY="1.2"
 				android:textSize="@dimen/small_text"
 				android:textColor="@color/text_gray"
 				/>

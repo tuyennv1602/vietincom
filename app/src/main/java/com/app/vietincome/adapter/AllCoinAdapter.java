@@ -25,19 +25,14 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 	private ItemClickListener itemClickListener;
 	private boolean isDarkTheme;
 
-	public AllCoinAdapter(ItemClickListener listener){
+	public AllCoinAdapter(ArrayList<Data> data, ItemClickListener listener){
 		this.itemClickListener = listener;
+		this.data = data;
 	}
 
 	public void setDarkTheme(boolean darkTheme) {
 		isDarkTheme = darkTheme;
 	}
-
-	public void setAllCoin(ArrayList<Data> data){
-		this.data = data;
-		notifyDataSetChanged();
-	}
-
 
 	@NonNull
 	@Override

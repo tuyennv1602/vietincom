@@ -5,12 +5,13 @@ import com.app.vietincome.model.responses.NewsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public interface ApiInterface {
 
 	@GET("api/get_recent_posts/")
 	Call<NewsResponse> getNews();
 
-	@GET("ticker/")
-	Call<CoinResponse> getAllCoin();
+	@GET("ticker/?convert=BTC&structure=array&limit=100")
+	Call<CoinResponse> getAllCoin(@Query("start") int start);
 }

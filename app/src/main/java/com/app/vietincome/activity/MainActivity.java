@@ -123,9 +123,11 @@ public class MainActivity extends BaseActivity {
 			public void onPageSelected(int position) {
 				if (position == selectedTab) return;
 				selectedTab = position;
-				if(selectedTab == Constant.TAB_ALL_COIN
-						|| selectedTab == Constant.TAB_EVENT){
-					EventBus.getDefault().post(new EventBusListener.RefreshData());
+				if(selectedTab == Constant.TAB_ALL_COIN){
+					EventBus.getDefault().post(new EventBusListener.RefreshData(Constant.TAB_ALL_COIN));
+				}else if(selectedTab  == Constant.TAB_EVENT){
+					EventBus.getDefault().post(new EventBusListener.RefreshData(Constant.TAB_EVENT));
+
 				}
 			}
 

@@ -1,5 +1,6 @@
 package com.app.vietincome.fragment;
 
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -10,21 +11,21 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.adapter.AllCoinAdapter;
 import com.app.vietincome.bases.BaseFragment;
-import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.network.ApiClient;
+import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.NavigationTopBar;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -75,8 +76,16 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 	@BindView(R.id.rcvAllCoin)
 	ShimmerRecyclerView rcvAllCoin;
 
+	@BindView(R.id.scrollView)
+	NestedScrollView scrollView;
+
 	private ArrayList<Data> allCoins;
 	private AllCoinAdapter allCoinAdapter;
+	private int start = 1;
+	private int perPage = 100;
+	private boolean canLoad;
+	private boolean isLoading;
+	private LinearLayoutManager linearLayoutManager;
 
 	public static HomeFragment newInstance() {
 		HomeFragment fragment = new HomeFragment();
@@ -85,7 +94,10 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventRefreshData(EventBusListener.RefreshData event) {
-		getCoins(false);
+		if (event.tab == Constant.TAB_ALL_COIN) {
+			start = 1;
+			getCoins(false);
+		}
 	}
 
 	@Override
@@ -95,18 +107,27 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 
 	@Override
 	public void onFragmentReady(View view) {
-		if(allCoins == null){
+		linearLayoutManager = new LinearLayoutManager(getContext());
+		if (allCoins == null) {
 			allCoins = new ArrayList<>();
 		}
-		if(allCoinAdapter == null){
-			allCoinAdapter = new AllCoinAdapter(this);
-			allCoinAdapter.setAllCoin(allCoins);
+		if (allCoinAdapter == null) {
+			allCoinAdapter = new AllCoinAdapter(allCoins, this);
 			allCoinAdapter.setDarkTheme(isDarkTheme);
 		}
-		rcvAllCoin.setLayoutManager(new LinearLayoutManager(getContext()));
+		rcvAllCoin.setLayoutManager(linearLayoutManager);
+		rcvAllCoin.setNestedScrollingEnabled(false);
 		rcvAllCoin.addItemDecoration(new CustomItemDecoration(2));
 		rcvAllCoin.setDemoShimmerDuration(60000);
 		rcvAllCoin.setAdapter(allCoinAdapter);
+		scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (view1, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+			if ((scrollY == (view1.getChildAt(0).getMeasuredHeight() - view1.getMeasuredHeight())) && (scrollY > oldScrollY)) {
+				if (!isLoading && canLoad) {
+					Log.d("__home", "onScrolled: loadmore");
+					getCoins(false);
+				}
+			}
+		});
 		onUpdatedTheme();
 		getCoins(true);
 	}
@@ -168,44 +189,28 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 		if (showShimmer) {
 			rcvAllCoin.showShimmerAdapter();
 		}
-		ApiClient.getAllCoinService().getAllCoin().enqueue(new Callback<CoinResponse>() {
+		ApiClient.getAllCoinService().getAllCoin(start).enqueue(new Callback<CoinResponse>() {
 			@Override
 			public void onResponse(Call<CoinResponse> call, Response<CoinResponse> response) {
 				navigationTopBar.hideProgressBar();
 				rcvAllCoin.hideShimmerAdapter();
 				if (response.isSuccessful()) {
 					if (response.body().getMetadata().isSuccess()) {
-						allCoins = parseDataToStringList(response.body().getData());
-						allCoinAdapter.setAllCoin(allCoins);
+						if (start == 1) allCoins.clear();
+						allCoins.addAll(response.body().getData());
+						allCoinAdapter.notifyItemInserted(start - 1);
+						canLoad = response.body().getData().size() == 100;
+						start += 100;
 					}
 				}
 			}
 
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
-				navigationTopBar.hideProgressBar();
-				rcvAllCoin.hideShimmerAdapter();
-				showAlert(getString(R.string.failed), t.getMessage());
+
 			}
 		});
 	}
-
-
-	private ArrayList<Data> parseDataToStringList(JsonElement jsonElement) {
-		if (jsonElement == null) return new ArrayList<>();
-		ArrayList<Data> dataArrayList = new ArrayList<>();
-		if (jsonElement instanceof JsonObject) {
-			JsonObject object = (JsonObject) jsonElement;
-			for (Object key : object.keySet()) {
-				String keyStr = (String) key;
-				Object keyvalue = object.get(keyStr);
-				Data data = AppPreference.INSTANCE.mGson.fromJson(keyvalue.toString(), Data.class);
-				dataArrayList.add(data);
-			}
-		}
-		return dataArrayList;
-	}
-
 
 	@Override
 	public void onItemClicked(int position) {
@@ -216,4 +221,5 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 	public void onLongClicked(int position) {
 
 	}
+
 }
