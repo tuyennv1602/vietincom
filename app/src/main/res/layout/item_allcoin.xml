@@ -4,6 +4,7 @@
 	android:layout_width="match_parent"
 	android:orientation="horizontal"
 	android:weightSum="8"
+	android:id="@+id/layoutRoot"
 	android:paddingTop="10dp"
 	android:paddingBottom="10dp"
 	android:paddingLeft="5dp"
@@ -13,8 +14,10 @@
 	android:layout_height="wrap_content">
 
 	<TextView
+		android:id="@+id/tvRank"
 		android:layout_weight="0.7"
 		android:text="0"
+		android:scaleY="1.2"
 		android:gravity="center"
 		android:textColor="@color/white"
 		style="@style/DefaultTextView"
@@ -33,6 +36,7 @@
 			android:text="12233232"
 			android:layout_centerVertical="true"
 			android:textSize="@dimen/small_text"
+			android:scaleY="1.2"
 			android:fontFamily="@font/helvetica_neue_bold"
 			android:layout_alignParentRight="true"
 			android:textColor="@color/white"
@@ -47,13 +51,16 @@
 			android:layout_height="wrap_content">
 
 			<TextView
+				android:id="@+id/tvName"
 				style="@style/DefaultTextView"
 				android:text="Bitcoin"
+				android:textSize="18sp"
 				android:fontFamily="@font/helvetica_neue_light"
 				android:textColor="@color/white"
 				/>
 
 			<TextView
+				android:id="@+id/tvSymbol"
 				style="@style/DefaultTextView"
 				android:text="BTC"
 				android:textSize="@dimen/small_text"
@@ -65,27 +72,33 @@
 	</RelativeLayout>
 
 	<TextView
+		android:id="@+id/tv1H"
 		android:layout_weight="1.2"
 		android:layout_width="0dp"
 		android:text="+0.23%"
+		android:scaleY="1.2"
 		android:textColor="@color/white"
 		android:gravity="center_vertical|right"
 		android:textSize="@dimen/small_text"
 		style="@style/DefaultTextView"/>
 
 	<TextView
+		android:id="@+id/tv24H"
 		android:layout_weight="1.2"
 		android:layout_width="0dp"
 		android:text="+0.23%"
+		android:scaleY="1.2"
 		android:textColor="@color/white"
 		android:gravity="center_vertical|right"
 		android:textSize="@dimen/small_text"
 		style="@style/DefaultTextView"/>
 
 	<TextView
+		android:id="@+id/tv7D"
 		android:layout_weight="1.2"
 		android:layout_width="0dp"
 		android:text="+0.23%"
+		android:scaleY="1.2"
 		android:textColor="@color/white"
 		android:gravity="center_vertical|right"
 		android:textSize="@dimen/small_text"

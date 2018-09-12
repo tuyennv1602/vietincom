@@ -17,6 +17,7 @@ public class NotificationReceived implements OneSignal.NotificationReceivedHandl
 			Notification message = AppPreference.INSTANCE.mGson.fromJson(notification.payload.additionalData.toString()
 					, Notification.class);
 			if (message.getType() == Constant.TYPE_NEWS) {
+				AppPreference.INSTANCE.setNumNews();
 				EventBus.getDefault().post(new EventBusListener.UpdateNews());
 			}
 		}

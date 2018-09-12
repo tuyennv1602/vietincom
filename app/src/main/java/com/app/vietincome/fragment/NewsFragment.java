@@ -43,7 +43,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventUpdateNews(EventBusListener.UpdateNews event) {
-		getNews();
+		getNews(false);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		rcvNews.setDemoShimmerDuration(60000);
 		rcvNews.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_news_dark : R.layout.layout_demo_news_light);
 		rcvNews.setAdapter(newsAdapter);
-		getNews();
+		getNews(true);
 	}
 
 	@Override
@@ -88,9 +88,11 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		super.onResume();
 	}
 
-	private void getNews() {
+	private void getNews(boolean showShimmer) {
 		navigationTopBar.showProgressBar();
-		rcvNews.showShimmerAdapter();
+		if(showShimmer) {
+			rcvNews.showShimmerAdapter();
+		}
 		ApiClient.getNewsService().getNews().enqueue(new Callback<NewsResponse>() {
 			@Override
 			public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
@@ -119,5 +121,10 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		newsAdapter.notifyItemChanged(position);
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(news.get(position).getUrl()));
 		startActivity(browserIntent);
+	}
+
+	@Override
+	public void onLongClicked(int position) {
+
 	}
 }

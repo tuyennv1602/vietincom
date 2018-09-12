@@ -33,10 +33,10 @@ android {
     }
     signingConfigs {
         keystore {
-            keyAlias 'vietincom'
-            keyPassword 'vietincom2018'
-            storeFile file('./key/keystore.js')
-            storePassword 'vietincom2018'
+            keyAlias 'vietincome'
+            keyPassword 'vietincome18'
+            storeFile file('./key/keystore.jks')
+            storePassword 'vietincome18'
         }
     }
     buildTypes {

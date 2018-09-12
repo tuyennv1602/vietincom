@@ -53,4 +53,6 @@ public class ApiClient {
 	public static ApiInterface getNewsService(){
 		return getService(AppConfig.NEWS_API);
 	}
+
+	public static ApiInterface getAllCoinService() {return getService(AppConfig.ALL_COIN_API);}
 }

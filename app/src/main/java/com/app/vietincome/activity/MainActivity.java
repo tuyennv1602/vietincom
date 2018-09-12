@@ -57,7 +57,6 @@ public class MainActivity extends BaseActivity {
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventUpdateNews(EventBusListener.UpdateNews event) {
 		numNews ++;
-		AppPreference.INSTANCE.setNumNews();
 		setBadge(Constant.TAB_NEWS, numNews);
 	}
 
@@ -178,7 +177,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	private void clearNews(){
-		if(selectedTab == Constant.TAB_NEWS || numNews > 0){
+		if(selectedTab == Constant.TAB_NEWS && numNews > 0){
 			numNews = 0;
 			AppPreference.INSTANCE.clearNumNews();
 			setBadge(Constant.TAB_NEWS, numNews);
