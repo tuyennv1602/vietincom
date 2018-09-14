@@ -125,9 +125,11 @@ public class MainActivity extends BaseActivity {
 				selectedTab = position;
 				if(selectedTab == Constant.TAB_ALL_COIN){
 					EventBus.getDefault().post(new EventBusListener.RefreshData(Constant.TAB_ALL_COIN));
-				}else if(selectedTab  == Constant.TAB_EVENT){
+				}else if(selectedTab  == Constant.TAB_EVENT) {
 					EventBus.getDefault().post(new EventBusListener.RefreshData(Constant.TAB_EVENT));
-
+					EventBus.getDefault().post(new EventBusListener.ExpanableView());
+				}else{
+					EventBus.getDefault().post(new EventBusListener.ExpanableView());
 				}
 			}
 

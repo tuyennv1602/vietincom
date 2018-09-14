@@ -1,5 +1,7 @@
 package com.app.vietincome.network;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -18,6 +20,7 @@ public class ApiClient {
 					.baseUrl(url)
 					.client(httpClient(createLogging()))
 					.addConverterFactory(GsonConverterFactory.create())
+					.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 					.build();
 
 		}

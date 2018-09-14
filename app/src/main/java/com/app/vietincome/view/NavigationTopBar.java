@@ -3,6 +3,7 @@ package com.app.vietincome.view;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
@@ -90,6 +91,8 @@ public class NavigationTopBar {
 	}
 
 	public void initTheme(boolean isDarkTheme){
+		progressBar.setIndeterminateTintList(ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image)));
+		progressBar.setBackgroundColor(getColor(R.color.white));
 		topLayout.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		layoutSearch.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		ColorStateList colorStateList = ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));

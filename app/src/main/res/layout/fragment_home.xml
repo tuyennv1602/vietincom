@@ -3,32 +3,42 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
 
 	<android.support.design.widget.AppBarLayout
+		android:id="@+id/appbarLayout"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		app:layout_collapseMode="parallax">
+		app:elevation="0dp"
+		android:layout_height="wrap_content">
 
 		<android.support.design.widget.CollapsingToolbarLayout
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
 			app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-			<include layout="@layout/navi_top_bar"/>
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layout_collapseMode="parallax">
+
+				<include
+					layout="@layout/navi_top_bar"/>
+			</FrameLayout>
 
 		</android.support.design.widget.CollapsingToolbarLayout>
 
-		<include layout="@layout/item_top_allcoin"/>
-
 	</android.support.design.widget.AppBarLayout>
 
-	<android.support.v4.widget.NestedScrollView
-		android:id="@+id/scrollView"
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:fillViewport="true"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+		<include
+			layout="@layout/item_top_allcoin"/>
 
 		<com.cooltechworks.views.shimmer.ShimmerRecyclerView
 			android:id="@+id/rcvAllCoin"
@@ -40,6 +50,7 @@
 			app:shimmer_demo_layout_manager_type="linear_vertical"
 			app:shimmer_demo_view_holder_item_background="@color/dark_background"
 			/>
-	</android.support.v4.widget.NestedScrollView>
+
+	</LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

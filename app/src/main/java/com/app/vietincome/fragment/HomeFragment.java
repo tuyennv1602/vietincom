@@ -1,7 +1,10 @@
 package com.app.vietincome.fragment;
 
+import android.annotation.SuppressLint;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,6 +24,7 @@ import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.NavigationTopBar;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -28,6 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,15 +87,13 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 	@BindView(R.id.rcvAllCoin)
 	ShimmerRecyclerView rcvAllCoin;
 
-	@BindView(R.id.scrollView)
-	NestedScrollView scrollView;
+	@BindView(R.id.appbarLayout)
+	AppBarLayout appBarLayout;
 
 	private ArrayList<Data> allCoins;
 	private AllCoinAdapter allCoinAdapter;
 	private int start = 1;
 	private int perPage = 100;
-	private boolean canLoad;
-	private boolean isLoading;
 	private LinearLayoutManager linearLayoutManager;
 
 	public static HomeFragment newInstance() {
@@ -98,6 +107,18 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 			start = 1;
 			getCoins(false);
 		}
+	}
+
+	@Subscribe(threadMode =  ThreadMode.MAIN)
+	public void onEventExpand(EventBusListener.ExpanableView event){
+		appBarLayout.setExpanded(true);
+		rcvAllCoin.scrollToPosition(0);
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+	public void onAddedCoin(EventBusListener.AddCoin event){
+		allCoins.addAll(event.data);
+		allCoinAdapter.notifyItemRangeChanged(event.position, allCoins.size());
 	}
 
 	@Override
@@ -116,18 +137,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 			allCoinAdapter.setDarkTheme(isDarkTheme);
 		}
 		rcvAllCoin.setLayoutManager(linearLayoutManager);
-		rcvAllCoin.setNestedScrollingEnabled(false);
 		rcvAllCoin.addItemDecoration(new CustomItemDecoration(2));
 		rcvAllCoin.setDemoShimmerDuration(60000);
 		rcvAllCoin.setAdapter(allCoinAdapter);
-		scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (view1, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-			if ((scrollY == (view1.getChildAt(0).getMeasuredHeight() - view1.getMeasuredHeight())) && (scrollY > oldScrollY)) {
-				if (!isLoading && canLoad) {
-					Log.d("__home", "onScrolled: loadmore");
-					getCoins(false);
-				}
-			}
-		});
 		onUpdatedTheme();
 		getCoins(true);
 	}
@@ -189,27 +201,238 @@ public class HomeFragment extends BaseFragment implements ItemClickListener {
 		if (showShimmer) {
 			rcvAllCoin.showShimmerAdapter();
 		}
-		ApiClient.getAllCoinService().getAllCoin(start).enqueue(new Callback<CoinResponse>() {
+		ApiClient.getAllCoinService().getCoinFirstPage().enqueue(new Callback<CoinResponse>() {
 			@Override
 			public void onResponse(Call<CoinResponse> call, Response<CoinResponse> response) {
 				navigationTopBar.hideProgressBar();
 				rcvAllCoin.hideShimmerAdapter();
 				if (response.isSuccessful()) {
 					if (response.body().getMetadata().isSuccess()) {
-						if (start == 1) allCoins.clear();
+						allCoins.clear();
 						allCoins.addAll(response.body().getData());
-						allCoinAdapter.notifyItemInserted(start - 1);
-						canLoad = response.body().getData().size() == 100;
+						allCoinAdapter.notifyDataSetChanged();
 						start += 100;
+						if (response.body().getData().size() == perPage) {
+							getNextPage(response.body().getMetadata().getNumCryptocurrencies());
+						}
 					}
 				}
 			}
 
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
-
 			}
 		});
+	}
+
+	@SuppressLint("CheckResult")
+	private void getNextPage(int totalItem) {
+		totalItem = totalItem - perPage;
+		int numPage = totalItem / perPage;
+		if (totalItem % perPage != 0) {
+			numPage += 1;
+		}
+		ApiClient.getAllCoinService().getCoinInPage(start)
+				.subscribeOn(Schedulers.io())
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.concatMap((Function<CoinResponse, ObservableSource<CoinResponse>>) respose ->{
+					return ApiClient.getAllCoinService().getCoinInPage(start+=100);
+				})
+				.doOnNext(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+						Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+						EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					}
+				})
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+					}
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+
+					}
+				});
+
 	}
 
 	@Override

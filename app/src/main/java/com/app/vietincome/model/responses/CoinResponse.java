@@ -11,8 +11,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 
-public class CoinResponse {
+
+public class CoinResponse implements ObservableSource<CoinResponse> {
 
 	@SerializedName("data")
 	@Expose
@@ -38,5 +41,8 @@ public class CoinResponse {
 	}
 
 
+	@Override
+	public void subscribe(Observer<? super CoinResponse> observer) {
 
+	}
 }
