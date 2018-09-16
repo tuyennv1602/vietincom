@@ -1,6 +1,7 @@
 package com.app.vietincome.network;
 
 import com.app.vietincome.model.responses.CoinResponse;
+import com.app.vietincome.model.responses.RateResponse;
 import com.app.vietincome.model.responses.NewsResponse;
 
 import io.reactivex.Observable;
@@ -13,9 +14,16 @@ public interface ApiInterface {
 	@GET("api/get_recent_posts/")
 	Call<NewsResponse> getNews();
 
-	@GET("ticker/?convert=BTC&structure=array&limit=100")
-	Observable<CoinResponse> getCoinInPage(@Query("start") int start);
+	@GET("api/get_recent_posts/")
+	Observable<NewsResponse> getNewsInPage(@Query("page") int page);
 
-	@GET("ticker/?convert=BTC&structure=array&limit=100")
-	Call<CoinResponse> getCoinFirstPage();
+	@GET("ticker/?structure=array&limit=100")
+	Observable<CoinResponse> getCoinInPage(@Query("start") int start,
+	                                       @Query("convert") String convert);
+
+	@GET("ticker/?structure=array&limit=100")
+	Call<CoinResponse> getCoinFirstPage(@Query("convert") String convert);
+
+	@GET("price?fsym=USD&tsyms=BTC")
+	Call<RateResponse> getRate();
 }

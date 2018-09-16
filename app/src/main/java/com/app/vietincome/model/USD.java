@@ -81,6 +81,7 @@ public class USD implements Parcelable
 	}
 
 	public String getPercentChange1h() {
+		if(percentChange1h == 0) return "__  ";
 		if(isPlus(percentChange1h)){
 			return "+".concat(String.valueOf(percentChange1h)).concat("%");
 		}
@@ -92,6 +93,7 @@ public class USD implements Parcelable
 	}
 
 	public String getPercentChange24h() {
+		if(percentChange24h == 0) return "__  ";
 		if(isPlus(percentChange24h)){
 			return "+".concat(String.valueOf(percentChange24h)).concat("%");
 		}
@@ -103,6 +105,7 @@ public class USD implements Parcelable
 	}
 
 	public String getPercentChange7d() {
+		if(percentChange7d == 0) return  "__  ";
 		if(isPlus(percentChange7d)){
 			return "+".concat(String.valueOf(percentChange7d)).concat("%");
 		}

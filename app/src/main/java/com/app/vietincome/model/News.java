@@ -4,12 +4,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.model.responses.NewsResponse;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class News implements Parcelable {
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+
+public class News implements Parcelable, ObservableSource<News> {
 
 	@SerializedName("id")
 	@Expose
@@ -309,8 +313,8 @@ public class News implements Parcelable {
 		return false;
 	}
 
-	public void setRead(){
-		isRead();
-	}
+	@Override
+	public void subscribe(Observer<? super News> observer) {
 
+	}
 }

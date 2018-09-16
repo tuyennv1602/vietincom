@@ -2,15 +2,244 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:orientation="vertical"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:orientation="vertical">
 
 	<include layout="@layout/navi_top_bar"/>
 
-	<Button
-		android:id="@+id/btnChangeTheme"
-		android:layout_width="wrap_content"
-		android:text="Test Change theme"
-		android:layout_height="wrap_content"/>
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+
+			<com.app.vietincome.view.HighLightRelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height">
+
+				<ImageView
+					android:layout_width="@dimen/item_setting_height"
+					android:layout_height="@dimen/item_setting_height"
+					android:padding="15dp"
+					android:src="@drawable/star"/>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:layout_marginLeft="@dimen/item_setting_height"
+					android:orientation="vertical">
+
+					<TextView
+						android:id="@+id/tvRate"
+						style="@style/DefaultTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Rate Vietincome on Google Play!"
+						android:textSize="16sp"/>
+
+					<TextView
+						style="@style/DefaultTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textColor="@color/light_gray"
+						android:text="It helps us make to move on"
+						android:textSize="13sp"/>
+				</LinearLayout>
+
+			</com.app.vietincome.view.HighLightRelativeLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<com.app.vietincome.view.HighLightLinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height">
+
+				<ImageView
+					android:id="@+id/imgSend"
+					android:layout_width="@dimen/item_setting_height"
+					android:layout_height="match_parent"
+					android:padding="15dp"
+					android:src="@drawable/send_message"/>
+
+				<TextView
+					android:id="@+id/tvTelegram"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:gravity="center_vertical"
+					android:textSize="16sp"
+					android:text="Join Telegram chat"/>
+
+			</com.app.vietincome.view.HighLightLinearLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<TextView
+				android:id="@+id/tvGeneral"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:fontFamily="@font/helvetica_neue_bold"
+				android:gravity="bottom"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="General"
+				android:textSize="20sp"/>
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp">
+
+				<TextView
+					android:id="@+id/tvCurrency"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:text="Currency"
+					android:textSize="16sp"/>
+
+				<TextView
+					android:id="@+id/tvCurrencyValue"
+					style="@style/DefaultTextView"
+					android:text="USD"
+					android:textSize="16sp"
+					android:paddingLeft="20dp"
+					android:gravity="center_vertical"
+					android:layout_width="wrap_content"
+					android:layout_alignParentRight="true"
+					android:layout_height="match_parent"/>
+
+			</RelativeLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp">
+
+				<TextView
+					android:id="@+id/tvDarkTheme"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:text="Dark Theme"
+					android:textSize="16sp"/>
+
+				<Switch
+					android:id="@+id/swTheme"
+					android:layout_width="@dimen/item_setting_height"
+					android:layout_height="match_parent"
+					android:layout_alignParentRight="true"/>
+			</RelativeLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<TextView
+				android:id="@+id/tvChart"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:fontFamily="@font/helvetica_neue_bold"
+				android:gravity="bottom"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="Chart"
+				android:textSize="20sp"/>
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp">
+
+				<TextView
+					android:id="@+id/tvShowVolume"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:text="Show volumes"
+					android:textSize="16sp"/>
+
+				<Switch
+					android:id="@+id/swVolume"
+					android:layout_width="@dimen/item_setting_height"
+					android:layout_height="match_parent"
+					android:layout_alignParentRight="true"/>
+			</RelativeLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp">
+
+				<TextView
+					android:id="@+id/tvShowHorizontal"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:text="Show horizontal lines"
+					android:textSize="16sp"/>
+
+				<Switch
+					android:id="@+id/swVertical"
+					android:layout_width="@dimen/item_setting_height"
+					android:layout_height="match_parent"
+					android:layout_alignParentRight="true"/>
+			</RelativeLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp">
+
+				<TextView
+					android:id="@+id/tvShowVertical"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"
+					android:text="Show vertical lines"
+					android:textSize="16sp"/>
+
+				<Switch
+					android:id="@+id/swHorizontal"
+					android:layout_width="@dimen/item_setting_height"
+					android:layout_height="match_parent"
+					android:layout_alignParentRight="true"/>
+			</RelativeLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<TextView
+				android:id="@+id/tvAbout"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:fontFamily="@font/helvetica_neue_bold"
+				android:gravity="bottom"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="About"
+				android:textSize="20sp"/>
+
+		</LinearLayout>
+	</ScrollView>
 </LinearLayout>

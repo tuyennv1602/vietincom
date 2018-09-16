@@ -15,6 +15,7 @@ import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.News;
 import com.app.vietincome.utils.DateUtil;
 import com.app.vietincome.utils.GlideImage;
+import com.app.vietincome.view.HighLightRelativeLayout;
 import com.app.vietincome.view.HighLightTextView;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.github.marlonlom.utilities.timeago.TimeAgoMessages;
@@ -32,17 +33,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 	private boolean isDarkTheme;
 	private ItemClickListener listener;
 
-	public NewsAdapter(ItemClickListener listener){
+	public NewsAdapter(ArrayList<News> news, ItemClickListener listener){
+		this.news = news;
 		this.listener = listener;
 	}
 
 	public void setDarkTheme(boolean darkTheme) {
 		isDarkTheme = darkTheme;
-	}
-
-	public void setNews(ArrayList<News> news){
-		this.news = news;
-		notifyDataSetChanged();
 	}
 
 	@NonNull
@@ -70,7 +67,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 		HighLightTextView tvTitleNews;
 
 		@BindView(R.id.rootLayout)
-		RelativeLayout rootLayout;
+		HighLightRelativeLayout rootLayout;
 
 		@BindView(R.id.tvTimeNews)
 		HighLightTextView tvTimeNews;
@@ -102,7 +99,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 			tvTitleNews.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			imgRead.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 			imgNews.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
-			GlideImage.loadImage(new_.getAttachments().get(0).getUrl(), R.drawable.news, imgNews);
+			GlideImage.loadImage(new_.getAttachments().get(0).getUrl(), R.drawable.favicon, imgNews);
 			tvTitleNews.setText(new_.getTitle());
 			tvTimeNews.setText(TimeAgo.using(DateUtil.toTimestamp(new_.getDate()), new TimeAgoMessages.Builder().withLocale(Locale.forLanguageTag("us")).build()));
 			tvAuthor.setText(new_.getAuthor().getName());

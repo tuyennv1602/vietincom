@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.vietincome.R;
@@ -115,6 +116,11 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 
 	@Override
 	public void onSearchDone(){
+
+	}
+
+	@Override
+	public void onCloseSearch(){
 
 	}
 
@@ -372,6 +378,10 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 
 	public int getColor(int color){
 		return ContextCompat.getColor(getContext(), color);
+	}
+
+	public void setTextColor(TextView textView){
+		textView.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 	}
 
 }

@@ -7,4 +7,5 @@ public interface NavigationTopListener {
 	void onAdditionRightClicked();
 	void onSearchChanged(String key);
 	void onSearchDone();
+	void onCloseSearch();
 }

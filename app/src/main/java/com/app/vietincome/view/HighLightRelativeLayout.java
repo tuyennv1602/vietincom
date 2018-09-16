@@ -1,23 +1,25 @@
 package com.app.vietincome.view;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+import android.widget.RelativeLayout;
 
-public class HighLightImageView extends AppCompatImageView {
-
-	public HighLightImageView(Context context) {
+public class HighLightRelativeLayout extends RelativeLayout {
+	public HighLightRelativeLayout(Context context) {
 		super(context);
 	}
 
-	public HighLightImageView(Context context, AttributeSet attrs) {
+	public HighLightRelativeLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	public HighLightImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+	public HighLightRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 	}
 
+	public HighLightRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+		super(context, attrs, defStyleAttr, defStyleRes);
+	}
 	@Override
 	public void setPressed(boolean pressed) {
 		if (isEnabled()) {

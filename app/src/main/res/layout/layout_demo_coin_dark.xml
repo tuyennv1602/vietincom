@@ -14,7 +14,7 @@
 
 	<RelativeLayout
 		android:layout_width="0dp"
-		android:layout_height="5dp"
+		android:layout_height="7dp"
 		android:layout_weight="0.7">
 
 		<View
@@ -35,7 +35,7 @@
 		<View
 			android:id="@+id/tvPrice"
 			android:layout_width="40dp"
-			android:layout_height="5dp"
+			android:layout_height="7dp"
 			android:layout_alignParentRight="true"
 			android:layout_centerVertical="true"
 			android:background="@drawable/bg_layout_demo_dark"
@@ -49,13 +49,13 @@
 
 			<View
 				android:layout_width="60dp"
-				android:layout_height="7dp"
+				android:layout_height="10dp"
 				android:background="@drawable/bg_layout_demo_dark"
 				/>
 
 			<View
 				android:layout_width="40dp"
-				android:layout_height="5dp"
+				android:layout_height="7dp"
 				android:layout_marginTop="5dp"
 				android:background="@drawable/bg_layout_demo_dark"
 				/>
@@ -67,7 +67,7 @@
 	<RelativeLayout
 		android:layout_weight="1.2"
 		android:layout_width="0dp"
-		android:layout_height="5dp">
+		android:layout_height="7dp">
 
 		<View
 			android:layout_alignParentRight="true"
@@ -81,7 +81,7 @@
 	<RelativeLayout
 		android:layout_weight="1.2"
 		android:layout_width="0dp"
-		android:layout_height="5dp">
+		android:layout_height="7dp">
 
 		<View
 			android:layout_alignParentRight="true"
@@ -95,7 +95,7 @@
 	<RelativeLayout
 		android:layout_weight="1.2"
 		android:layout_width="0dp"
-		android:layout_height="5dp">
+		android:layout_height="7dp">
 
 		<View
 			android:layout_alignParentRight="true"

@@ -71,7 +71,7 @@ public class NavigationTopBar {
 			@Override
 			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
 				if (i == EditorInfo.IME_ACTION_SEARCH) {
-					if(topBarListener != null){
+					if (topBarListener != null) {
 						topBarListener.onSearchDone();
 						Log.d("__topbar", "onEditorAction: ");
 					}
@@ -82,15 +82,15 @@ public class NavigationTopBar {
 		});
 	}
 
-	public void showProgressBar(){
+	public void showProgressBar() {
 		progressBar.setVisibility(View.VISIBLE);
 	}
 
-	public void hideProgressBar(){
+	public void hideProgressBar() {
 		progressBar.setVisibility(View.GONE);
 	}
 
-	public void initTheme(boolean isDarkTheme){
+	public void initTheme(boolean isDarkTheme) {
 		progressBar.setIndeterminateTintList(ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image)));
 		progressBar.setBackgroundColor(getColor(R.color.white));
 		topLayout.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
@@ -106,11 +106,11 @@ public class NavigationTopBar {
 		tvTitle.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 	}
 
-	public int getColor(int color){
+	public int getColor(int color) {
 		return ContextCompat.getColor(context, color);
 	}
 
-	public void playTitleAnimation(){
+	public void playTitleAnimation() {
 		YoYo.with(Techniques.Bounce)
 				.duration(3000)
 				.repeat(YoYo.INFINITE)
@@ -118,48 +118,57 @@ public class NavigationTopBar {
 	}
 
 	@OnClick(R.id.imgRight)
-	void onRightClick(){
-		if(topBarListener != null) {
+	void onRightClick() {
+		if (topBarListener != null) {
 			topBarListener.onRightClicked();
 		}
 	}
 
 	@OnClick(R.id.imgLeft)
-	void onLeftClick(){
-		if(isSearch){
+	void onLeftClick() {
+		if (isSearch) {
+			if (topBarListener != null) {
+				topBarListener.onCloseSearch();
+			}
 			closeSearch();
-			return;
-		}
-		if(topBarListener != null) {
+		} else if (topBarListener != null) {
 			topBarListener.onLeftClicked();
 		}
 	}
 
 	@OnClick(R.id.imgAdditionalRight)
-	void onAdditionalRight(){
-		if(topBarListener != null){
+	void onAdditionalRight() {
+		if (topBarListener != null) {
 			topBarListener.onAdditionRightClicked();
 		}
 	}
 
 	@OnTextChanged(R.id.edtSearch)
-	void onSearchChanged(CharSequence text){
-		if(text.toString().isEmpty()){
+	void onSearchChanged(CharSequence text) {
+		if (text.toString().isEmpty()) {
 			imgClose.setVisibility(View.GONE);
-		}else{
+		} else {
 			imgClose.setVisibility(View.VISIBLE);
 		}
-		if(topBarListener != null){
+		if (topBarListener != null) {
 			topBarListener.onSearchChanged(text.toString());
 		}
 	}
 
 	@OnClick(R.id.imgClose)
-	void onCloseClick(){
+	void onCloseClick() {
 		edtSearch.setText("");
 	}
 
-	public void openSearch(){
+	public EditText getEdtSearch() {
+		return this.edtSearch;
+	}
+
+	public boolean isSearch(){
+		return this.isSearch;
+	}
+
+	public void openSearch() {
 		YoYo.with(Techniques.SlideInRight)
 				.duration(200)
 				.withListener(new Animator.AnimatorListener() {
@@ -189,7 +198,7 @@ public class NavigationTopBar {
 				.playOn(layoutSearch);
 	}
 
-	public void closeSearch(){
+	public void closeSearch() {
 		YoYo.with(Techniques.SlideOutRight)
 				.duration(200)
 				.withListener(new Animator.AnimatorListener() {
@@ -203,6 +212,7 @@ public class NavigationTopBar {
 						imgLeft.setImageResource(currentLeft);
 						imgLeft.setVisibility(isShowLeft ? View.VISIBLE : View.INVISIBLE);
 						layoutSearch.setVisibility(View.GONE);
+						edtSearch.setText("");
 					}
 
 					@Override
@@ -218,28 +228,28 @@ public class NavigationTopBar {
 				.playOn(layoutSearch);
 	}
 
-	public void setTvTitle(int text){
+	public void setTvTitle(int text) {
 		tvTitle.setText(text);
 	}
 
-	public void showImgRight(boolean isShow){
+	public void showImgRight(boolean isShow) {
 		imgRight.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 	}
 
-	public void showImgLeft(boolean isShow){
+	public void showImgLeft(boolean isShow) {
 		isShowLeft = isShow;
 		imgLeft.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 	}
 
-	public void showAdditionalRight(boolean isShow){
+	public void showAdditionalRight(boolean isShow) {
 		imgAdditonalRight.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 	}
 
-	public void setImgRight(int res){
+	public void setImgRight(int res) {
 		imgRight.setImageResource(res);
 	}
 
-	public void setImgLeft(int res){
+	public void setImgLeft(int res) {
 		currentLeft = res;
 		imgLeft.setImageResource(res);
 	}

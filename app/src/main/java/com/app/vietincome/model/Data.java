@@ -3,6 +3,7 @@ package com.app.vietincome.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.app.vietincome.manager.AppPreference;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -54,7 +55,7 @@ public class Data implements Parcelable
 		}
 
 	}
-			;
+	;
 
 	protected Data(Parcel in) {
 		this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -69,17 +70,7 @@ public class Data implements Parcelable
 		this.lastUpdated = ((Integer) in.readValue((Integer.class.getClassLoader())));
 	}
 
-	public Data(Integer id, String name, String symbol, String websiteSlug, Integer rank, Double circulatingSupply, Double totalSupply, Double maxSupply, Quotes quotes, Integer lastUpdated) {
-		this.id = id;
-		this.name = name;
-		this.symbol = symbol;
-		this.websiteSlug = websiteSlug;
-		this.rank = rank;
-		this.circulatingSupply = circulatingSupply;
-		this.totalSupply = totalSupply;
-		this.maxSupply = maxSupply;
-		this.quotes = quotes;
-		this.lastUpdated = lastUpdated;
+	public Data(){
 	}
 
 	public Integer getId() {
@@ -174,6 +165,13 @@ public class Data implements Parcelable
 		dest.writeValue(quotes);
 		dest.writeValue(lastUpdated);
 	}
+
+//	public boolean isFavourite() {
+//		for (Integer integer : AppPreference.INSTANCE.getFavouriteCoin()) {
+//			if (integer == id) return true;
+//		}
+//		return false;
+//	}
 
 	public int describeContents() {
 		return 0;

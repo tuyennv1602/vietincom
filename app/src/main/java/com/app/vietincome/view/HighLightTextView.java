@@ -33,6 +33,6 @@ public class HighLightTextView extends AppCompatTextView {
 	}
 
 	private void setState(boolean pressed) {
-		setAlpha(pressed ? 0.5f : 1f);
+		setAlpha(pressed ? 0.8f : 1f);
 	}
 }

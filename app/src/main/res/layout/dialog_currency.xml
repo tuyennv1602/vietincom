@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/light_background">
+
+	<TextView
+		android:id="@+id/tvCurrency"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:fontFamily="@font/helvetica_neue_medium"
+		android:gravity="center_vertical"
+		android:paddingLeft="20dp"
+		android:text="Currency"
+		android:textSize="18sp"/>
+
+	<LinearLayout
+		android:id="@+id/layoutBottom"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:layout_alignParentBottom="true"
+		android:gravity="right">
+
+		<com.app.vietincome.view.HighLightTextView
+			android:id="@+id/tvCancel"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:gravity="center"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:text="CANCEL"
+			android:textSize="16sp"/>
+
+		<com.app.vietincome.view.HighLightTextView
+			android:id="@+id/tvSelect"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:gravity="center"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:text="SELECT"
+			android:textSize="16sp"/>
+
+	</LinearLayout>
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/rcvCurrency"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="51dp"
+		android:layout_marginTop="51dp"
+		android:background="@color/color_line"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.5dp"
+		android:layout_above="@id/layoutBottom"
+		android:background="@color/color_line"/>
+
+</RelativeLayout>

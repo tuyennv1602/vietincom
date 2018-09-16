@@ -33,4 +33,15 @@
 		<item name="android:singleLine">true</item>
 	</style>
 
+	<style name="ZoomDialogAnimation">
+		<item name="android:windowEnterAnimation">@anim/zoom_in</item>
+		<item name="android:windowExitAnimation">@anim/zoom_out</item>
+	</style>
+
+	<style name="SlideUpDialogAnimation">
+		<item name="android:windowEnterAnimation">@anim/slide_up_dialog</item>
+		<item name="android:windowExitAnimation">@anim/slide_down_dialog</item>
+	</style>
+
+
 </resources>

@@ -6,7 +6,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class NewsResponse {
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+
+public class NewsResponse implements ObservableSource<NewsResponse> {
 	@SerializedName("status")
 	@Expose
 	private String status;
@@ -57,5 +60,10 @@ public class NewsResponse {
 
 	public void setNews(ArrayList<News> news) {
 		this.news = news;
+	}
+
+	@Override
+	public void subscribe(Observer<? super NewsResponse> observer) {
+
 	}
 }

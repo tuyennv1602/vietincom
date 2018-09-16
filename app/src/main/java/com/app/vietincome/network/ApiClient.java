@@ -12,19 +12,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-	private static Retrofit retrofit = null;
 
 	private static Retrofit getClient(String url) {
-		if (retrofit == null) {
-			retrofit = new Retrofit.Builder()
-					.baseUrl(url)
-					.client(httpClient(createLogging()))
-					.addConverterFactory(GsonConverterFactory.create())
-					.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-					.build();
-
-		}
-		return retrofit;
+		return new Retrofit.Builder()
+				.baseUrl(url)
+				.client(httpClient(createLogging()))
+				.addConverterFactory(GsonConverterFactory.create())
+				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+				.build();
 	}
 
 	private static ApiInterface getService(String url) {
@@ -53,9 +48,15 @@ public class ApiClient {
 		return chain.request();
 	}
 
-	public static ApiInterface getNewsService(){
+	public static ApiInterface getNewsService() {
 		return getService(AppConfig.NEWS_API);
 	}
 
-	public static ApiInterface getAllCoinService() {return getService(AppConfig.ALL_COIN_API);}
+	public static ApiInterface getAllCoinService() {
+		return getService(AppConfig.ALL_COIN_API);
+	}
+
+	public static ApiInterface getRate(){
+		return getService(AppConfig.RATE);
+	}
 }

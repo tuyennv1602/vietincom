@@ -12,4 +12,7 @@
 	<dimen name="img_news_height">75dp</dimen>
 	<dimen name="small_text">12sp</dimen>
 	<dimen name="size_image_sort">12dp</dimen>
+	<dimen name="star_size">15dp</dimen>
+	<dimen name="item_setting_height">55dp</dimen>
+	<dimen name="item_currency">45dp</dimen>
 </resources>
