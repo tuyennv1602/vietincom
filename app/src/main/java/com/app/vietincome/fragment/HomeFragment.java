@@ -1,6 +1,7 @@
 package com.app.vietincome.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.vietincome.R;
+import com.app.vietincome.activity.ParentActivity;
 import com.app.vietincome.adapter.AllCoinAdapter;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
@@ -29,11 +31,9 @@ import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,9 +41,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -103,8 +101,10 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	private LinearLayoutManager linearLayoutManager;
 	private boolean isBTC = false;
 	private boolean isSortUp = true;
-	private double rate = -1;
+	private double rate = 1;
 	private Disposable disposable;
+	private boolean isLoading = true;
+	private Currency currency = AppPreference.INSTANCE.getCurrency();
 
 	public static HomeFragment newInstance() {
 		HomeFragment fragment = new HomeFragment();
@@ -115,20 +115,27 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onEventRefreshData(EventBusListener.RefreshData event) {
 		if (event.tab == Constant.TAB_ALL_COIN) {
 			start = 1;
-			getCoins(false);
+			if (!currency.getCode().equals(AppPreference.INSTANCE.getCurrency().getCode())) {
+				currency = AppPreference.INSTANCE.getCurrency();
+				getData(true);
+			} else {
+				getCoins(allCoins.size() == 0);
+			}
 		}
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventExpand(EventBusListener.ExpanableView event) {
-		disposable.dispose();
+		if (!disposable.isDisposed()) {
+			disposable.dispose();
+		}
 		appBarLayout.setExpanded(true);
 		rcvAllCoin.scrollToPosition(0);
 	}
 
-	@Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onAddedCoin(EventBusListener.AddCoin event) {
-		allCoins.addAll(event.data);
+//		allCoins.addAll(event.data);
 		allCoinAdapter.notifyItemRangeChanged(event.position, allCoins.size());
 	}
 
@@ -153,14 +160,13 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		rcvAllCoin.setDemoShimmerDuration(100000);
 		rcvAllCoin.setAdapter(allCoinAdapter);
 		onUpdatedTheme();
-		tvCurrency.setText(AppPreference.INSTANCE.getCurrency().getSymbol());
+		getData(true);
 		setupUI(view);
 	}
 
 	@OnClick(R.id.layoutPrice)
 	void onChangeCurrency() {
-		if (rate == -1) return;
-		allCoinAdapter.changeCurrency(rate);
+		allCoinAdapter.changeCurrency();
 		isBTC = !isBTC;
 		tvCurrency.setText(isBTC ? getString(R.string.bitcoin) : AppPreference.INSTANCE.getCurrency().getSymbol());
 	}
@@ -181,7 +187,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Override
 	public void onLeftClicked() {
 		super.onLeftClicked();
-		hideKeyboard();
+		Intent parent = new Intent(getContext(), ParentActivity.class);
+		parent.putExtra(Constant.KEY_SCREEN, Constant.GLOBAL_MARKET);
+		startActivity(parent);
 	}
 
 	@Override
@@ -222,18 +230,16 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onResume() {
 		super.onResume();
 		getCoins(allCoins.size() == 0);
-		getRate();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		disposable.dispose();
 	}
 
 	@Override
 	public void onUpdatedTheme() {
-		rcvAllCoin.setBackgroundColor(isDarkTheme? getColor(R.color.black) : getColor(R.color.color_line));
+		rcvAllCoin.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
 		layoutTopAll.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		imgSortName.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvCurrency.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
@@ -253,32 +259,53 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	}
 
 	public void getRate() {
-		ApiClient.getRate().getRate().enqueue(new Callback<RateResponse>() {
+		isLoading = true;
+		navigationTopBar.showProgressBar();
+		rcvAllCoin.showShimmerAdapter();
+		ApiClient.getRate().getRate(currency.getCode()).enqueue(new Callback<RateResponse>() {
 			@Override
 			public void onResponse(Call<RateResponse> call, Response<RateResponse> response) {
 				if (response.isSuccessful()) {
 					HomeFragment.this.rate = response.body().getRate();
+					allCoinAdapter.setRate(HomeFragment.this.rate);
+					Log.d("__coin", "onResponse: " + HomeFragment.this.rate);
+					getCoins(false);
 				}
 			}
 
 			@Override
 			public void onFailure(Call<RateResponse> call, Throwable t) {
-
+				navigationTopBar.showProgressBar();
+				rcvAllCoin.showShimmerAdapter();
+				showAlert(getString(R.string.message_title), t.getMessage());
 			}
 		});
 	}
 
+	public void getData(boolean isUpdateRate) {
+		tvCurrency.setText(currency.getSymbol());
+		if (!currency.getCode().equals("USD") || isUpdateRate) {
+			if (isBTC) {
+				allCoinAdapter.changeCurrency();
+			}
+			getRate();
+		} else {
+			getCoins(true);
+		}
+	}
+
 	public void getCoins(boolean showShimmer) {
-		tvCurrency.setText(AppPreference.INSTANCE.getCurrency().getSymbol());
+		isLoading = true;
 		navigationTopBar.showProgressBar();
 		if (showShimmer) {
 			rcvAllCoin.showShimmerAdapter();
 		}
-		ApiClient.getAllCoinService().getCoinFirstPage(AppPreference.INSTANCE.getCurrency().getCode()).enqueue(new Callback<CoinResponse>() {
+		ApiClient.getAllCoinService().getCoinFirstPage().enqueue(new Callback<CoinResponse>() {
 			@Override
 			public void onResponse(Call<CoinResponse> call, Response<CoinResponse> response) {
 				navigationTopBar.hideProgressBar();
 				rcvAllCoin.hideShimmerAdapter();
+				isLoading = false;
 				if (response.isSuccessful()) {
 					if (response.body().getMetadata().isSuccess()) {
 						allCoins.clear();
@@ -296,34 +323,21 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvAllCoin.hideShimmerAdapter();
+				showAlert(getString(R.string.message_title), t.getMessage());
 			}
 		});
 	}
 
 	@SuppressLint("CheckResult")
 	public void searchCoin(String key) {
-		Observable.fromIterable(allCoins)
+		Disposable subscribe = Observable.fromIterable(allCoins)
 				.observeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
-				.filter(new Predicate<Data>() {
-					@Override
-					public boolean test(Data data) throws Exception {
-						return data.getName().contains(key);
-					}
-				})
-				.doOnNext(new Consumer<Data>() {
-					@Override
-					public void accept(Data data) throws Exception {
-
-					}
-				})
+				.filter(data -> data.getName().contains(key) || data.getSymbol().contains(key.toUpperCase()))
 				.toList()
-				.subscribe(new Consumer<List<Data>>() {
-					@Override
-					public void accept(List<Data> data) throws Exception {
-						resultSearchCoin = (ArrayList<Data>) data;
-						allCoinAdapter.setCoins(resultSearchCoin);
-					}
+				.subscribe(data -> {
+					resultSearchCoin = (ArrayList<Data>) data;
+					allCoinAdapter.setCoins(resultSearchCoin);
 				});
 	}
 
@@ -336,13 +350,14 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		}
 		disposable = Observable.range(1, numPage)
 				.subscribeOn(Schedulers.io())
-				.concatMap((Function<Integer, ObservableSource<CoinResponse>>) integer -> ApiClient.getAllCoinService().getCoinInPage((integer * perPage) + 1, AppPreference.INSTANCE.getCurrency().getCode()))
+				.concatMap((Function<Integer, ObservableSource<CoinResponse>>) integer -> ApiClient.getAllCoinService().getCoinInPage((integer * perPage) + 1))
 				.doOnError(throwable -> {
 					navigationTopBar.hideProgressBar();
 					rcvAllCoin.hideShimmerAdapter();
 				})
 				.doOnNext(coinResponse -> {
 					Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
+					allCoins.addAll(coinResponse.getData());
 					EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
 					start += perPage;
 				})
@@ -351,8 +366,21 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	}
 
 	@Override
-	public void onItemClicked(int position) {
+	public void onPause() {
+		super.onPause();
+		if (!disposable.isDisposed()) {
+			disposable.dispose();
+		}
+	}
 
+	@Override
+	public void onItemClicked(int position) {
+		if (isLoading) return;
+		Intent parent = new Intent(getContext(), ParentActivity.class);
+		parent.putExtra("coin", allCoins.get(position));
+		parent.putExtra(Constant.KEY_SCREEN, Constant.COIN_DETAIL);
+		parent.putExtra(Constant.KEY_RATE, rate);
+		startActivity(parent);
 	}
 
 	@Override

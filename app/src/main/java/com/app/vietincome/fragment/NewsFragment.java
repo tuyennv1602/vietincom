@@ -173,6 +173,5 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		disposable.dispose();
 	}
 }

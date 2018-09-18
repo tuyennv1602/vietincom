@@ -13,9 +13,9 @@ public class Quotes implements Parcelable
 	@Expose
 	private USD uSD;
 
-	@SerializedName(value = "secondCoin", alternate = {"AUD", "BRL", "CAD", "CHF", "CLP", "CNY", "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP", "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "ZAR"})
+	@SerializedName("BTC")
 	@Expose
-	private USD secondCoin;
+	private USD bTC;
 
 	public final static Parcelable.Creator<Quotes> CREATOR = new Creator<Quotes>() {
 
@@ -36,7 +36,7 @@ public class Quotes implements Parcelable
 
 	protected Quotes(Parcel in) {
 		this.uSD = ((USD) in.readValue((USD.class.getClassLoader())));
-		this.secondCoin =  ((USD) in.readValue((USD.class.getClassLoader())));
+		this.bTC =  ((USD) in.readValue((USD.class.getClassLoader())));
 	}
 
 	public Quotes() {
@@ -50,13 +50,13 @@ public class Quotes implements Parcelable
 		this.uSD = uSD;
 	}
 
-	public USD getsecondCoin() {
-		return secondCoin;
+	public USD getBTC() {
+		return bTC;
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeValue(uSD);
-		dest.writeValue(secondCoin);
+		dest.writeValue(bTC);
 	}
 
 	public int describeContents() {

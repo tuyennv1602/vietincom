@@ -17,13 +17,12 @@ public interface ApiInterface {
 	@GET("api/get_recent_posts/")
 	Observable<NewsResponse> getNewsInPage(@Query("page") int page);
 
-	@GET("ticker/?structure=array&limit=100")
-	Observable<CoinResponse> getCoinInPage(@Query("start") int start,
-	                                       @Query("convert") String convert);
+	@GET("ticker/?structure=array&limit=100&convert=BTC")
+	Observable<CoinResponse> getCoinInPage(@Query("start") int start);
 
-	@GET("ticker/?structure=array&limit=100")
-	Call<CoinResponse> getCoinFirstPage(@Query("convert") String convert);
+	@GET("ticker/?structure=array&limit=100&convert=BTC")
+	Call<CoinResponse> getCoinFirstPage();
 
-	@GET("price?fsym=USD&tsyms=BTC")
-	Call<RateResponse> getRate();
+	@GET("price?fsym=USD")
+	Call<RateResponse> getRate(@Query("tsyms") String toSymbol);
 }

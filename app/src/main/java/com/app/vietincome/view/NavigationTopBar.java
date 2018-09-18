@@ -7,10 +7,12 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,10 +28,12 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
+import static com.app.vietincome.utils.CommonUtil.dp2pxInt;
+
 public class NavigationTopBar {
 
 	@BindView(R.id.topLayout)
-	RelativeLayout topLayout;
+	LinearLayout topLayout;
 
 	@BindView(R.id.imgRight)
 	HighLightImageView imgRight;
@@ -55,11 +59,15 @@ public class NavigationTopBar {
 	@BindView(R.id.imgClose)
 	HighLightImageView imgClose;
 
+	@BindView(R.id.tvSubTitle)
+	TextView tvSubTitle;
+
 	private Context context;
 	private NavigationTopListener topBarListener;
 	private boolean isSearch;
 	private int currentLeft;
 	private boolean isShowLeft = true;
+	private boolean isDarkTheme;
 
 	public NavigationTopBar(View view, Context context, NavigationTopListener topBarListener) {
 		if (view == null) return;
@@ -83,16 +91,17 @@ public class NavigationTopBar {
 	}
 
 	public void showProgressBar() {
+		progressBar.setIndeterminateTintList(ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image)));
 		progressBar.setVisibility(View.VISIBLE);
 	}
 
 	public void hideProgressBar() {
-		progressBar.setVisibility(View.GONE);
+		progressBar.setIndeterminateTintList(ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background)));
+		progressBar.setVisibility(View.INVISIBLE);
 	}
 
 	public void initTheme(boolean isDarkTheme) {
-		progressBar.setIndeterminateTintList(ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image)));
-		progressBar.setBackgroundColor(getColor(R.color.white));
+		this.isDarkTheme = isDarkTheme;
 		topLayout.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		layoutSearch.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		ColorStateList colorStateList = ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
@@ -104,6 +113,7 @@ public class NavigationTopBar {
 		imgClose.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		imgAdditonalRight.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvTitle.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+		tvSubTitle.setTextColor(isDarkTheme ? getColor(R.color.text_gray) : getColor(R.color.gray));
 	}
 
 	public int getColor(int color) {
@@ -232,6 +242,10 @@ public class NavigationTopBar {
 		tvTitle.setText(text);
 	}
 
+	public void setTvTitle(String text) {
+		tvTitle.setText(text);
+	}
+
 	public void showImgRight(boolean isShow) {
 		imgRight.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 	}
@@ -252,6 +266,20 @@ public class NavigationTopBar {
 	public void setImgLeft(int res) {
 		currentLeft = res;
 		imgLeft.setImageResource(res);
+	}
+
+	public void setSubTitle(String subTitle){
+		tvSubTitle.setVisibility(View.VISIBLE);
+		tvSubTitle.setText(subTitle);
+		tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+	}
+
+	public void changePaddingView(View view, float padding) {
+		view.setPadding(dp2pxInt(padding), dp2pxInt(padding), dp2pxInt(padding), dp2pxInt(padding));
+	}
+
+	public void changeLeftPadding(float padding){
+		changePaddingView(imgLeft, padding);
 	}
 
 }

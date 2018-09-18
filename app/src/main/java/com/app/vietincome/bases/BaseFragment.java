@@ -66,7 +66,7 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 		super.onViewCreated(view, savedInstanceState);
 		ButterKnife.bind(this, view);
 		isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
-		if (view.findViewById(R.id.root_topbar) != null) {
+		if (view.findViewById(R.id.topLayout) != null) {
 			navigationTopBar = new NavigationTopBar(view, getContext(), this);
 			onNavigationTopUpdate(navigationTopBar);
 		}
@@ -290,9 +290,6 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 		}
 	}
 
-	protected void goBack() {
-		goBack(R.anim.slide_up);
-	}
 
 	public void pushFragment(Fragment fragment) {
 		((BaseActivity) getActivity()).pushFragment(fragment);

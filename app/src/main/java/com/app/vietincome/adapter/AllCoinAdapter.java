@@ -35,7 +35,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 	private ItemClickCancelListener itemClickCancelListener;
 	private boolean isDarkTheme;
 	private boolean isBTC = false;
-	private double rate;
+	private double rate = 1;
 
 	public AllCoinAdapter(ArrayList<Data> data, ItemClickListener listener, ItemClickCancelListener i) {
 		this.itemClickListener = listener;
@@ -48,10 +48,13 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 		notifyDataSetChanged();
 	}
 
-	public void changeCurrency(double rate) {
+	public void changeCurrency() {
 		isBTC = !isBTC;
-		this.rate = rate;
 		notifyDataSetChanged();
+	}
+
+	public void setRate(double rate){
+		this.rate = rate;
 	}
 
 	public void setDarkTheme(boolean darkTheme) {
@@ -141,8 +144,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			tvName.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvPrice.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvPrice.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-			Currency currency = AppPreference.INSTANCE.getCurrency();
-			USD usd = currency.getCode().equals("USD") ? item.getQuotes().getUSD() : item.getQuotes().getsecondCoin();
+			USD usd = item.getQuotes().getUSD();
 			if (usd.percentChange1h != 0) {
 				tv1H.setTextColor(usd.isPlus(usd.percentChange1h) ? getColor(R.color.green) : getColor(R.color.red));
 			} else {
@@ -168,16 +170,18 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			StringBuilder price = new StringBuilder();
 			if (isBTC) {
 				price.append(itemView.getContext().getString(R.string.bitcoin));
-				price.append(String.format("%.8f", (item.getQuotes().getUSD().getPrice() * rate)));
+				price.append(String.format("%.8f", (item.getQuotes().getBTC().getPrice())));
 			} else {
+				Currency currency = AppPreference.INSTANCE.getCurrency();
 				price.append(currency.getSymbol());
+				double priceValue = AppPreference.INSTANCE.getCurrency().getCode().equals("USD") ? usd.getPrice() : usd.getPrice() * rate;
 				if (usd.getPrice() < 1.0) {
-					price.append(String.format("%.4f", usd.getPrice()));
+					price.append(String.format("%.4f", priceValue));
 				} else if (usd.getPrice() < 1000) {
-					price.append(String.format("%.2f", usd.getPrice()));
+					price.append(String.format("%.2f", priceValue));
 				} else {
 					DecimalFormat dFormat = new DecimalFormat("###,###");
-					price.append(dFormat.format(usd.getPrice()));
+					price.append(dFormat.format(priceValue));
 				}
 			}
 			tvPrice.setText(price);

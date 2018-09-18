@@ -2,7 +2,7 @@
 <resources>
 	<dimen name="default_text_size">14sp</dimen>
 	<dimen name="line_spacing_normal">2dp</dimen>
-	<dimen name="topbar_height">55dp</dimen>
+	<dimen name="topbar_height">60dp</dimen>
 	<dimen name="width_image">55dp</dimen>
 	<dimen name="bottom_height">55dp</dimen>
 	<dimen name="image_bottom_size">23dp</dimen>
@@ -15,4 +15,5 @@
 	<dimen name="star_size">15dp</dimen>
 	<dimen name="item_setting_height">55dp</dimen>
 	<dimen name="item_currency">45dp</dimen>
+	<dimen name="line_chart_height">200dp</dimen>
 </resources>

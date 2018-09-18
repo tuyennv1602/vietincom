@@ -1,7 +1,9 @@
 package com.app.vietincome.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -47,5 +49,14 @@ public class CommonUtil {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static float dp2px(float dp){
+		Resources r = Resources.getSystem();
+		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+	}
+
+	public static int dp2pxInt(float dp){
+		return (int) dp2px(dp);
 	}
 }

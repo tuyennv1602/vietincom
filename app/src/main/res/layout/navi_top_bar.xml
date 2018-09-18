@@ -2,61 +2,83 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:custom="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/root_topbar"
+	android:id="@+id/topLayout"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 
 	<RelativeLayout
-		android:id="@+id/topLayout"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/topbar_height">
 
 		<com.app.vietincome.view.HighLightImageView
 			android:id="@+id/imgLeft"
 			android:layout_width="@dimen/width_image"
-			android:layout_height="@dimen/topbar_height"
+			android:layout_height="@dimen/width_image"
+			android:layout_centerVertical="true"
 			android:padding="15dp"
 			android:src="@drawable/pie_chart"/>
 
 		<com.app.vietincome.view.HighLightImageView
 			android:id="@+id/imgRight"
 			android:layout_width="@dimen/width_image"
-			android:layout_height="@dimen/topbar_height"
+			android:layout_height="@dimen/width_image"
 			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
 			android:padding="15dp"
 			android:src="@drawable/icn_search"/>
 
 		<com.app.vietincome.view.HighLightImageView
 			android:id="@+id/imgAdditionalRight"
 			android:layout_width="@dimen/width_image"
-			android:layout_height="@dimen/topbar_height"
+			android:layout_height="@dimen/width_image"
+			android:layout_centerVertical="true"
 			android:layout_toLeftOf="@id/imgRight"
 			android:padding="15dp"
 			android:src="@drawable/icn_search"
 			android:visibility="gone"/>
 
-		<TextView
-			android:id="@+id/tvTitle"
+		<RelativeLayout
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
 			android:layout_toLeftOf="@id/imgRight"
 			android:layout_toRightOf="@id/imgLeft"
-			android:ellipsize="end"
-			android:fontFamily="@font/helvetica_neue_bold"
-			android:gravity="center"
-			android:maxLines="1"
-			android:letterSpacing="0.05"
-			android:text="@string/app_name"
-			android:textSize="25sp"
-			/>
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/tvTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				android:fontFamily="@font/helvetica_neue_bold"
+				android:gravity="center"
+				android:letterSpacing="0.05"
+				android:maxLines="1"
+				android:text="@string/app_name"
+				android:textSize="25sp"
+				/>
+
+			<TextView
+				android:id="@+id/tvSubTitle"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textSize="17sp"
+				android:layout_marginTop="25dp"
+				android:fontFamily="@font/helvetica_neue_medium"
+				android:gravity="center"
+				android:text="SUBTITLE"
+				android:visibility="gone"/>
+
+		</RelativeLayout>
 
 		<RelativeLayout
 			android:id="@+id/layoutSearch"
-			android:visibility="gone"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_toRightOf="@id/imgLeft">
+			android:layout_toRightOf="@id/imgLeft"
+			android:visibility="gone">
 
 
 			<EditText
@@ -89,7 +111,7 @@
 		android:layout_height="2dp"
 		android:layout_gravity="bottom"
 		android:indeterminate="true"
-		android:visibility="gone"
+		android:visibility="invisible"
 		custom:mpb_progressStyle="horizontal"
 		custom:mpb_useIntrinsicPadding="false"
 		/>

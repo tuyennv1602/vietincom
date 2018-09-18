@@ -104,6 +104,7 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public void onViewCreated(View view) {
+		setBackPressListener(true);
 		if (homeViewPagerAdapter == null) {
 			homeViewPagerAdapter = new HomeViewpagerAdapter(this, getSupportFragmentManager());
 		}
