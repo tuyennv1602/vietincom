@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.app.vietincome.view.HighLightRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 android:id="@+id/rootLayout"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="wrap_content"
+                                                 android:orientation="horizontal"
+                                                 android:padding="15dp">
+
+	<ImageView
+		android:id="@+id/imgRead"
+		android:layout_width="5dp"
+		android:layout_height="5dp"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="10dp"
+		android:src="@drawable/circle"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_toLeftOf="@id/imgRead"
+		android:orientation="vertical">
+
+		<com.app.vietincome.view.HighLightTextView
+			android:id="@+id/tvTitleNews"
+			style="@style/DefaultTextView"
+			android:layout_width="match_parent"
+			android:layout_marginLeft="15dp"
+			android:layout_marginRight="5dp"
+			android:lines="2"
+			android:maxLines="2"
+			android:text="Title"
+			android:textColor="@color/black"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			android:orientation="horizontal">
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvTimeNews"
+				style="@style/DefaultTextView"
+				android:layout_gravity="center_vertical"
+				android:layout_marginLeft="15dp"
+				android:fontFamily="@font/helvetica_neue_light"
+				android:text="1 minute ago"
+				android:textColor="@color/gray"
+				android:textSize="12sp"
+				/>
+
+			<ImageView
+				android:id="@+id/imgDot"
+				android:layout_width="4dp"
+				android:layout_height="4dp"
+				android:layout_gravity="center_vertical"
+				android:layout_marginLeft="7dp"
+				android:layout_marginRight="7dp"
+				android:src="@drawable/circle"/>
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvAuthor"
+				style="@style/DefaultTextView"
+				android:layout_gravity="center_vertical"
+				android:fontFamily="@font/helvetica_neue_light"
+				android:text="Abc"
+				android:textColor="@color/gray"
+				android:textSize="12sp"
+				/>
+		</LinearLayout>
+
+
+	</LinearLayout>
+
+</com.app.vietincome.view.HighLightRelativeLayout>

@@ -15,5 +15,5 @@
 	<dimen name="star_size">15dp</dimen>
 	<dimen name="item_setting_height">55dp</dimen>
 	<dimen name="item_currency">45dp</dimen>
-	<dimen name="line_chart_height">200dp</dimen>
+	<dimen name="line_chart_height">290dp</dimen>
 </resources>

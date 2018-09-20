@@ -1,12 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
+	android:orientation="vertical"
 	android:layout_height="@dimen/line_chart_height">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:gravity="center"
+		android:orientation="horizontal">
+
+		<TextView
+			android:id="@+id/tvExchange"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="+$1.00 (+1.00%)"
+			android:textColor="@color/green"/>
+
+		<TextView
+			android:id="@+id/tvForTime"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="7dp"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:text="for 24 hours"/>
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="5dp"
+		android:gravity="center"
+		android:orientation="horizontal">
+
+		<TextView
+			android:id="@+id/tvLow"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:text="Low: "/>
+
+		<TextView
+			android:id="@+id/tvLowValue"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="$6,216"
+			android:textColor="@color/red"/>
+
+		<ImageView
+			android:id="@+id/imgDot"
+			android:layout_width="4dp"
+			android:layout_height="4dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:src="@drawable/circle"/>
+
+		<TextView
+			android:id="@+id/tvHigh"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:text="High: "/>
+
+		<TextView
+			android:id="@+id/tvHighValue"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="$6,898"
+			android:textColor="@color/green"/>
+	</LinearLayout>
 
 	<com.github.mikephil.charting.charts.LineChart
 		android:id="@+id/lineChart"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"/>
 
-</FrameLayout>
+</LinearLayout>

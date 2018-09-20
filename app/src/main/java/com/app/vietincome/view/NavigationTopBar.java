@@ -106,14 +106,14 @@ public class NavigationTopBar {
 		layoutSearch.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		ColorStateList colorStateList = ColorStateList.valueOf(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		ViewCompat.setBackgroundTintList(edtSearch, colorStateList);
-		edtSearch.setHintTextColor(isDarkTheme ? getColor(R.color.text_gray) : getColor(R.color.gray));
+		edtSearch.setHintTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		edtSearch.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 		imgLeft.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		imgRight.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		imgClose.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		imgAdditonalRight.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvTitle.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-		tvSubTitle.setTextColor(isDarkTheme ? getColor(R.color.text_gray) : getColor(R.color.gray));
+		tvSubTitle.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 	}
 
 	public int getColor(int color) {

@@ -144,6 +144,8 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			tvName.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvPrice.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvPrice.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+			tvSymbol.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+			if(item.getQuotes() == null) return;
 			USD usd = item.getQuotes().getUSD();
 			if (usd.percentChange1h != 0) {
 				tv1H.setTextColor(usd.isPlus(usd.percentChange1h) ? getColor(R.color.green) : getColor(R.color.red));

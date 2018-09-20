@@ -46,7 +46,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	ShimmerRecyclerView rcvNews;
 
 	private NewsAdapter newsAdapter;
-	private ArrayList<News> news;
+	private static ArrayList<News> news;
 	private LinearLayoutManager linearLayoutManager;
 	private int page = 1;
 	private Disposable disposable;
@@ -138,7 +138,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 			public void onFailure(Call<NewsResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvNews.hideShimmerAdapter();
-				showAlert(getString(R.string.failed), t.getMessage());
+				showAlert(getResources().getString(R.string.failed), t.getMessage());
 			}
 		});
 	}
@@ -174,4 +174,5 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	public void onDestroy() {
 		super.onDestroy();
 	}
+
 }

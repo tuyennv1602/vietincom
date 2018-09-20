@@ -15,7 +15,6 @@
 		android:text="@string/home"
 		android:letterSpacing="0.04"
 		android:layout_alignParentBottom="true"
-		android:textColor="@color/text_gray"
 		android:textSize="13sp"/>
 
 	<ImageView

@@ -135,8 +135,8 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onAddedCoin(EventBusListener.AddCoin event) {
-//		allCoins.addAll(event.data);
-		allCoinAdapter.notifyItemRangeChanged(event.position, allCoins.size());
+		allCoins.addAll(event.data);
+		allCoinAdapter.notifyItemRangeInserted(event.position, allCoins.size());
 	}
 
 	@Override
@@ -357,7 +357,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				})
 				.doOnNext(coinResponse -> {
 					Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
-					allCoins.addAll(coinResponse.getData());
 					EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
 					start += perPage;
 				})
