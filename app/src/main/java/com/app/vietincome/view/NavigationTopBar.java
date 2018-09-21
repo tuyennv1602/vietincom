@@ -62,6 +62,9 @@ public class NavigationTopBar {
 	@BindView(R.id.tvSubTitle)
 	TextView tvSubTitle;
 
+	@BindView(R.id.layoutSecond)
+	RelativeLayout layoutSecond;
+
 	private Context context;
 	private NavigationTopListener topBarListener;
 	private boolean isSearch;
@@ -282,4 +285,14 @@ public class NavigationTopBar {
 		changePaddingView(imgLeft, padding);
 	}
 
+	public void changeRightPadding(float padding){
+		changePaddingView(imgRight, padding);
+		changePaddingView(imgAdditonalRight, padding);
+	}
+
+	public void setBackgroundBorder(){
+		topLayout.setBackground(isDarkTheme ? context.getDrawable(R.drawable.border_evulation_gray_dark) : context.getDrawable(R.drawable.border_evulation_gray));
+		layoutSecond.setBackground(isDarkTheme ? context.getDrawable(R.drawable.border_evulation_dark) : context.getDrawable(R.drawable.border_evulation_light));
+
+	}
 }

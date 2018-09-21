@@ -2,10 +2,10 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<translate
-		android:duration="@integer/anim_duration_slow"
-		android:fromYDelta="-100%p"
+		android:duration="350"
+		android:fromYDelta="0"
 		android:interpolator="@android:anim/accelerate_interpolator"
-		android:toYDelta="0%p" />
+		android:toYDelta="100%p" />
 
 	<!--<alpha-->
 	<!--android:duration="@android:integer/config_shortAnimTime"-->

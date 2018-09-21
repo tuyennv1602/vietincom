@@ -2,10 +2,10 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="45dp"
+	android:layout_height="40dp"
 	android:paddingLeft="5dp"
-	android:id="@+id/layoutTopAllCoin"
 	android:paddingRight="5dp"
+	android:elevation="1dp"
 	android:orientation="horizontal"
 	android:weightSum="8">
 
@@ -20,6 +20,7 @@
 			android:id="@+id/tvSortName"
 			style="@style/DefaultTextView"
 			android:text="#"
+			android:textSize="14sp"
 			android:textColor="@color/black"/>
 
 		<ImageView
@@ -50,6 +51,7 @@
 				android:id="@+id/tvPrice"
 				style="@style/DefaultTextView"
 				android:text="Price"
+				android:textSize="14sp"
 				android:textColor="@color/black"/>
 
 			<ImageView
@@ -62,6 +64,7 @@
 
 			<TextView
 				android:id="@+id/tvCurrency"
+				android:textSize="14sp"
 				style="@style/DefaultTextView"
 				android:text="$"/>
 
@@ -71,6 +74,7 @@
 			android:id="@+id/tvName"
 			android:layout_centerVertical="true"
 			android:text="Name"
+			android:textSize="14sp"
 			android:paddingLeft="5dp"
 			style="@style/DefaultTextView"/>
 
@@ -86,6 +90,7 @@
 			android:id="@+id/tv1H"
 			style="@style/DefaultTextView"
 			android:text="1H"
+			android:textSize="14sp"
 			android:textColor="@color/black"/>
 
 		<ImageView
@@ -109,6 +114,7 @@
 			android:id="@+id/tv24H"
 			style="@style/DefaultTextView"
 			android:text="24H"
+			android:textSize="14sp"
 			android:textColor="@color/black"/>
 
 		<ImageView
@@ -132,6 +138,7 @@
 			android:id="@+id/tv7D"
 			style="@style/DefaultTextView"
 			android:text="7D"
+			android:textSize="14sp"
 			android:textColor="@color/black"/>
 
 		<ImageView

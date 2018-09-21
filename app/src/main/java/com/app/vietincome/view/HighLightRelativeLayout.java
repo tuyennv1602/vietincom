@@ -35,6 +35,6 @@ public class HighLightRelativeLayout extends RelativeLayout {
 	}
 
 	private void setState(boolean pressed) {
-		setAlpha(pressed ? 0.8f : 1f);
+		setAlpha(pressed ? 0.9f : 1f);
 	}
 }

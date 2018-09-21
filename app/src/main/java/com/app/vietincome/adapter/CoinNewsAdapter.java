@@ -47,12 +47,14 @@ public class CoinNewsAdapter extends RecyclerView.Adapter<CoinNewsAdapter.CoinNe
 
 	@Override
 	public void onBindViewHolder(@NonNull CoinNewsViewHolder coinNewsViewHolder, int i) {
-
+		coinNewsViewHolder.onBind(news.get(i));
 	}
 
 	@Override
 	public int getItemCount() {
-		return news == null ? 0: news.size();
+		if(news == null) return 0;
+		if(news.size() < 3) return news.size();
+		return 3;
 	}
 
 	class CoinNewsViewHolder extends RecyclerView.ViewHolder{

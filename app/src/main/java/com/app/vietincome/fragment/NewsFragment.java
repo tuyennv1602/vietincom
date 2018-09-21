@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.app.vietincome.R;
 import com.app.vietincome.adapter.NewsAdapter;
@@ -20,6 +21,7 @@ import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.NavigationTopBar;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
+import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener;
 import com.google.android.gms.common.api.Api;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,14 +47,25 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	@BindView(R.id.rcv_news)
 	ShimmerRecyclerView rcvNews;
 
+	@BindView(R.id.layoutRoot)
+	LinearLayout layoutRoot;
+
 	private NewsAdapter newsAdapter;
-	private static ArrayList<News> news;
+	private ArrayList<News> news;
 	private LinearLayoutManager linearLayoutManager;
 	private int page = 1;
-	private Disposable disposable;
+	private boolean needReload;
 
 	public static NewsFragment newInstance() {
 		NewsFragment fragment = new NewsFragment();
+		fragment.needReload = true;
+		return fragment;
+	}
+
+	public static NewsFragment newInstance(ArrayList<News> news){
+		NewsFragment fragment = new NewsFragment();
+		fragment.news = news;
+		fragment.needReload = false;
 		return fragment;
 	}
 
@@ -63,9 +76,10 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onEventAddNews(EventBusListener.AddNews event){
+	public void onEventAddNews(EventBusListener.AddNews event) {
 		news.addAll(event.news);
 		newsAdapter.notifyItemRangeChanged(event.position, news.size());
+		AppPreference.INSTANCE.setNews(news);
 	}
 
 	@Override
@@ -79,17 +93,19 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 			news = new ArrayList<>();
 		}
 		if (newsAdapter == null) {
-			newsAdapter = new NewsAdapter(news,this);
+			newsAdapter = new NewsAdapter(news, this);
 			newsAdapter.setDarkTheme(isDarkTheme);
 		}
 		linearLayoutManager = new LinearLayoutManager(getContext());
 		rcvNews.setLayoutManager(linearLayoutManager);
 		rcvNews.addItemDecoration(new CustomItemDecoration(2));
 		rcvNews.setDemoShimmerDuration(60000);
+		rcvNews.setNestedScrollingEnabled(false);
 		rcvNews.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_news_dark : R.layout.layout_demo_news_light);
 		rcvNews.setAdapter(newsAdapter);
-
-		getNews(true);
+		if(needReload) {
+			getNews(true);
+		}
 	}
 
 	@Override
@@ -97,11 +113,23 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		navitop.setTvTitle(R.string.news);
 		navitop.showImgLeft(false);
 		navitop.showImgRight(false);
+		if(!needReload){
+			navitop.setBackgroundBorder();
+			navitop.showImgRight(true);
+			navitop.setImgRight(R.drawable.arrow_down);
+			navitop.changeRightPadding(18);
+		}
+	}
+
+	@Override
+	public void onRightClicked() {
+		super.onRightClicked();
+		goBack();
 	}
 
 	@Override
 	public void onUpdatedTheme() {
-		rcvNews.setBackgroundColor(isDarkTheme? getColor(R.color.black) : getColor(R.color.color_line));
+		rcvNews.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
 		rcvNews.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_news_dark : R.layout.layout_demo_news_light);
 		newsAdapter.setDarkTheme(isDarkTheme);
 		newsAdapter.notifyDataSetChanged();
@@ -124,10 +152,13 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 				rcvNews.hideShimmerAdapter();
 				if (response.isSuccessful()) {
 					if (response.body().isSuccess()) {
-						if (page == 1) news.clear();
+						if (page == 1) {
+							news.clear();
+						}
 						news.addAll(response.body().getNews());
+						AppPreference.INSTANCE.setNews(news);
 						newsAdapter.notifyDataSetChanged();
-						if(response.body().getPages() > 1){
+						if (response.body().getPages() > 1) {
 							getNextPage(response.body().getPages());
 						}
 					}
@@ -144,8 +175,8 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	}
 
 	@SuppressLint("CheckResult")
-	private void getNextPage(int totalPage){
-		disposable = Observable.range(2, totalPage - 1)
+	private void getNextPage(int totalPage) {
+		         Observable.range(2, totalPage - 1)
 				.subscribeOn(Schedulers.io())
 				.concatMap((Function<Integer, ObservableSource<NewsResponse>>) integer -> ApiClient.getNewsService().getNewsInPage(integer))
 				.doOnError(throwable -> {
@@ -153,7 +184,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 					rcvNews.hideShimmerAdapter();
 				})
 				.doOnNext(newsResponse -> {
-					page ++;
+					page++;
 					EventBus.getDefault().post(new EventBusListener.AddNews(newsResponse.getNews(), (page - 1) * 10));
 					Log.d("__new", "getNextPage: ");
 				})
@@ -170,9 +201,21 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		startActivity(browserIntent);
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
+//	private InfiniteScrollListener createInfiniteScrollListener() {
+//		return new InfiniteScrollListener(MAX_ITEMS_PER_REQUEST, linearLayoutManager) {
+//			@Override public void onScrolledToEnd(final int firstVisibleItemPosition) {
+//				simulateLoading();
+//				int start = ++page * MAX_ITEMS_PER_REQUEST;
+//				final boolean allItemsLoaded = start >= items.size();
+//				if (allItemsLoaded) {
+//					progressBar.setVisibility(View.GONE);
+//				} else {
+//					int end = start + MAX_ITEMS_PER_REQUEST;
+//					final List<String> itemsLocal = getItemsToBeLoaded(start, end);
+//					refreshView(recyclerView, new MyAdapter(itemsLocal), firstVisibleItemPosition);
+//				}
+//			}
+//		};
+//	}
 
 }

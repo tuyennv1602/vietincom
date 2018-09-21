@@ -73,16 +73,6 @@ public class MainActivity extends BaseActivity {
 	}
 
 	@Override
-	public int animationIn() {
-		return 0;
-	}
-
-	@Override
-	public int animationOut() {
-		return 0;
-	}
-
-	@Override
 	public void initStack() {
 		if (backStack == null) {
 			backStack = new Stack<>();

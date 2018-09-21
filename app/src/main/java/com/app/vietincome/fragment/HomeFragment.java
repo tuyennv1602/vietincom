@@ -85,9 +85,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@BindView(R.id.imgSort7D)
 	ImageView imgSort7D;
 
-	@BindView(R.id.layoutTopAllCoin)
-	LinearLayout layoutTopAll;
-
 	@BindView(R.id.rcvAllCoin)
 	ShimmerRecyclerView rcvAllCoin;
 
@@ -102,7 +99,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	private boolean isBTC = false;
 	private boolean isSortUp = true;
 	private double rate = 1;
-	private Disposable disposable;
 	private boolean isLoading = true;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
 
@@ -126,9 +122,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventExpand(EventBusListener.ExpanableView event) {
-		if (!disposable.isDisposed()) {
-			disposable.dispose();
-		}
 		appBarLayout.setExpanded(true);
 		rcvAllCoin.scrollToPosition(0);
 	}
@@ -136,7 +129,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onAddedCoin(EventBusListener.AddCoin event) {
 		allCoins.addAll(event.data);
-		allCoinAdapter.notifyItemRangeInserted(event.position, allCoins.size());
+		allCoinAdapter.notifyItemRangeChanged(event.position, allCoins.size());
 	}
 
 	@Override
@@ -240,7 +233,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Override
 	public void onUpdatedTheme() {
 		rcvAllCoin.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
-		layoutTopAll.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		imgSortName.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvCurrency.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		imgDot.setColorFilter(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
@@ -330,7 +322,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 	@SuppressLint("CheckResult")
 	public void searchCoin(String key) {
-		Disposable subscribe = Observable.fromIterable(allCoins)
+		Observable.fromIterable(allCoins)
 				.observeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
 				.filter(data -> data.getName().contains(key) || data.getSymbol().contains(key.toUpperCase()))
@@ -348,8 +340,8 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		if (totalItem % perPage != 0) {
 			numPage += 1;
 		}
-		disposable = Observable.range(1, numPage)
-				.subscribeOn(Schedulers.io())
+		Observable.range(1, numPage)
+				.subscribeOn(Schedulers.computation())
 				.concatMap((Function<Integer, ObservableSource<CoinResponse>>) integer -> ApiClient.getAllCoinService().getCoinInPage((integer * perPage) + 1))
 				.doOnError(throwable -> {
 					navigationTopBar.hideProgressBar();
@@ -362,14 +354,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				})
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		if (!disposable.isDisposed()) {
-			disposable.dispose();
-		}
 	}
 
 	@Override

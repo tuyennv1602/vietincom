@@ -17,16 +17,6 @@ public class ParentActivity extends BaseActivity {
 	private Stack<Fragment> backStack = new Stack<>();
 
 	@Override
-	public int animationIn() {
-		return 0;
-	}
-
-	@Override
-	public int animationOut() {
-		return 0;
-	}
-
-	@Override
 	public void initStack() {
 		if (backStack == null) {
 			backStack = new Stack<>();
@@ -52,9 +42,9 @@ public class ParentActivity extends BaseActivity {
 			if (screen == Constant.COIN_DETAIL) {
 				Data data = getIntent().getParcelableExtra("coin");
 				double rate = getIntent().getDoubleExtra(Constant.KEY_RATE, 1);
-				pushFragment(CoinDetailFragment.newInstance(data, rate), R.anim.zoom_in);
+				pushFragment(CoinDetailFragment.newInstance(data, rate), R.anim.zoom_in, R.anim.zoom_out);
 			} else if (screen == Constant.GLOBAL_MARKET) {
-				pushFragment(new GlobalFragment(), R.anim.slide_from_left_to_right_in);
+				pushFragment(new GlobalFragment(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 			}
 		}
 	}

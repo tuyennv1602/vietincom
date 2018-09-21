@@ -11,6 +11,7 @@ import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.model.History;
+import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.MyAxisValueFormatter;
 import com.app.vietincome.view.MyMarkerView;
 import com.app.vietincome.view.NavigationTopBar;
@@ -59,14 +60,14 @@ public class LineChartFragment extends BaseFragment {
 	ImageView imgDot;
 
 	private String coinId;
-	private String time;
+	private int time;
 	private ArrayList<History> data;
 	private boolean isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
 	private boolean isVerticalLine = AppPreference.INSTANCE.isVertical();
 	private boolean isHorizontalLine = AppPreference.INSTANCE.isHorizontal();
 
-	public static LineChartFragment newInstance(String coinId, String time){
-		LineChartFragment fragment= new LineChartFragment();
+	public static LineChartFragment newInstance(String coinId, int time) {
+		LineChartFragment fragment = new LineChartFragment();
 		fragment.coinId = coinId;
 		fragment.time = time;
 		return fragment;
@@ -80,6 +81,7 @@ public class LineChartFragment extends BaseFragment {
 	@Override
 	public void onFragmentReady(View view) {
 		onUpdatedTheme();
+		initLabel();
 		styleChart();
 		setData(45, 100);
 		lineChart.animateXY(1000, 1000);
@@ -87,7 +89,36 @@ public class LineChartFragment extends BaseFragment {
 		lineChart.invalidate();
 	}
 
-	private void styleChart(){
+	private void initLabel() {
+		switch (time) {
+			case Constant.HIS_24H: {
+				tvForTime.setText("for 24 hours");
+				break;
+			}
+			case Constant.HIS_7D: {
+				tvForTime.setText("for 7 days");
+				break;
+			}
+			case Constant.HIS_1M: {
+				tvForTime.setText("for 1 month");
+				break;
+			}
+			case Constant.HIS_3M: {
+				tvForTime.setText("for 3 months");
+				break;
+			}
+			case Constant.HIS_1Y: {
+				tvForTime.setText("for 1 year");
+				break;
+			}
+			case Constant.HIS_ALL: {
+				tvForTime.setText("for all");
+				break;
+			}
+		}
+	}
+
+	private void styleChart() {
 		// no description text
 		lineChart.getDescription().setEnabled(false);
 		// enable touch gestures

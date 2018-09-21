@@ -54,6 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 	private Stack<Fragment> backStack;
 	private ProgressDialog dialog;
 	public boolean isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
+	private int animateOut, animateIn;
 
 	public Stack<Fragment> getBackStack() {
 		return backStack;
@@ -79,10 +80,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 		}
 	}
 
-	public abstract int animationIn();
-
-	public abstract int animationOut();
-
 	public abstract void initStack();
 
 	public abstract int getLayoutId();
@@ -107,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 	public void finish() {
 		super.finish();
-		overridePendingTransition(animationIn(), animationOut());
+		overridePendingTransition(animateIn, animateOut);
 	}
 
 	public static void hideSoftKeyboard(Activity activity) {
@@ -118,114 +115,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 				Log.d(TAG, "hideSoftKeyboard: " + e.getMessage());
 			}
 		}
-	}
-
-	public void showProgressDialog(Context context) {
-		try {
-			hideProgressDialog();
-			dialog = new ProgressDialog(context);
-			dialog.setCancelable(false);
-			Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-			dialog.getWindow().setDimAmount(0.5f);
-			dialog.show();
-			dialog.setContentView(R.layout.processing);
-		} catch (Exception e) {
-			Log.d(TAG, "showProgressDialog: " + e.getMessage());
-		}
-	}
-
-	public void hideProgressDialog() {
-		if (dialog != null && dialog.isShowing())
-			dialog.dismiss();
-	}
-
-	public boolean isShowProgressDialog() {
-		return dialog != null && dialog.isShowing();
-	}
-
-	public void showAlert(final String title, final String message) {
-		if (!isFinishing()) {
-			runOnUiThread(() -> new AlertDialog.Builder(BaseActivity.this, R.style.AlertDialogTheme)
-					.setTitle(title)
-					.setMessage(message)
-					.setNegativeButton(getString(R.string.ok), null).create()
-					.show());
-		}
-	}
-
-
-	public void showAlert(@StringRes final int titleResId, @StringRes final int messageResId) {
-		if (!isFinishing()) {
-			runOnUiThread(() -> new AlertDialog.Builder(BaseActivity.this, R.style.AlertDialogTheme)
-					.setTitle(titleResId)
-					.setMessage(messageResId)
-					.setNegativeButton(getString(R.string.ok), null).create()
-					.show());
-		}
-	}
-
-	public void showAlert(@StringRes final int titleResId, @StringRes final int messageResId, final String negativeStr) {
-		if (!isFinishing()) {
-			runOnUiThread(() -> new AlertDialog.Builder(BaseActivity.this, R.style.AlertDialogTheme)
-					.setTitle(titleResId)
-					.setMessage(messageResId)
-					.setNegativeButton(negativeStr, null).create()
-					.show());
-		}
-	}
-
-	public void showAlert(final String title, final String message, final AlertListener listener) {
-		if (!isFinishing()) {
-			runOnUiThread(() -> new AlertDialog.Builder(BaseActivity.this, R.style.AlertDialogTheme)
-					.setTitle(title)
-					.setMessage(message)
-					.setNegativeButton(android.R.string.ok, (dialogInterface, i) -> {
-						if (listener != null)
-							listener.onClickedOk();
-					}).create()
-					.show());
-		}
-	}
-
-	public void showAlert(final String title, final boolean cancel, final String message, final AlertListener listener) {
-		if (!isFinishing()) {
-			runOnUiThread(() -> new AlertDialog.Builder(BaseActivity.this, R.style.AlertDialogTheme)
-					.setTitle(title)
-					.setMessage(message)
-					.setCancelable(cancel)
-					.setNegativeButton(android.R.string.ok, (dialogInterface, i) -> {
-						if (listener != null)
-							listener.onClickedOk();
-					}).create()
-					.show());
-		}
-	}
-
-	public void showAlert(final String title, final String message, final String yesTitle, final String noTitle, final AlertListener listener) {
-		if (!isFinishing()) {
-			runOnUiThread(() -> new AlertDialog.Builder(BaseActivity.this, R.style.AlertDialogTheme)
-					.setTitle(title)
-					.setMessage(message)
-					.setPositiveButton(yesTitle, (dialogInterface, i) -> {
-						if (listener != null) {
-							listener.onClickedOk();
-						}
-					})
-					.setNegativeButton(noTitle, (dialogInterface, i) -> {
-						if (listener != null) {
-							listener.onClickedCancel();
-						}
-					}).create()
-					.show());
-		}
-	}
-
-	public void showToast(String message) {
-		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-	}
-
-	public void showToast(@StringRes final int messageResId) {
-		Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
 	}
 
 	protected void showKeyboard(View target) {
@@ -310,11 +199,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 	}
 
 	public void pushFragment(Fragment fragment) {
-		pushFragment(fragment, R.anim.slide_down);
+		pushFragment(fragment, R.anim.zoom_in, R.anim.zoom_out);
 	}
 
-	public void pushFragment(Fragment fragment, int animateIn) {
+	public void pushFragment(Fragment fragment, int animateIn, int animateOut) {
 		hideKeyboard();
+		this.animateOut = animateOut;
+		this.animateIn = animateIn;
 		if (!backStack.empty())
 			if (backStack.peek().getClass().getSimpleName().equals(fragment.getClass().getSimpleName()))
 				return;
@@ -333,12 +224,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 	}
 
 	public void replaceTopFragment(Fragment fragment) {
-		replaceTopFragment(fragment, R.anim.slide_down);
+		replaceTopFragment(fragment, R.anim.zoom_in, R.anim.zoom_out);
 	}
 
-	public void replaceTopFragment(Fragment fragment, int animateIn) {
+	public void replaceTopFragment(Fragment fragment, int animateIn, int animateOut) {
+		this.animateIn = animateIn;
+		this.animateOut = animateOut;
 		if (backStack.isEmpty()) {
-			pushFragment(fragment, animateIn);
+			pushFragment(fragment, animateIn, animateOut);
 			return;
 		}
 		Fragment currentFragment = backStack.pop();
@@ -351,21 +244,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 		getSupportFragmentManager().executePendingTransactions();
 	}
 
-	public void popToRootFragment(int animationOut) {
+	public void popToRootFragment() {
 		if (backStack != null && backStack.size() > 1) {
-			popFragment(animationOut, backStack.size() - 1);
+			popFragment(backStack.size() - 1);
 		}
 	}
 
 	public void popFragment() {
-		popFragment(R.anim.slide_up, 1);
+		popFragment(1);
 	}
 
-	public void popFragment(int animateOut) {
-		popFragment(animateOut, 1);
-	}
-
-	public void popFragment(int animateOut, int depth) {
+	public void popFragment(int depth) {
 		if (depth < 1) {
 			return;
 		}
@@ -412,7 +301,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 		}
 		if (backStack != null) {
 			if (backStack.size() > 1) {
-				popFragment(animationOut());
+				popFragment(animateOut);
 			} else {
 				checkBackStack();
 			}
@@ -491,9 +380,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 	public void changeStatusBar() {
 		Window window = this.getWindow();
 		int flags = this.getWindow().getDecorView().getSystemUiVisibility();
-		if(isDarkTheme){
+		if (isDarkTheme) {
 			flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-		}else{
+		} else {
 			flags = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
 		}
 		window.getDecorView().setSystemUiVisibility(flags);

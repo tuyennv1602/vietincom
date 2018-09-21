@@ -12,4 +12,5 @@
 	<string name="failed">Failed</string>
 	<string name="added_favourite">%s added to favourite</string>
 	<string name="bitcoin">฿</string>
+	<string name="no_alert">You have no %s alert yet</string>
 </resources>

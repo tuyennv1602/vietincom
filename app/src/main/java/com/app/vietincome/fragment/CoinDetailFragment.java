@@ -1,9 +1,10 @@
 package com.app.vietincome.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,12 +13,19 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.adapter.ChartViewPagerAdapter;
 import com.app.vietincome.adapter.CoinInfoAdapter;
+import com.app.vietincome.adapter.CoinNewsAdapter;
+import com.app.vietincome.adapter.TopMarketAdapter;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.CoinInfo;
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.Data;
+import com.app.vietincome.model.Market;
+import com.app.vietincome.model.News;
 import com.app.vietincome.model.USD;
+import com.app.vietincome.view.CustomItemDecoration;
+import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 import com.app.vietincome.view.NoneSwipeViewpager;
 
@@ -25,8 +33,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
-public class CoinDetailFragment extends BaseFragment {
+public class CoinDetailFragment extends BaseFragment implements ItemClickListener {
 
 	@BindView(R.id.layoutRoot)
 	LinearLayout layoutRoot;
@@ -58,12 +67,55 @@ public class CoinDetailFragment extends BaseFragment {
 	@BindView(R.id.tvNews)
 	TextView tvNews;
 
+	@BindView(R.id.rcvNews)
+	RecyclerView rcvNews;
+
+	@BindView(R.id.tvShowNews)
+	TextView tvShowNews;
+
+	@BindView(R.id.imgNotification)
+	ImageView imgNotification;
+
+	@BindView(R.id.tvAlert)
+	TextView tvAlert;
+
+	@BindView(R.id.tvNoAlert)
+	TextView tvNoAlert;
+
+	@BindView(R.id.tvCreateAlert)
+	HighLightTextView tvCreateAlert;
+
+	@BindView(R.id.tvTopMarket)
+	TextView tvTopMarket;
+
+	@BindView(R.id.rcvTopMarket)
+	RecyclerView rcvTopMarket;
+
+	@BindView(R.id.tvRank)
+	TextView tvRank;
+
+	@BindView(R.id.tvExchange)
+	TextView tvExchange;
+
+	@BindView(R.id.tvPair)
+	TextView tvPair;
+
+	@BindView(R.id.tvPriceTop)
+	TextView tvPriceTop;
+
+	@BindView(R.id.tvVolume)
+	TextView tvVolume;
+
 	private Data data;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
 	private double rate;
 	private ChartViewPagerAdapter chartViewPagerAdapter;
 	private ArrayList<CoinInfo> coinInfos;
 	private CoinInfoAdapter coinInfoAdapter;
+	private ArrayList<News> news = AppPreference.INSTANCE.getNews();
+	private CoinNewsAdapter coinNewsAdapter;
+	private ArrayList<Market> markets;
+	private TopMarketAdapter topMarketAdapter;
 
 	public static CoinDetailFragment newInstance(Data data, double rate) {
 		CoinDetailFragment fragment = new CoinDetailFragment();
@@ -83,12 +135,15 @@ public class CoinDetailFragment extends BaseFragment {
 		initPrice();
 		initChartView();
 		initCoinInfor();
+		initNews();
+		initTopMarket();
+		tvNoAlert.setText(getString(R.string.no_alert, data.getName()));
 	}
 
 	@Override
 	public void onLeftClicked() {
 		super.onLeftClicked();
-		goBack(R.anim.zoom_out);
+		goBack();
 	}
 
 	private void initPrice() {
@@ -153,6 +208,29 @@ public class CoinDetailFragment extends BaseFragment {
 		rcvCoinInfo.setAdapter(coinInfoAdapter);
 	}
 
+	private void initNews(){
+		if(coinNewsAdapter == null){
+			coinNewsAdapter = new CoinNewsAdapter(news, isDarkTheme, this);
+		}
+		rcvNews.setHasFixedSize(true);
+		rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
+		rcvNews.addItemDecoration(new CustomItemDecoration(1));
+		rcvNews.setAdapter(coinNewsAdapter);
+	}
+
+	private void initTopMarket(){
+		if(markets == null){
+			markets = new ArrayList<>();
+		}
+		if(topMarketAdapter == null){
+			topMarketAdapter = new TopMarketAdapter(markets, isDarkTheme);
+		}
+		rcvTopMarket.setLayoutManager(new LinearLayoutManager(getContext()));
+		rcvTopMarket.setHasFixedSize(true);
+		rcvTopMarket.addItemDecoration(new CustomItemDecoration(1));
+		rcvTopMarket.setAdapter(topMarketAdapter);
+	}
+
 	@Override
 	public void onNavigationTopUpdate(NavigationTopBar navitop) {
 		navitop.showImgLeft(true);
@@ -177,9 +255,41 @@ public class CoinDetailFragment extends BaseFragment {
 		setTextColor(tvEndPrice);
 		rcvCoinInfo.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		tvCoinInfor.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
-		tvCoinInfor.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+		setTextColorGray(tvCoinInfor);
 		tvNews.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
-		tvNews.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+		setTextColorGray(tvNews);
+		rcvNews.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
+		tvShowNews.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
+		tvShowNews.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		tvAlert.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
+		setTextColorGray(tvAlert);
+		setTextColorGray(tvNoAlert);
+		imgNotification.setColorFilter(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+		tvCreateAlert.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		tvTopMarket.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
+		setTextColorGray(tvTopMarket);
+		rcvTopMarket.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
+		setTextColorGray(tvRank);
+		setTextColorGray(tvExchange);
+		setTextColorGray(tvPair);
+		setTextColorGray(tvPriceTop);
+		setTextColorGray(tvVolume);
 	}
 
+	private void setTextColorGray(TextView tv){
+		tv.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+	}
+
+	@OnClick(R.id.tvShowNews)
+	void showAllNews(){
+		pushFragment(NewsFragment.newInstance(news), R.anim.slide_up, R.anim.slide_down);
+	}
+
+	@Override
+	public void onItemClicked(int position) {
+		AppPreference.INSTANCE.addNewsRead(news.get(position).getId());
+		coinNewsAdapter.notifyItemChanged(position);
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(news.get(position).getUrl()));
+		startActivity(browserIntent);
+	}
 }

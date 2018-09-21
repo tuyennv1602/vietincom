@@ -283,10 +283,10 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 		}
 	}
 
-	protected void goBack(int animation) {
+	protected void goBack() {
 		Activity activity = getActivity();
 		if (activity != null && activity instanceof BaseActivity && isAdded()) {
-			((BaseActivity) getActivity()).popFragment(animation);
+			((BaseActivity) getActivity()).popFragment();
 		}
 	}
 
@@ -295,32 +295,28 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 		((BaseActivity) getActivity()).pushFragment(fragment);
 	}
 
-	public void pushFragment(Fragment fragment, int animateIn) {
-		((BaseActivity) getActivity()).pushFragment(fragment, animateIn);
+	public void pushFragment(Fragment fragment, int animateIn, int animateOut) {
+		((BaseActivity) getActivity()).pushFragment(fragment, animateIn, animateOut);
 	}
 
 	public void replaceTopFragment(Fragment fragment) {
 		((BaseActivity) getActivity()).replaceTopFragment(fragment);
 	}
 
-	public void replaceTopFragment(Fragment fragment, int animateIn) {
-		((BaseActivity) getActivity()).replaceTopFragment(fragment, animateIn);
+	public void replaceTopFragment(Fragment fragment, int animateIn, int animateOut) {
+		((BaseActivity) getActivity()).replaceTopFragment(fragment, animateIn, animateOut);
 	}
 
-	public void popToRootFragment(int animationOut) {
-		((BaseActivity) getActivity()).popToRootFragment(animationOut);
+	public void popToRootFragment() {
+		((BaseActivity) getActivity()).popToRootFragment();
 	}
 
 	public void popFragment() {
 		((BaseActivity) getActivity()).popFragment();
 	}
 
-	public void popFragment(int animateOut) {
-		((BaseActivity) getActivity()).popFragment(animateOut);
-	}
-
-	public void popFragment(int animateOut, int depth) {
-		((BaseActivity) getActivity()).popFragment(animateOut, depth);
+	public void popFragment(int depth) {
+		((BaseActivity) getActivity()).popFragment( depth);
 	}
 
 	public String[] getStringArray(@ArrayRes int array) {
@@ -335,12 +331,6 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 	public void unRegisterEventBus() {
 		if (EventBus.getDefault().isRegistered(this))
 			EventBus.getDefault().unregister(this);
-	}
-
-	public void errorEditText(EditText editText, @StringRes int resId) {
-		editText.setError(getString(resId));
-		editText.requestFocus();
-		showKeyboard(editText);
 	}
 
 	public boolean checkPermission(String permission) {
@@ -365,13 +355,6 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 		getActivity().getWindow().setSoftInputMode(type);
 	}
 
-	public void changeColorView(View view){
-		view.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
-	}
-
-	public void changeColorImage(ImageView imageView){
-		imageView.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
-	}
 
 	public int getColor(int color){
 		return ContextCompat.getColor(getContext(), color);

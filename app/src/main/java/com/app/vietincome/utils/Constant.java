@@ -15,4 +15,11 @@ public class Constant {
 
 	public static final int COIN_DETAIL = 1;
 	public static final int GLOBAL_MARKET = 2;
+
+	public static final int HIS_24H = 0;
+	public static final int HIS_7D = 1;
+	public static final int HIS_1M = 2;
+	public static final int HIS_3M = 3;
+	public static final int HIS_1Y = 4;
+	public static final int HIS_ALL = 5;
 }

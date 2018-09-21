@@ -16,8 +16,8 @@
 
 		<LinearLayout
 			android:layout_width="match_parent"
-			android:focusableInTouchMode="true"
 			android:layout_height="match_parent"
+			android:focusableInTouchMode="true"
 			android:orientation="vertical">
 
 			<LinearLayout
@@ -70,43 +70,123 @@
 				android:id="@+id/tabLayoutTime"
 				android:layout_width="match_parent"
 				android:layout_height="40dp"
+				android:elevation="1dp"
 				app:tabGravity="fill"
 				app:tabIndicatorHeight="2dp"
-				android:elevation="1dp"
 				app:tabMode="fixed"/>
 
 			<TextView
 				android:id="@+id/tvCoinInfo"
-				android:text="Coin info"
-				android:gravity="center_vertical"
-				android:paddingLeft="25dp"
-				android:textSize="16sp"
 				style="@style/DefaultTextView"
 				android:layout_width="match_parent"
-				android:layout_height="50dp"/>
+				android:layout_height="50dp"
+				android:elevation="1dp"
+				android:gravity="center_vertical"
+				android:paddingLeft="25dp"
+				android:text="Coin info"
+				android:textSize="16sp"/>
 
 
 			<android.support.v7.widget.RecyclerView
 				android:id="@+id/rcvCoinInfo"
-				android:padding="5dp"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:elevation="1dp"
+				android:padding="5dp"/>
+
+			<TextView
+				android:id="@+id/tvAlert"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:elevation="1dp"
+				android:gravity="center_vertical"
+				android:paddingLeft="25dp"
+				android:text="Alerts"
+				android:textSize="16sp"
+				android:visibility="gone"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal"
+				android:orientation="vertical"
+				android:padding="20dp"
+				android:visibility="gone">
+
+				<ImageView
+					android:id="@+id/imgNotification"
+					android:layout_width="30dp"
+					android:layout_height="30dp"
+					android:src="@drawable/notification"/>
+
+				<TextView
+					android:id="@+id/tvNoAlert"
+					style="@style/DefaultTextView"
+					android:padding="5dp"
+					android:text="Alerts"
+					android:textSize="16sp"/>
+
+				<com.app.vietincome.view.HighLightTextView
+					android:id="@+id/tvCreateAlert"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:paddingBottom="10dp"
+					android:paddingLeft="15dp"
+					android:paddingRight="15dp"
+					android:paddingTop="10dp"
+					android:text="Create Alert"
+					android:textColor="@color/white"
+					android:textSize="16sp"/>
+
+			</LinearLayout>
+
+			<TextView
+				android:id="@+id/tvNews"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:elevation="1dp"
+				android:gravity="center_vertical"
+				android:paddingLeft="25dp"
+				android:text="News"
+				android:textSize="16sp"/>
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/rcvNews"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"/>
 
 			<TextView
-				android:id="@+id/tvNews"
-				android:text="News"
-				android:gravity="center_vertical"
-				android:paddingLeft="25dp"
-				android:textSize="16sp"
+				android:id="@+id/tvShowNews"
 				style="@style/DefaultTextView"
 				android:layout_width="match_parent"
-				android:layout_height="50dp"/>
+				android:layout_height="50dp"
+				android:elevation="1dp"
+				android:fontFamily="@font/helvetica_neue_medium"
+				android:gravity="center"
+				android:text="Show all"
+				android:textSize="16sp"/>
+
+			<TextView
+				android:id="@+id/tvTopMarket"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:elevation="1dp"
+				android:gravity="center_vertical"
+				android:paddingLeft="25dp"
+				android:text="Top Markets"
+				android:textSize="16sp"/>
+
+			<include layout="@layout/item_top_topmarket"/>
 
 			<android.support.v7.widget.RecyclerView
+				android:id="@+id/rcvTopMarket"
 				android:layout_width="match_parent"
-				android:id="@+id/rcvNews"
 				android:layout_height="wrap_content"/>
-
 		</LinearLayout>
 	</android.support.v4.widget.NestedScrollView>
 

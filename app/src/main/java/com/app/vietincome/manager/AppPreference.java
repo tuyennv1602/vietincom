@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.app.vietincome.model.Currency;
+import com.app.vietincome.model.News;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -26,6 +27,7 @@ public enum AppPreference {
 	private static final String KEY_VOLUME = "volume";
 	private static final String KEY_HORIZONTAL = "horizontal";
 	private static final String KEY_VERTICAL = "vertical";
+	private static final String KEY_NEWS = "news";
 
 	public String token = "";
 	public boolean darkTheme;
@@ -34,6 +36,7 @@ public enum AppPreference {
 	public int numNews;
 	private ArrayList<Integer> newsRead = new ArrayList<>();
 	private ArrayList<Integer> favouriteCoin = new ArrayList<>();
+	private ArrayList<News> news = new ArrayList<>();
 	private Currency currency;
 	private boolean isVolume;
 	private boolean isHorizontal;
@@ -65,6 +68,13 @@ public enum AppPreference {
 			Type type = new TypeToken<ArrayList<Integer>>() {
 			}.getType();
 			favouriteCoin = mGson.fromJson(coinData, type);
+		}
+		String newsData = preferences.getString(KEY_NEWS, null);
+		if(newsData != null){
+			Type type = new TypeToken<ArrayList<News>>(){
+
+			}.getType();
+			news = mGson.fromJson(newsData, type);
 		}
 	}
 
@@ -157,4 +167,14 @@ public enum AppPreference {
 		}
 		return this.currency;
 	}
+
+	public ArrayList<News> getNews() {
+		return news;
+	}
+
+	public void setNews(ArrayList<News> news) {
+		this.news = news;
+		preferences.edit().putString(KEY_NEWS, mGson.toJson(news)).apply();
+	}
+
 }
