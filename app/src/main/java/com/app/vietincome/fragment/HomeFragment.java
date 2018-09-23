@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.vietincome.R;
@@ -21,8 +20,10 @@ import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.model.responses.CoinResponse;
+import com.app.vietincome.model.responses.GlobalResponse;
 import com.app.vietincome.model.responses.RateResponse;
 import com.app.vietincome.network.ApiClient;
+import com.app.vietincome.network.ApiInterface;
 import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.NavigationTopBar;
@@ -40,7 +41,7 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -100,6 +101,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	private boolean isSortUp = true;
 	private double rate = 1;
 	private boolean isLoading = true;
+	private Data global;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
 
 	public static HomeFragment newInstance() {
@@ -180,8 +182,10 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Override
 	public void onLeftClicked() {
 		super.onLeftClicked();
+		if (isLoading) return;
 		Intent parent = new Intent(getContext(), ParentActivity.class);
 		parent.putExtra(Constant.KEY_SCREEN, Constant.GLOBAL_MARKET);
+		parent.putExtra(Constant.KEY_RATE, rate);
 		startActivity(parent);
 	}
 
@@ -207,6 +211,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Override
 	public void onRightClicked() {
 		super.onRightClicked();
+		if (isLoading) return;
 		showKeyboard(navigationTopBar.getEdtSearch());
 		navigationTopBar.openSearch();
 	}
@@ -254,7 +259,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		isLoading = true;
 		navigationTopBar.showProgressBar();
 		rcvAllCoin.showShimmerAdapter();
-		ApiClient.getRate().getRate(currency.getCode()).enqueue(new Callback<RateResponse>() {
+		ApiClient.getRateService().getRate(currency.getCode()).enqueue(new Callback<RateResponse>() {
 			@Override
 			public void onResponse(Call<RateResponse> call, Response<RateResponse> response) {
 				if (response.isSuccessful()) {
@@ -274,7 +279,26 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		});
 	}
 
+	public void getGolbalData(){
+		ApiClient.getAllCoinService().getGlobalData().enqueue(new Callback<GlobalResponse>() {
+			@Override
+			public void onResponse(Call<GlobalResponse> call, Response<GlobalResponse> response) {
+				if(response.isSuccessful()){
+					if(response.body().getMetadata().isSuccess()){
+						global = response.body().getData();
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(Call<GlobalResponse> call, Throwable t) {
+				showAlert(getString(R.string.message_title), t.getMessage());
+			}
+		});
+	}
+
 	public void getData(boolean isUpdateRate) {
+		getGolbalData();
 		tvCurrency.setText(currency.getSymbol());
 		if (!currency.getCode().equals("USD") || isUpdateRate) {
 			if (isBTC) {
@@ -305,7 +329,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 						allCoinAdapter.notifyDataSetChanged();
 						start += perPage;
 						if (response.body().getData().size() == perPage) {
-							getNextPage(response.body().getMetadata().getNumCryptocurrencies());
+//							getNextPage(response.body().getMetadata().getNumCryptocurrencies());
 						}
 					}
 				}
@@ -344,8 +368,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				.subscribeOn(Schedulers.computation())
 				.concatMap((Function<Integer, ObservableSource<CoinResponse>>) integer -> ApiClient.getAllCoinService().getCoinInPage((integer * perPage) + 1))
 				.doOnError(throwable -> {
-					navigationTopBar.hideProgressBar();
-					rcvAllCoin.hideShimmerAdapter();
+
 				})
 				.doOnNext(coinResponse -> {
 					Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
@@ -353,7 +376,17 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 					start += perPage;
 				})
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe();
+				.subscribe(new Consumer<CoinResponse>() {
+					@Override
+					public void accept(CoinResponse coinResponse) throws Exception {
+
+					}
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+
+					}
+				});
 	}
 
 	@Override

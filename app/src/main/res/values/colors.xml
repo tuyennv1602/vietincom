@@ -6,7 +6,7 @@
 	<color name="dark_background">#1f2936</color>
 	<color name="light_background">#ffffff</color>
 	<color name="dark_image">#3d5afe</color>
-	<color name="light_image">#46be2e</color>
+	<color name="light_image">#FF40AB67</color>
 	<color name="dark_text">#ffffff</color>
 	<color name="light_text">#000000</color>
 	<color name="dark_tab">#ffffff</color>
@@ -25,4 +25,8 @@
 	<color name="light_green">#FF40AB67</color>
 	<color name="black_background">#1d2025</color>
 	<color name="gray_background">#FFF1F0F0</color>
+	<color name="dark_orange">#e14f32</color>
+	<color name="dark_yellow">#d6be28</color>
+	<color name="dark_blue">#2e7dd7</color>
+	<color name="dark_black">#2c2c3d</color>
 </resources>

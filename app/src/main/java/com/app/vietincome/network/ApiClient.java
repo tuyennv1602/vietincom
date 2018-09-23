@@ -56,7 +56,11 @@ public class ApiClient {
 		return getService(AppConfig.ALL_COIN_API);
 	}
 
-	public static ApiInterface getRate(){
+	public static ApiInterface getRateService() {
 		return getService(AppConfig.RATE);
+	}
+
+	public static ApiInterface getChartService() {
+		return getService(AppConfig.CHART_COIN);
 	}
 }

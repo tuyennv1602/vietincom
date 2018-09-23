@@ -22,4 +22,7 @@ public class Constant {
 	public static final int HIS_3M = 3;
 	public static final int HIS_1Y = 4;
 	public static final int HIS_ALL = 5;
+
+	public static final int MARKET_CAP = 1;
+	public static final int VOLUME_24H = 2;
 }

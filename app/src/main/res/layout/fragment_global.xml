@@ -1,12 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
 	android:background="@color/dark_background"
-	android:layout_height="match_parent">
-
+	android:orientation="vertical">
 
 	<include layout="@layout/navi_top_bar"/>
 
+	<android.support.v4.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:focusableInTouchMode="true"
+			android:orientation="vertical">
+
+			<LinearLayout
+				android:id="@+id/layoutMarketCap"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="15dp"
+				android:layout_marginTop="15dp"
+				android:background="@color/dark_image"
+				android:gravity="center_horizontal"
+				android:orientation="vertical"
+				android:padding="10dp">
+
+				<TextView
+					android:id="@+id/tvMarketValue"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="$0"
+					android:textColor="@color/white"
+					android:textSize="30sp"/>
+
+				<TextView
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Total Market Capitalization"
+					android:textColor="@color/white"
+					android:textSize="17sp"/>
+			</LinearLayout>
+
+			<com.app.vietincome.view.NoneSwipeViewpager
+				android:id="@+id/viewPagerChart"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/small_line_chart_height"
+				/>
+
+			<android.support.design.widget.TabLayout
+				android:id="@+id/tabLayoutTime"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_marginTop="5dp"
+				android:elevation="1dp"
+				app:tabGravity="fill"
+				app:tabIndicatorHeight="2dp"
+				app:tabMode="fixed"/>
+
+			<View
+				android:id="@+id/view1"
+				android:layout_width="match_parent"
+				android:layout_height="15dp"
+				android:background="@color/black_background"/>
+
+			<TextView
+				android:id="@+id/tvMarketShare"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:fontFamily="@font/helvetica_neue_bold"
+				android:gravity="center"
+				android:padding="10dp"
+				android:text="Market Shares"
+				android:textSize="25sp"/>
+
+			<com.github.mikephil.charting.charts.PieChart
+				android:id="@+id/chartMarket"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/small_line_chart_height"
+				android:layout_marginBottom="10dp"/>
+
+			<include layout="@layout/item_top_percent_marketcap"/>
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/rcvMarketCap"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+
+			<com.app.vietincome.view.HighLightTextView
+				style="@style/DefaultTextView"
+				android:id="@+id/tvShowMarketCap"
+				android:layout_width="match_parent"
+				android:layout_height="45dp"
+				android:gravity="center"
+				android:text="Show more..."
+				android:textSize="16sp"/>
+
+			<View
+				android:id="@+id/view2"
+				android:layout_width="match_parent"
+				android:layout_height="15dp"
+				android:background="@color/black_background"/>
+
+			<LinearLayout
+				android:id="@+id/layoutVolume"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="15dp"
+				android:background="@color/dark_image"
+				android:gravity="center_horizontal"
+				android:orientation="vertical"
+				android:padding="10dp">
+
+				<TextView
+					android:id="@+id/tvVolumeValue"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="$0"
+					android:textColor="@color/white"
+					android:textSize="30sp"/>
+
+				<TextView
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Total Market Volume (24h)"
+					android:textColor="@color/white"
+					android:textSize="17sp"/>
+			</LinearLayout>
+
+			<com.github.mikephil.charting.charts.PieChart
+				android:id="@+id/chartVolume"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/small_line_chart_height"
+				android:layout_marginBottom="10dp"/>
+
+			<include layout="@layout/item_top_percent_volume"/>
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/rcvVolume"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+
+			<com.app.vietincome.view.HighLightTextView
+				style="@style/DefaultTextView"
+				android:id="@+id/tvShowVolume"
+				android:layout_width="match_parent"
+				android:layout_height="45dp"
+				android:gravity="center"
+				android:text="Show more..."
+				android:textSize="16sp"/>
+		</LinearLayout>
+
+
+	</android.support.v4.widget.NestedScrollView>
 </LinearLayout>

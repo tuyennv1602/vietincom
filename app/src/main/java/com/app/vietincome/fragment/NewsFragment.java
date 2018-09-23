@@ -16,6 +16,7 @@ import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.News;
+import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.model.responses.NewsResponse;
 import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.view.CustomItemDecoration;
@@ -62,7 +63,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		return fragment;
 	}
 
-	public static NewsFragment newInstance(ArrayList<News> news){
+	public static NewsFragment newInstance(ArrayList<News> news) {
 		NewsFragment fragment = new NewsFragment();
 		fragment.news = news;
 		fragment.needReload = false;
@@ -103,7 +104,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		rcvNews.setNestedScrollingEnabled(false);
 		rcvNews.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_news_dark : R.layout.layout_demo_news_light);
 		rcvNews.setAdapter(newsAdapter);
-		if(needReload) {
+		if (needReload) {
 			getNews(true);
 		}
 	}
@@ -113,7 +114,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		navitop.setTvTitle(R.string.news);
 		navitop.showImgLeft(false);
 		navitop.showImgRight(false);
-		if(!needReload){
+		if (!needReload) {
 			navitop.setBackgroundBorder();
 			navitop.showImgRight(true);
 			navitop.setImgRight(R.drawable.arrow_down);
@@ -176,12 +177,11 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 
 	@SuppressLint("CheckResult")
 	private void getNextPage(int totalPage) {
-		         Observable.range(2, totalPage - 1)
+		Observable.range(2, totalPage - 1)
 				.subscribeOn(Schedulers.io())
 				.concatMap((Function<Integer, ObservableSource<NewsResponse>>) integer -> ApiClient.getNewsService().getNewsInPage(integer))
 				.doOnError(throwable -> {
-					navigationTopBar.hideProgressBar();
-					rcvNews.hideShimmerAdapter();
+
 				})
 				.doOnNext(newsResponse -> {
 					page++;
@@ -189,8 +189,17 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 					Log.d("__new", "getNextPage: ");
 				})
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe();
+				.subscribe(new Consumer<NewsResponse>() {
+					@Override
+					public void accept(NewsResponse coinResponse) throws Exception {
 
+					}
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+
+					}
+				});
 	}
 
 	@Override

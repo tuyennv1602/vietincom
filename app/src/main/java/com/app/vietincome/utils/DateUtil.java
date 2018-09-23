@@ -9,13 +9,14 @@ import java.util.concurrent.TimeUnit;
 
 public class DateUtil {
 
-	public static final SimpleDateFormat FORMAT_TASKS_HISTORY = new SimpleDateFormat("MM/dd/yyyy, HH:mmaa", Locale.getDefault());
-	public static final SimpleDateFormat FORMAT_TIMELINE = new SimpleDateFormat("MM/dd/yyyy, HH:mm aa", Locale.getDefault());
-	public static final SimpleDateFormat FORMAT_CREATE_ORDER = new SimpleDateFormat("HH:mmaa", Locale.getDefault());
+	public static final SimpleDateFormat FORMAT_MONTH_OF_YEAR = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
+	public static final SimpleDateFormat FORMAT_DAY_OF_MONTH = new SimpleDateFormat("MMM dd", Locale.getDefault());
+	public static final SimpleDateFormat FORMAT_HOURS = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
 	public static String getStringTime(long timeStamp, SimpleDateFormat format) {
 		if (timeStamp == 0) return "";
-		Date date = new Date(timeStamp * 1000L);
+		Timestamp timestamp = new Timestamp(timeStamp);
+		Date date = new Date(timestamp.getTime());
 		return format.format(date);
 	}
 

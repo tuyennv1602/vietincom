@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.app.vietincome.fragment.LineChartFragment;
+import com.app.vietincome.fragment.CoinChartFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,13 +15,13 @@ public class ChartViewPagerAdapter extends FragmentStatePagerAdapter {
 	private ArrayList<Fragment> fragments;
 	private ArrayList<String> labelTime = new ArrayList<>(Arrays.asList("24H", "7D", "1M", "3M", "1Y", "ALL"));
 
-	public ChartViewPagerAdapter(Context context, FragmentManager fm, String coinId) {
+	public ChartViewPagerAdapter(Context context, FragmentManager fm, String coinId, double rate) {
 		super(fm);
 		this.context  = context;
 		if (fragments == null) {
 			fragments = new ArrayList<>();
 			for(int i = 0; i < labelTime.size(); i++){
-				fragments.add(LineChartFragment.newInstance(coinId, i));
+				fragments.add(CoinChartFragment.newInstance(coinId, i, rate));
 			}
 		}
 	}

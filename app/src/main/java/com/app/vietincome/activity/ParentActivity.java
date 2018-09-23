@@ -10,6 +10,7 @@ import com.app.vietincome.fragment.GlobalFragment;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.utils.Constant;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class ParentActivity extends BaseActivity {
@@ -44,7 +45,9 @@ public class ParentActivity extends BaseActivity {
 				double rate = getIntent().getDoubleExtra(Constant.KEY_RATE, 1);
 				pushFragment(CoinDetailFragment.newInstance(data, rate), R.anim.zoom_in, R.anim.zoom_out);
 			} else if (screen == Constant.GLOBAL_MARKET) {
-				pushFragment(new GlobalFragment(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+				double rate = getIntent().getDoubleExtra(Constant.KEY_RATE, 1);
+				pushFragment(GlobalFragment.newInstance(rate)
+						, R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 			}
 		}
 	}

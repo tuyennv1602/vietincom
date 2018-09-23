@@ -108,7 +108,7 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 
 	private Data data;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
-	private double rate;
+	private double rate = 1;
 	private ChartViewPagerAdapter chartViewPagerAdapter;
 	private ArrayList<CoinInfo> coinInfos;
 	private CoinInfoAdapter coinInfoAdapter;
@@ -176,9 +176,10 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 
 	private void initChartView() {
 		if (chartViewPagerAdapter == null) {
-			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), data.getName());
+			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), data.getSymbol(), rate);
 		}
 		viewPagerChart.setAdapter(chartViewPagerAdapter);
+		viewPagerChart.setOffscreenPageLimit(6);
 		tabLayoutTime.setupWithViewPager(viewPagerChart);
 	}
 
@@ -230,6 +231,8 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		rcvTopMarket.addItemDecoration(new CustomItemDecoration(1));
 		rcvTopMarket.setAdapter(topMarketAdapter);
 	}
+
+
 
 	@Override
 	public void onNavigationTopUpdate(NavigationTopBar navitop) {

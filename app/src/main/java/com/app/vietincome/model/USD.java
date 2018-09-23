@@ -14,10 +14,10 @@ public class USD implements Parcelable
 	public double price;
 	@SerializedName("volume_24h")
 	@Expose
-	public double volume24h;
+	public Double volume24h;
 	@SerializedName("market_cap")
 	@Expose
-	public double marketCap;
+	public Double marketCap;
 	@SerializedName("percent_change_1h")
 	@Expose
 	public double percentChange1h;
@@ -27,6 +27,12 @@ public class USD implements Parcelable
 	@SerializedName("percent_change_7d")
 	@Expose
 	public double percentChange7d;
+	@SerializedName("total_market_cap")
+	@Expose
+	private Double totalMarketCap;
+	@SerializedName("total_volume_24h")
+	@Expose
+	private Double totalVolume24h;
 	public final static Parcelable.Creator<USD> CREATOR = new Creator<USD>() {
 
 
@@ -46,11 +52,13 @@ public class USD implements Parcelable
 
 	protected USD(Parcel in) {
 		this.price = ((double) in.readValue((double.class.getClassLoader())));
-		this.volume24h = ((double) in.readValue((double.class.getClassLoader())));
-		this.marketCap = ((double) in.readValue((double.class.getClassLoader())));
+		this.volume24h = ((Double) in.readValue((Double.class.getClassLoader())));
+		this.marketCap = ((Double) in.readValue((Double.class.getClassLoader())));
 		this.percentChange1h = ((double) in.readValue((double.class.getClassLoader())));
 		this.percentChange24h = ((double) in.readValue((double.class.getClassLoader())));
 		this.percentChange7d = ((double) in.readValue((double.class.getClassLoader())));
+		this.totalMarketCap = ((Double) in.readValue((Double.class.getClassLoader())));
+		this.totalVolume24h = ((Double) in.readValue((Double.class.getClassLoader())));
 	}
 
 	public USD() {
@@ -64,20 +72,22 @@ public class USD implements Parcelable
 		this.price = price;
 	}
 
-	public double getVolume24h() {
+	public Double getVolume24h() {
 		return volume24h;
 	}
 
-	public void setVolume24h(double volume24h) {
-		this.volume24h = volume24h;
-	}
 
-	public double getMarketCap() {
+	public Double getMarketCap() {
 		return marketCap;
 	}
 
-	public void setMarketCap(double marketCap) {
-		this.marketCap = marketCap;
+
+	public Double getTotalMarketCap() {
+		return totalMarketCap;
+	}
+
+	public Double getTotalVolume24h() {
+		return totalVolume24h;
 	}
 
 	public String getPercentChange1h() {
@@ -122,6 +132,8 @@ public class USD implements Parcelable
 		dest.writeValue(percentChange1h);
 		dest.writeValue(percentChange24h);
 		dest.writeValue(percentChange7d);
+		dest.writeValue(totalMarketCap);
+		dest.writeValue(totalVolume24h);
 	}
 
 	public int describeContents() {

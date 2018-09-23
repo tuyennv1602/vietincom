@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="7dp"
-                android:background="@drawable/bg_red_circle" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@drawable/bg_marker"
+              android:orientation="vertical"
+              android:padding="5dp">
 
 	<TextView
-		android:id="@+id/tvContent"
+		android:id="@+id/tvTime"
 		style="@style/DefaultTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
 		android:layout_centerInParent="true"
-		android:text="123"
-		android:fontFamily="@font/helvetica_neue_medium"
-		android:textColor="@color/white"
 		android:ellipsize="end"
-		android:singleLine="true"/>
+		android:fontFamily="@font/helvetica_neue"
+		android:singleLine="true"
+		android:text="123"
+		android:textColor="@color/white"
+		android:textSize="14sp"/>
 
-</RelativeLayout>
+	<TextView
+		android:id="@+id/tvPrice"
+		style="@style/DefaultTextView"
+		android:layout_centerInParent="true"
+		android:ellipsize="end"
+		android:fontFamily="@font/helvetica_neue"
+		android:singleLine="true"
+		android:text="123"
+		android:layout_gravity="center_horizontal"
+		android:textColor="@color/white"
+		android:textSize="14sp"/>
+
+</LinearLayout>
