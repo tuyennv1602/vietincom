@@ -18,8 +18,8 @@ public class MyMarkerView extends MarkerView {
 	private TextView tvTime;
 	private IAxisValueFormatter xAxisValueFormatter;
 
-	public MyMarkerView(Context context,IAxisValueFormatter xAxisValueFormatter) {
-		super(context, R.layout.custom_marker_view);
+	public MyMarkerView(Context context,IAxisValueFormatter xAxisValueFormatter, int layoutId) {
+		super(context, layoutId);
 		this.xAxisValueFormatter = xAxisValueFormatter;
 		tvPrice = findViewById(R.id.tvPrice);
 		tvTime = findViewById(R.id.tvTime);

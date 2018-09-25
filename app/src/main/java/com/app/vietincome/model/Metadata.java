@@ -17,6 +17,18 @@ public class Metadata implements Parcelable {
 	@SerializedName("error")
 	@Expose
 	private String error;
+	@SerializedName("page")
+	@Expose
+	private Integer page;
+	@SerializedName("max")
+	@Expose
+	private Integer max;
+	@SerializedName("total_count")
+	@Expose
+	private Integer totalCount;
+	@SerializedName("page_count")
+	@Expose
+	private Integer pageCount;
 	public final static Parcelable.Creator<Metadata> CREATOR = new Creator<Metadata>() {
 
 
@@ -37,6 +49,10 @@ public class Metadata implements Parcelable {
 		this.timestamp = ((Integer) in.readValue((Integer.class.getClassLoader())));
 		this.numCryptocurrencies = ((Integer) in.readValue((Integer.class.getClassLoader())));
 		this.error = ((String) in.readValue((String.class.getClassLoader())));
+		this.page = ((Integer) in.readValue((Integer.class.getClassLoader())));
+		this.max = ((Integer) in.readValue((Integer.class.getClassLoader())));
+		this.totalCount = ((Integer) in.readValue((Integer.class.getClassLoader())));
+		this.pageCount = ((Integer) in.readValue((Integer.class.getClassLoader())));
 	}
 
 	public Metadata() {
@@ -70,6 +86,10 @@ public class Metadata implements Parcelable {
 		dest.writeValue(timestamp);
 		dest.writeValue(numCryptocurrencies);
 		dest.writeValue(error);
+		dest.writeValue(page);
+		dest.writeValue(max);
+		dest.writeValue(totalCount);
+		dest.writeValue(pageCount);
 	}
 
 	public int describeContents() {

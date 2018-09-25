@@ -1,10 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:orientation="vertical"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:orientation="vertical">
 
 	<include layout="@layout/navi_top_bar"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:orientation="horizontal"
+		android:weightSum="2">
+
+		<com.app.vietincome.view.HighLightLinearLayout
+			android:id="@+id/layoutPeriod"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/tvPeriod"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Period"
+				android:textColor="@color/light_text"/>
+
+			<TextView
+				android:id="@+id/tvPeriodValue"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:fontFamily="@font/helvetica_neue_medium"
+				android:text="Time"
+				android:textColor="@color/light_text"
+				android:textSize="16sp"/>
+
+		</com.app.vietincome.view.HighLightLinearLayout>
+
+		<com.app.vietincome.view.HighLightLinearLayout
+			android:id="@+id/layoutCoin"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/tvCoin"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Coin(s)"
+				android:textColor="@color/light_text"/>
+
+			<TextView
+				android:id="@+id/tvCoinValue"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:fontFamily="@font/helvetica_neue_medium"
+				android:text="All"
+				android:textColor="@color/light_text"
+				android:textSize="16sp"/>
+
+		</com.app.vietincome.view.HighLightLinearLayout>
+
+	</LinearLayout>
+
+	<com.cooltechworks.views.shimmer.ShimmerRecyclerView
+		android:id="@+id/rcvEvents"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="15dp"
+		android:paddingTop="10dp"
+		android:paddingRight="15dp"
+		app:shimmer_demo_child_count="5"
+		app:shimmer_demo_layout="@layout/layout_demo_event_light"
+		app:shimmer_demo_layout_manager_type="linear_vertical"/>
 
 </LinearLayout>

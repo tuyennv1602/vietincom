@@ -100,7 +100,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		linearLayoutManager = new LinearLayoutManager(getContext());
 		rcvNews.setLayoutManager(linearLayoutManager);
 		rcvNews.addItemDecoration(new CustomItemDecoration(2));
-		rcvNews.setDemoShimmerDuration(60000);
+		rcvNews.setDemoShimmerDuration(100000);
 		rcvNews.setNestedScrollingEnabled(false);
 		rcvNews.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_news_dark : R.layout.layout_demo_news_light);
 		rcvNews.setAdapter(newsAdapter);
@@ -170,7 +170,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 			public void onFailure(Call<NewsResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvNews.hideShimmerAdapter();
-				showAlert(getResources().getString(R.string.failed), t.getMessage());
+				showAlert("Failure", t.getMessage());
 			}
 		});
 	}
@@ -210,21 +210,5 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		startActivity(browserIntent);
 	}
 
-//	private InfiniteScrollListener createInfiniteScrollListener() {
-//		return new InfiniteScrollListener(MAX_ITEMS_PER_REQUEST, linearLayoutManager) {
-//			@Override public void onScrolledToEnd(final int firstVisibleItemPosition) {
-//				simulateLoading();
-//				int start = ++page * MAX_ITEMS_PER_REQUEST;
-//				final boolean allItemsLoaded = start >= items.size();
-//				if (allItemsLoaded) {
-//					progressBar.setVisibility(View.GONE);
-//				} else {
-//					int end = start + MAX_ITEMS_PER_REQUEST;
-//					final List<String> itemsLocal = getItemsToBeLoaded(start, end);
-//					refreshView(recyclerView, new MyAdapter(itemsLocal), firstVisibleItemPosition);
-//				}
-//			}
-//		};
-//	}
 
 }

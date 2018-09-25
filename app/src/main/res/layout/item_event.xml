@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/border_event_dark"
+	android:gravity="center_horizontal"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<TextView
+			android:id="@+id/tvTime"
+			style="@style/DefaultTextView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:gravity="center"
+			android:text="2018-09-25"
+			android:textColor="@color/white"
+			android:textSize="16sp"/>
+
+		<ImageView
+			android:id="@+id/imgHot"
+			android:layout_width="25dp"
+			android:layout_height="25dp"
+			android:layout_alignParentRight="true"
+			android:src="@drawable/star"
+			android:visibility="gone"/>
+	</RelativeLayout>
+
+	<TextView
+		android:id="@+id/tvEventCate"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:fontFamily="@font/helvetica_neue_medium"
+		android:gravity="center"
+		android:text="Steam"
+		android:textColor="@color/white"
+		android:textSize="16sp"/>
+
+	<TextView
+		android:id="@+id/tvTitle"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:text="Steam"
+		android:textColor="@color/white"/>
+
+	<LinearLayout
+		android:id="@+id/layoutInfo"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:background="@color/dark_gray"
+		android:orientation="vertical"
+		android:padding="10dp">
+
+		<TextView
+			android:id="@+id/tvDescription"
+			style="@style/DefaultTextView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:text="Steam"
+			android:textColor="@color/white"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:gravity="center_horizontal"
+			android:orientation="horizontal"
+			android:weightSum="2">
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvProof"
+				style="@style/DefaultTextView"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:fontFamily="@font/helvetica_neue_bold"
+				android:gravity="center"
+				android:text="PROOF"
+				android:textColor="@color/dark_blue"
+				android:textSize="17sp"/>
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvSource"
+				style="@style/DefaultTextView"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:fontFamily="@font/helvetica_neue_bold"
+				android:gravity="center"
+				android:text="SOURCE"
+				android:textColor="@color/dark_blue"
+				android:textSize="17sp"/>
+
+		</LinearLayout>
+
+		<View
+			android:id="@+id/viewLine"
+			android:layout_width="match_parent"
+			android:layout_height="0.7dp"
+			android:background="@color/black"/>
+
+		<TextView
+			android:id="@+id/tvValidation"
+			style="@style/DefaultTextView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			android:gravity="center"
+			android:text="Validation"
+			android:textColor="@color/white"/>
+
+		<com.app.vietincome.view.CustomSeekbar
+			android:id="@+id/seekBar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingStart="0dp"
+			android:paddingEnd="0dp"
+			android:thumb="@drawable/seekbar_thumb"/>
+
+	</LinearLayout>
+
+</LinearLayout>

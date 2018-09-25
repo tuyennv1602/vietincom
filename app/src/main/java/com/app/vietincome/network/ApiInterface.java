@@ -2,6 +2,7 @@ package com.app.vietincome.network;
 
 import com.app.vietincome.model.responses.ChartResponse;
 import com.app.vietincome.model.responses.CoinResponse;
+import com.app.vietincome.model.responses.EventResponse;
 import com.app.vietincome.model.responses.GlobalResponse;
 import com.app.vietincome.model.responses.RateResponse;
 import com.app.vietincome.model.responses.NewsResponse;
@@ -46,4 +47,11 @@ public interface ApiInterface {
 
 	@GET("ticker/?limit=10&sort=volume_24h&structure=array&convert=BTC")
 	Call<CoinResponse> getTopVolume();
+
+	@GET("events?max=150&showMetadata=true")
+	Call<EventResponse> getEvent(@Query("access_token") String accessToken,
+	                             @Query("page") int page,
+	                             @Query("dateRangeStart") String dateStart,
+	                             @Query("dateRangeEnd") String dateEnd,
+	                             @Query("coins") String coins);
 }

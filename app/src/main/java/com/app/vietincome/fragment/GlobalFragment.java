@@ -267,10 +267,10 @@ public class GlobalFragment extends BaseFragment {
 		// add a lot of colors
 
 		ArrayList<Integer> colors = new ArrayList<>();
-		colors.add(getColor(R.color.dark_orange));
-		colors.add(getColor(R.color.dark_yellow));
-		colors.add(getColor(R.color.dark_blue));
-		colors.add(getColor(R.color.dark_black));
+		colors.add(Color.parseColor("#e14f32"));
+		colors.add(Color.parseColor("#d6be28"));
+		colors.add(Color.parseColor("#2e7dd7"));
+		colors.add(Color.parseColor("#2c2c3d"));
 		dataSet.setColors(colors);
 		//dataSet.setSelectionShift(0f);
 
@@ -300,7 +300,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert(getContext().getString(R.string.message_title), t.getMessage());
+				showAlert("Failure", t.getMessage());
 			}
 		});
 	}
@@ -324,7 +324,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert(getContext().getString(R.string.message_title), t.getMessage());
+				showAlert("Failure", t.getMessage());
 			}
 		});
 	}
@@ -347,7 +347,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<GlobalResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert(getContext().getString(R.string.message_title), t.getMessage());
+				showAlert("Failure", t.getMessage());
 			}
 		});
 	}

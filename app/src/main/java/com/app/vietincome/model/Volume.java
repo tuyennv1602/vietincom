@@ -1,17 +1,26 @@
 package com.app.vietincome.model;
 
 public class Volume {
-	private long price;
+	private long time;
+	private float price;
 
-	public Volume(long price) {
+	public Volume(long time, float price) {
 		this.price = price;
 	}
 
-	public long getPrice() {
-		return price / 1000000;
+	public float getPrice() {
+		return price;
 	}
 
-	public void setPrice(long price) {
+	public void setPrice(float price) {
 		this.price = price;
+	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
 	}
 }

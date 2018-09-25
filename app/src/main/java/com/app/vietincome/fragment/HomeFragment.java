@@ -205,6 +205,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onCloseSearch() {
 		super.onCloseSearch();
 		hideKeyboard();
+		resultSearchCoin.clear();
 		allCoinAdapter.setCoins(allCoins);
 	}
 
@@ -272,33 +273,14 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 			@Override
 			public void onFailure(Call<RateResponse> call, Throwable t) {
-				navigationTopBar.showProgressBar();
-				rcvAllCoin.showShimmerAdapter();
-				showAlert(getString(R.string.message_title), t.getMessage());
-			}
-		});
-	}
-
-	public void getGolbalData(){
-		ApiClient.getAllCoinService().getGlobalData().enqueue(new Callback<GlobalResponse>() {
-			@Override
-			public void onResponse(Call<GlobalResponse> call, Response<GlobalResponse> response) {
-				if(response.isSuccessful()){
-					if(response.body().getMetadata().isSuccess()){
-						global = response.body().getData();
-					}
-				}
-			}
-
-			@Override
-			public void onFailure(Call<GlobalResponse> call, Throwable t) {
-				showAlert(getString(R.string.message_title), t.getMessage());
+				navigationTopBar.hideProgressBar();
+				rcvAllCoin.hideShimmerAdapter();
+				showAlert("Failure", t.getMessage());
 			}
 		});
 	}
 
 	public void getData(boolean isUpdateRate) {
-		getGolbalData();
 		tvCurrency.setText(currency.getSymbol());
 		if (!currency.getCode().equals("USD") || isUpdateRate) {
 			if (isBTC) {
@@ -339,7 +321,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvAllCoin.hideShimmerAdapter();
-				showAlert(getString(R.string.message_title), t.getMessage());
+				showAlert("Failure", t.getMessage());
 			}
 		});
 	}
@@ -367,9 +349,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		Observable.range(1, numPage)
 				.subscribeOn(Schedulers.computation())
 				.concatMap((Function<Integer, ObservableSource<CoinResponse>>) integer -> ApiClient.getAllCoinService().getCoinInPage((integer * perPage) + 1))
-				.doOnError(throwable -> {
-
-				})
 				.doOnNext(coinResponse -> {
 					Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
 					EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
@@ -393,7 +372,11 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onItemClicked(int position) {
 		if (isLoading) return;
 		Intent parent = new Intent(getContext(), ParentActivity.class);
-		parent.putExtra("coin", allCoins.get(position));
+		if(resultSearchCoin != null && resultSearchCoin.size() != 0){
+			parent.putExtra("coin", resultSearchCoin.get(position));
+		}else {
+			parent.putExtra("coin", allCoins.get(position));
+		}
 		parent.putExtra(Constant.KEY_SCREEN, Constant.COIN_DETAIL);
 		parent.putExtra(Constant.KEY_RATE, rate);
 		startActivity(parent);

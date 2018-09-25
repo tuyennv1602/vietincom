@@ -33,7 +33,7 @@ public class ChartResponse {
 	public ArrayList<Volume> getVolumes() {
 		ArrayList<Volume> _volumes = new ArrayList<>();
 		for(int i = 0; i < volumes.size(); i++){
-			_volumes.add(new Volume(Long.parseLong(volumes.get(i).get(0))));
+			_volumes.add(new Volume(Long.valueOf(volumes.get(i).get(0)), Float.parseFloat(volumes.get(i).get(1))));
 		}
 		return _volumes;
 	}

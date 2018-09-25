@@ -63,4 +63,8 @@ public class ApiClient {
 	public static ApiInterface getChartService() {
 		return getService(AppConfig.CHART_COIN);
 	}
+
+	public static ApiInterface getEventService(){
+		return getService(AppConfig.EVENTS);
+	}
 }

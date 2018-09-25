@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:orientation="vertical"
+	android:gravity="center_horizontal"
+	android:background="@drawable/border_event_light"
+	android:layout_height="wrap_content">
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_marginTop="10dp"
+		android:background="@drawable/bg_layout_demo"
+		android:layout_height="12dp"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_marginTop="7dp"
+		android:background="@drawable/bg_layout_demo"
+		android:layout_height="12dp"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_marginTop="7dp"
+		android:background="@drawable/bg_layout_demo"
+		android:layout_height="12dp"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:orientation="vertical"
+		android:background="@color/white"
+		android:padding="20dp"
+		android:layout_marginTop="20dp"
+		android:layout_height="wrap_content">
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo"
+			android:layout_height="12dp"/>
+		<View
+			android:layout_width="match_parent"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo"
+			android:layout_height="12dp"/>
+		<View
+			android:layout_width="match_parent"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo"
+			android:layout_height="12dp"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:orientation="horizontal"
+			android:weightSum="2"
+			android:gravity="center_horizontal"
+			android:layout_marginTop="7dp"
+			android:layout_height="wrap_content">
+
+			<View
+				android:layout_width="100dp"
+				android:layout_marginRight="10dp"
+				android:background="@drawable/bg_layout_demo"
+				android:layout_height="25dp"/>
+
+			<View
+				android:layout_width="100dp"
+				android:layout_marginLeft="10dp"
+				android:background="@drawable/bg_layout_demo"
+				android:layout_height="25dp"/>
+		</LinearLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo"
+			android:layout_height="12dp"/>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo"
+			android:layout_height="12dp"/>
+	</LinearLayout>
+
+</LinearLayout>

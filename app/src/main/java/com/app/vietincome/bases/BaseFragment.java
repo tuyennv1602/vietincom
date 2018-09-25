@@ -352,12 +352,12 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 	}
 
 	public void setSoftInputMode(int type) {
-		getActivity().getWindow().setSoftInputMode(type);
+		Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(type);
 	}
 
 
 	public int getColor(int color){
-		return ContextCompat.getColor(getContext(), color);
+		return ContextCompat.getColor(Objects.requireNonNull(getContext()), color);
 	}
 
 	public void setTextColor(TextView textView){

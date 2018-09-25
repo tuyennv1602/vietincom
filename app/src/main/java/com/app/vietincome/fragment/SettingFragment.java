@@ -89,30 +89,21 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 		});
 		swVolume.setOnCheckedChangeListener(null);
 		swVolume.setChecked(AppPreference.INSTANCE.isVolume());
-		swVolume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				AppPreference.INSTANCE.setVolume();
-				setSwitchColor(swVolume);
-			}
+		swVolume.setOnCheckedChangeListener((compoundButton, b) -> {
+			AppPreference.INSTANCE.setVolume();
+			setSwitchColor(swVolume);
 		});
 		swHorizontal.setOnCheckedChangeListener(null);
 		swHorizontal.setChecked(AppPreference.INSTANCE.isHorizontal());
-		swHorizontal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				AppPreference.INSTANCE.setHorizontal();
-				setSwitchColor(swHorizontal);
-			}
+		swHorizontal.setOnCheckedChangeListener((compoundButton, b) -> {
+			AppPreference.INSTANCE.setHorizontal();
+			setSwitchColor(swHorizontal);
 		});
 		swVertical.setOnCheckedChangeListener(null);
 		swVertical.setChecked(AppPreference.INSTANCE.isVertical());
-		swVertical.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				AppPreference.INSTANCE.setVertical();
-				setSwitchColor(swVertical);
-			}
+		swVertical.setOnCheckedChangeListener((compoundButton, b) -> {
+			AppPreference.INSTANCE.setVertical();
+			setSwitchColor(swVertical);
 		});
 		tvCurrencyValue.setText(AppPreference.INSTANCE.getCurrency().getCode());
 		onUpdatedTheme();

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/border_event_dark"
+	android:gravity="center_horizontal"
+	android:orientation="vertical">
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="12dp"
+		android:layout_marginTop="10dp"
+		android:background="@drawable/bg_layout_demo_dark"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="12dp"
+		android:layout_marginTop="7dp"
+		android:background="@drawable/bg_layout_demo_dark"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="12dp"
+		android:layout_marginTop="7dp"
+		android:background="@drawable/bg_layout_demo_dark"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="20dp"
+		android:background="@color/dark_gray"
+		android:orientation="vertical"
+		android:padding="20dp">
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="12dp"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo_dark"/>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="12dp"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo_dark"/>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="12dp"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo_dark"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="7dp"
+			android:gravity="center_horizontal"
+			android:orientation="horizontal"
+			android:weightSum="2">
+
+			<View
+				android:layout_width="100dp"
+				android:layout_height="25dp"
+				android:layout_marginRight="10dp"
+				android:background="@drawable/bg_layout_demo_dark"/>
+
+			<View
+				android:layout_width="100dp"
+				android:layout_height="25dp"
+				android:layout_marginLeft="10dp"
+				android:background="@drawable/bg_layout_demo_dark"/>
+		</LinearLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="12dp"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo_dark"/>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="12dp"
+			android:layout_marginTop="7dp"
+			android:background="@drawable/bg_layout_demo_dark"/>
+	</LinearLayout>
+
+</LinearLayout>

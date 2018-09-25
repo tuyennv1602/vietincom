@@ -1,6 +1,7 @@
 package com.app.vietincome.fragment;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -71,8 +72,6 @@ public class CoinChartFragment extends BaseFragment {
 	private String symbol;
 	private int time;
 	private boolean isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
-	private boolean isVerticalLine = AppPreference.INSTANCE.isVertical();
-	private boolean isHorizontalLine = AppPreference.INSTANCE.isHorizontal();
 	private double rate;
 
 	public static CoinChartFragment newInstance(String symbol, int time, double rate) {
@@ -91,13 +90,13 @@ public class CoinChartFragment extends BaseFragment {
 	@Override
 	public void onFragmentReady(View view) {
 		onUpdatedTheme();
-		if(symbol.equals("global")){
+		styleChart();
+		if (symbol.equals("global")) {
 			layoutExchange.setVisibility(View.GONE);
 			layoutNumber.setVisibility(View.GONE);
-		}else{
+		} else {
 			initData(this.time);
 		}
-		styleChart();
 		setData(new ChartResponse());
 	}
 
@@ -154,44 +153,43 @@ public class CoinChartFragment extends BaseFragment {
 		// enable touch gestures
 		chart.setTouchEnabled(true);
 		chart.getLegend().setEnabled(false);
-
+		chart.setDrawValueAboveBar(true);
 		// enable dragging
-		chart.setDragEnabled(true);
-		chart.setScaleEnabled(true);
+		chart.setScaleEnabled(false);
+		chart.fitScreen();
+		chart.setDragYEnabled(false);
 		chart.setExtraOffsets(0, 0, 0, 10);
 		chart.setDrawOrder(new CombinedChart.DrawOrder[]{
 				CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE});
 
 		PriceAxisValueFormatter custom = new PriceAxisValueFormatter(rate);
 
-		YAxis y = chart.getAxisRight();
-		y.setLabelCount(4, false);
-		y.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-		y.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-		y.setDrawGridLines(isVerticalLine);
-		y.setTextSize(12);
-		y.setDrawAxisLine(false);
-		y.setValueFormatter(custom);
-		y.setAxisLineColor(Color.GRAY);
+		YAxis yRight = chart.getAxisRight();
+		yRight.setLabelCount(4, false);
+		yRight.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+		yRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+		yRight.setDrawGridLines(AppPreference.INSTANCE.isVertical());
+		yRight.setTextSize(12);
+		yRight.setDrawAxisLine(false);
+		yRight.setValueFormatter(custom);
+		yRight.setAxisLineColor(Color.GRAY);
 
 		YAxis yLeft = chart.getAxisLeft();
-		yLeft.setSpaceTop(100);
-		yLeft.setTextSize(0);
 		yLeft.setDrawGridLines(false);
 		yLeft.setDrawAxisLine(false);
 		yLeft.setDrawLabels(false);
+		yLeft.setTextColor(Color.WHITE);
+		yLeft.setAxisMinimum(0f);
 		yLeft.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
-//		yLeft.setEnabled(false);
 
 		XAxis x = chart.getXAxis();
 		x.setLabelCount(3, false);
 		x.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 		x.setTextSize(12);
-		x.setDrawGridLines(isHorizontalLine);
+		x.setDrawGridLines(AppPreference.INSTANCE.isHorizontal());
 		x.setAxisLineColor(Color.GRAY);
 		x.setAvoidFirstLastClipping(true);
 		x.setPosition(XAxis.XAxisPosition.BOTTOM);
-		x.setGranularity(1.0f);
 	}
 
 	private void getAllHistory() {
@@ -200,14 +198,12 @@ public class CoinChartFragment extends BaseFragment {
 			public void onResponse(Call<ChartResponse> call, Response<ChartResponse> response) {
 				if (response.isSuccessful()) {
 					setData(response.body());
-					chart.animateXY(1000, 1000);
-					chart.invalidate();
 				}
 			}
 
 			@Override
 			public void onFailure(Call<ChartResponse> call, Throwable t) {
-				showAlert(getContext().getString(R.string.message_title), t.getMessage());
+				showAlert("Failure", t.getMessage());
 			}
 		});
 	}
@@ -219,14 +215,13 @@ public class CoinChartFragment extends BaseFragment {
 				hideProgressDialog();
 				if (response.isSuccessful()) {
 					setData(response.body());
-					chart.animateXY(1000, 1000);
-					chart.invalidate();
+					Log.d("__chart", "onResponse: " + response.body().getVolumes().size());
 				}
 			}
 
 			@Override
 			public void onFailure(Call<ChartResponse> call, Throwable t) {
-				showAlert(getContext().getString(R.string.message_title), t.getMessage());
+				showAlert("Failure", t.getMessage());
 			}
 		});
 	}
@@ -247,12 +242,16 @@ public class CoinChartFragment extends BaseFragment {
 	private void setData(ChartResponse chartResponse) {
 		CombinedData data = new CombinedData();
 		data.setData(generateLineData(chartResponse.getPrices()));
-//		data.setData(generateBarChart(chartResponse.getVolumes()));
+		if(AppPreference.INSTANCE.isVolume()){
+			data.setData(generateBarChart(chartResponse.getVolumes()));
+			chart.getAxisLeft().setAxisMaximum(data.getYMax(YAxis.AxisDependency.LEFT) * 4);
+		}
 		chart.setData(data);
+		chart.animateXY(1000, 1000);
 		chart.invalidate();
 	}
 
-	private LineData generateLineData(ArrayList<Price> prices){
+	private LineData generateLineData(ArrayList<Price> prices) {
 		ArrayList<Entry> yVals = new ArrayList<>();
 		if (prices != null && prices.size() > 0) {
 			for (int i = 0; i < prices.size(); i++) {
@@ -268,23 +267,25 @@ public class CoinChartFragment extends BaseFragment {
 		set1.setCubicIntensity(0.2f);
 		set1.setDrawCircles(false);
 		set1.setLineWidth(2f);
-		set1.setColor(getColor(R.color.green));
+		set1.setAxisDependency(YAxis.AxisDependency.RIGHT);
+		set1.setColor(Color.parseColor("#45d178"));
 		set1.setHighLightColor(Color.GRAY);
+		set1.setHighlightLineWidth(1.5f);
 		set1.enableDashedHighlightLine(10f, 5f, 0f);
 		set1.setDrawHorizontalHighlightIndicator(false);
 		if (prices != null && prices.size() > 0) {
 			chart.getXAxis().setValueFormatter((value, axis) -> {
-				if(time == Constant.HIS_24H){
+				if (time == Constant.HIS_24H) {
 					return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_HOURS);
 				}
-				if(time == Constant.HIS_ALL){
+				if (time == Constant.HIS_ALL) {
 					return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_MONTH_OF_YEAR);
 				}
 				return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_DAY_OF_MONTH);
 			});
 
 		}
-		MyMarkerView mv = new MyMarkerView(getContext(), chart.getXAxis().getValueFormatter());
+		MyMarkerView mv = new MyMarkerView(getContext(), chart.getXAxis().getValueFormatter(), R.layout.custom_marker_view);
 		chart.setMarker(mv); // Set the marker to the chart
 		// create a data object with the datasets
 		LineData data = new LineData(set1);
@@ -292,26 +293,20 @@ public class CoinChartFragment extends BaseFragment {
 		return data;
 	}
 
-	private BarData generateBarChart(ArrayList<Volume> volumes){
+	private BarData generateBarChart(ArrayList<Volume> volumes) {
 		ArrayList<BarEntry> entries = new ArrayList<>();
-
-		BarDataSet set = new BarDataSet(entries, "Bar 1");
 		if (volumes != null && volumes.size() > 0) {
 			for (int i = 0; i < volumes.size(); i++) {
-				if(i % 5 == 0) {
+				if (i % 5 == 0)
 					entries.add(new BarEntry(i, volumes.get(i).getPrice()));
-				}
-			}
-		} else {
-			for (int i = 0; i <= 100; i++) {
-				entries.add(new BarEntry(i, 0));
 			}
 		}
+		BarDataSet set = new BarDataSet(entries, "Bar 1");
 		set.setColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		set.setAxisDependency(YAxis.AxisDependency.LEFT);
 		BarData data = new BarData(set);
 		data.setDrawValues(false);
-		data.setBarWidth(1f);
+		data.setBarWidth(2f);
 		return data;
 	}
 

@@ -13,6 +13,6 @@ public class CustomItemDecoration extends RecyclerView.ItemDecoration {
 
 	@Override
 	public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-		outRect.bottom = space;
+		outRect.top = space;
 	}
 }
