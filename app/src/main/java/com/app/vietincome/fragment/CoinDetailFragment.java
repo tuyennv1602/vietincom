@@ -31,6 +31,7 @@ import com.app.vietincome.view.NoneSwipeViewpager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -153,11 +154,11 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		String path;
 		String endPrice = "";
 		if (usd.getPrice() < 1.0) {
-			path = String.format("%.4f", priceValue);
+			path = String.format(Locale.US, "%.4f", priceValue);
 			price = String.valueOf(path.charAt(0));
 			endPrice = path.substring(1);
 		} else if (usd.getPrice() < 1000) {
-			path = String.format("%.2f", priceValue);
+			path = String.format(Locale.US, "%.2f", priceValue);
 			price = path.substring(0, path.length() - 3);
 			endPrice = path.substring(path.length() - 3);
 		} else {
@@ -170,7 +171,7 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 
 		StringBuilder bitcoin = new StringBuilder();
 		bitcoin.append(getContext().getString(R.string.bitcoin));
-		bitcoin.append(String.format("%.8f", (data.getQuotes().getBTC().getPrice())));
+		bitcoin.append(String.format(Locale.US,"%.8f", (data.getQuotes().getBTC().getPrice())));
 		tvBitcoin.setText(bitcoin.toString());
 	}
 
@@ -292,7 +293,6 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 	public void onItemClicked(int position) {
 		AppPreference.INSTANCE.addNewsRead(news.get(position).getId());
 		coinNewsAdapter.notifyItemChanged(position);
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(news.get(position).getUrl()));
-		startActivity(browserIntent);
+		openLink(news.get(position).getUrl());
 	}
 }

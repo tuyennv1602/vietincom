@@ -18,7 +18,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="5dp"
-			android:fontFamily="@font/helvetica_neue_medium"
+			android:fontFamily="@font/helvetica_neue_bold"
 			android:gravity="center"
 			android:text="2018-09-25"
 			android:textColor="@color/white"
@@ -38,7 +38,7 @@
 		style="@style/DefaultTextView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:fontFamily="@font/helvetica_neue_medium"
+		android:fontFamily="@font/helvetica_neue_bold"
 		android:gravity="center"
 		android:text="Steam"
 		android:textColor="@color/white"
@@ -73,7 +73,7 @@
 
 		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="50dp"
+			android:layout_height="45dp"
 			android:gravity="center_horizontal"
 			android:orientation="horizontal"
 			android:weightSum="2">
@@ -125,8 +125,9 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingStart="0dp"
+			android:max="105"
 			android:paddingEnd="0dp"
-			android:thumb="@drawable/seekbar_thumb"/>
+			android:thumb="@drawable/seekbar_thumb_white"/>
 
 	</LinearLayout>
 

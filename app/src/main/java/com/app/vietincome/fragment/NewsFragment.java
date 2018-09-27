@@ -153,9 +153,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 				rcvNews.hideShimmerAdapter();
 				if (response.isSuccessful()) {
 					if (response.body().isSuccess()) {
-						if (page == 1) {
-							news.clear();
-						}
+						news.clear();
 						news.addAll(response.body().getNews());
 						AppPreference.INSTANCE.setNews(news);
 						newsAdapter.notifyDataSetChanged();
@@ -170,7 +168,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 			public void onFailure(Call<NewsResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvNews.hideShimmerAdapter();
-				showAlert("Failure", t.getMessage());
+				showAlert("Failure", "Get News: " + t.getMessage());
 			}
 		});
 	}
@@ -206,8 +204,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	public void onItemClicked(int position) {
 		AppPreference.INSTANCE.addNewsRead(news.get(position).getId());
 		newsAdapter.notifyItemChanged(position);
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(news.get(position).getUrl()));
-		startActivity(browserIntent);
+		openLink(news.get(position).getUrl());
 	}
 
 

@@ -23,22 +23,28 @@ public class CustomSeekbar extends android.support.v7.widget.AppCompatSeekBar {
 
 	public CustomSeekbar(Context context, AttributeSet attrs) {
 		super(context, attrs, android.R.attr.seekBarStyle);
+		initView();
 	}
 
 	public CustomSeekbar(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+		initView();
+	}
+
+	private void initView(){
+		mThumbSize = getResources().getDimensionPixelSize(R.dimen.thumb_size);
+		mTextPaint = new TextPaint();
+		mTextPaint.setColor(Color.BLACK);
+		mTextPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.thumb_text_size));
+		mTextPaint.setAntiAlias(true);
+		mTextPaint.setTypeface(Typeface.DEFAULT);
+		mTextPaint.setTextAlign(Paint.Align.CENTER);
 	}
 
 	@Override
 	protected synchronized void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		mThumbSize = getResources().getDimensionPixelSize(R.dimen.thumb_size);
-		mTextPaint = new TextPaint();
-		mTextPaint.setColor(Color.BLACK);
-		mTextPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.thumb_text_size));
-		mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
-		mTextPaint.setTextAlign(Paint.Align.CENTER);
-		String progressText = " " +  String.valueOf(getProgress()) + "% ";
+		String progressText = String.valueOf(getProgress()) + "%";
 		Rect bounds = new Rect();
 		mTextPaint.getTextBounds(progressText, 0, progressText.length(), bounds);
 		int leftPadding = getPaddingLeft() - getThumbOffset();
@@ -54,5 +60,10 @@ public class CustomSeekbar extends android.support.v7.widget.AppCompatSeekBar {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		return false;
+	}
+
+	public void setTextColor(int color){
+		mTextPaint.setColor(color);
+		invalidate();
 	}
 }

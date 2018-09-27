@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.News;
+import com.app.vietincome.model.responses.TokenResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -28,8 +29,8 @@ public enum AppPreference {
 	private static final String KEY_HORIZONTAL = "horizontal";
 	private static final String KEY_VERTICAL = "vertical";
 	private static final String KEY_NEWS = "news";
+	private static final String KEY_TOKEN = "token";
 
-	public String token = "";
 	public boolean darkTheme;
 	private SharedPreferences preferences;
 	public Gson mGson;
@@ -38,6 +39,7 @@ public enum AppPreference {
 	private ArrayList<Integer> favouriteCoin = new ArrayList<>();
 	private ArrayList<News> news = new ArrayList<>();
 	private Currency currency;
+	private TokenResponse token;
 	private boolean isVolume;
 	private boolean isHorizontal;
 	private boolean isVertical;
@@ -50,10 +52,10 @@ public enum AppPreference {
 	}
 
 	private void readData() {
-		token = preferences.getString(KEY_ACCESS_TOKEN, "");
 		darkTheme = preferences.getBoolean(KEY_THEME, true);
 		numNews = preferences.getInt(KEY_NUMNEWS, 0);
 		currency = mGson.fromJson(preferences.getString(KEY_CURRENCY, null), Currency.class);
+		token = mGson.fromJson(preferences.getString(KEY_TOKEN, null), TokenResponse.class);
 		isVolume = preferences.getBoolean(KEY_VOLUME, true);
 		isHorizontal = preferences.getBoolean(KEY_HORIZONTAL, true);
 		isVertical = preferences.getBoolean(KEY_VERTICAL, true);
@@ -166,6 +168,15 @@ public enum AppPreference {
 			return new Currency("USD", "$", "");
 		}
 		return this.currency;
+	}
+
+	public TokenResponse getToken() {
+		return token;
+	}
+
+	public void setToken(TokenResponse token) {
+		this.token = token;
+		preferences.edit().putString(KEY_TOKEN, mGson.toJson(token)).apply();
 	}
 
 	public ArrayList<News> getNews() {

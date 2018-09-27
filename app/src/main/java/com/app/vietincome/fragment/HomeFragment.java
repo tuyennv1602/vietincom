@@ -275,7 +275,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 			public void onFailure(Call<RateResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvAllCoin.hideShimmerAdapter();
-				showAlert("Failure", t.getMessage());
+				showAlert("Failure", "Get Rate: " + t.getMessage());
 			}
 		});
 	}
@@ -321,7 +321,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvAllCoin.hideShimmerAdapter();
-				showAlert("Failure", t.getMessage());
+				showAlert("Failure","Get Coins: " + t.getMessage());
 			}
 		});
 	}

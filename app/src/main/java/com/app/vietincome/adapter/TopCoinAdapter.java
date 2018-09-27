@@ -17,6 +17,7 @@ import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.HighLightLinearLayout;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -116,30 +117,30 @@ public class TopCoinAdapter extends RecyclerView.Adapter<TopCoinAdapter.TopCoinV
 			tvRank.setText(String.valueOf(position));
 			tvName.setText(data.getName());
 			if (type == Constant.MARKET_CAP) {
-				tvValue.setText("$" + withSuffix(data.getQuotes().getUSD().getMarketCap().longValue()));
+				tvValue.setText(new StringBuilder().append("$").append(withSuffix(data.getQuotes().getUSD().getMarketCap().longValue())).toString());
 //				if(currency.getCode().equals("USD")) {
 //					tvValue.setText(currency.getSymbol() + withSuffix(data.getQuotes().getUSD().getMarketCap().longValue()));
 //				}else{
 //					tvValue.setText(currency.getSymbol() + withSuffix((long) (data.getQuotes().getUSD().getMarketCap() * rate)));
 //				}
 				float percent = (float) ((data.getQuotes().getUSD().getMarketCap() / total) * 100);
-				tvPercent.setText(String.format("%.2f", percent) + "%");
+				tvPercent.setText(new StringBuilder().append(String.format(Locale.US, "%.2f", percent)).append("%").toString());
 			} else {
-				tvValue.setText("$" + withSuffix(data.getQuotes().getUSD().getVolume24h().longValue()));
+				tvValue.setText(new StringBuilder().append("$").append(withSuffix(data.getQuotes().getUSD().getVolume24h().longValue())).toString());
 //				if(currency.getCode().equals("USD")) {
 //					tvValue.setText(currency.getSymbol() + withSuffix(data.getQuotes().getUSD().getVolume24h().longValue()));
 //				}else{
 //					tvValue.setText(currency.getSymbol() + withSuffix((long) (data.getQuotes().getUSD().getVolume24h() * rate)));
 //				}
 				float percent = (float) ((data.getQuotes().getUSD().getVolume24h() / total) * 100);
-				tvPercent.setText(String.format("%.2f", percent) + "%");
+				tvPercent.setText(new StringBuilder().append(String.format("%.2f", percent)).append("%").toString());
 			}
 		}
 
 		public String withSuffix(long price) {
 			if (price < 1000) return "" + price;
 			int exp = (int) (Math.log(price) / Math.log(1000));
-			return String.format("%.1f%c",
+			return String.format(Locale.US, "%.1f%c",
 					price / Math.pow(1000, exp),
 					"KMBTPE".charAt(exp - 1));
 		}

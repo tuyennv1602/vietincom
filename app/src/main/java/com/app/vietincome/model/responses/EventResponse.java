@@ -7,7 +7,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class EventResponse {
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+
+public class EventResponse implements ObservableSource<EventResponse> {
 
 	@SerializedName("_metadata")
 	@Expose
@@ -30,5 +33,10 @@ public class EventResponse {
 
 	public void setMetadata(Metadata metadata) {
 		this.metadata = metadata;
+	}
+
+	@Override
+	public void subscribe(Observer<? super EventResponse> observer) {
+
 	}
 }

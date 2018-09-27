@@ -3,9 +3,11 @@ package com.app.vietincome.bases;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
@@ -362,6 +364,11 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 
 	public void setTextColor(TextView textView){
 		textView.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+	}
+
+	public void openLink(String link){
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+		startActivity(browserIntent);
 	}
 
 }

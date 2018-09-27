@@ -300,7 +300,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", t.getMessage());
+				showAlert("Failure", "Get TopMarkets: " +t.getMessage());
 			}
 		});
 	}
@@ -324,7 +324,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", t.getMessage());
+				showAlert("Failure", "Get TopVolumes: " +t.getMessage());
 			}
 		});
 	}
@@ -347,7 +347,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<GlobalResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", t.getMessage());
+				showAlert("Failure","Get Global Data: " + t.getMessage());
 			}
 		});
 	}

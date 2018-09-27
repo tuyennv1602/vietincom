@@ -35,7 +35,9 @@
 				style="@style/DefaultTextView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:ellipsize="end"
 				android:fontFamily="@font/helvetica_neue_medium"
+				android:maxLines="1"
 				android:text="Time"
 				android:textColor="@color/light_text"
 				android:textSize="16sp"/>
@@ -63,7 +65,9 @@
 				style="@style/DefaultTextView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:ellipsize="end"
 				android:fontFamily="@font/helvetica_neue_medium"
+				android:maxLines="1"
 				android:text="All"
 				android:textColor="@color/light_text"
 				android:textSize="16sp"/>
@@ -72,15 +76,30 @@
 
 	</LinearLayout>
 
-	<com.cooltechworks.views.shimmer.ShimmerRecyclerView
-		android:id="@+id/rcvEvents"
+	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:paddingLeft="15dp"
-		android:paddingTop="10dp"
-		android:paddingRight="15dp"
-		app:shimmer_demo_child_count="5"
-		app:shimmer_demo_layout="@layout/layout_demo_event_light"
-		app:shimmer_demo_layout_manager_type="linear_vertical"/>
+		android:layout_height="match_parent">
+
+		<TextView
+			android:id="@+id/tvNotFound"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:fontFamily="@font/helvetica_neue_bold"
+			android:text="No matches found"
+			android:textSize="20sp"/>
+
+		<com.cooltechworks.views.shimmer.ShimmerRecyclerView
+			android:id="@+id/rcvEvents"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="15dp"
+			android:paddingRight="15dp"
+			app:shimmer_demo_child_count="5"
+			app:shimmer_demo_layout="@layout/layout_demo_event_light"
+			app:shimmer_demo_layout_manager_type="linear_vertical"/>
+	</RelativeLayout>
+
 
 </LinearLayout>

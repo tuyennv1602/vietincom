@@ -17,6 +17,6 @@
 	<dimen name="item_currency">45dp</dimen>
 	<dimen name="line_chart_height">300dp</dimen>
 	<dimen name="small_line_chart_height">250dp</dimen>
-	<dimen name="thumb_size">20dp</dimen>
+	<dimen name="thumb_size">32dp</dimen>
 	<dimen name="thumb_text_size">15sp</dimen>
 </resources>

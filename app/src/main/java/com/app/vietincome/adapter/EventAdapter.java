@@ -111,7 +111,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
 		public void onBind(Event event) {
 			layoutRoot.setBackgroundResource(isDarkTheme ? R.drawable.border_event_dark : R.drawable.border_event_light);
-			layoutInfo.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.white));
+			layoutInfo.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_info) : getColor(R.color.light_info));
 			tvDescription.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			viewLine.setBackgroundColor(isDarkTheme ? getColor(R.color.white) : getColor(R.color.color_line));
 			tvValidation.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
@@ -129,6 +129,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 			tvDescription.setText(event.getDescription());
 			tvValidation.setText(new StringBuilder().append("Validation (").append(event.getPositiveVoteCount()).append("/").append(event.getVoteCount()).append(" votes)").toString());
 			seekBar.getProgressDrawable().setColorFilter(getColor(R.color.dark_blue),PorterDuff.Mode.SRC_ATOP);
+			seekBar.setThumb(isDarkTheme ? itemView.getContext().getDrawable(R.drawable.seekbar_thumb_gray) : itemView.getContext().getDrawable(R.drawable.seekbar_thumb_white));
+			seekBar.setTextColor(isDarkTheme ? getColor(R.color.dark_blue) : getColor(R.color.dark_blue));
 			seekBar.setProgress(event.getPercentage());
 		}
 

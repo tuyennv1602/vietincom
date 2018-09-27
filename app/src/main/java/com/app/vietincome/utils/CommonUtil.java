@@ -7,22 +7,16 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.model.Currency;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 public class CommonUtil {
-	public static void runJustBeforeBeingDrawn(final View view, final Runnable runnable) {
-		final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-			@Override
-			public boolean onPreDraw() {
-				view.getViewTreeObserver().removeOnPreDrawListener(this);
-				runnable.run();
-				return true;
-			}
-		};
-		view.getViewTreeObserver().addOnPreDrawListener(preDrawListener);
-	}
 
 	public static int dpToPx(Context context, int dp) {
 		return (int) (dp * context.getResources().getDisplayMetrics().density);
@@ -58,5 +52,20 @@ public class CommonUtil {
 
 	public static int dp2pxInt(float dp){
 		return (int) dp2px(dp);
+	}
+
+	public static String formatCurrency(double value, double rate, Currency currency){
+		StringBuilder price = new StringBuilder();
+		price.append(currency.getSymbol());
+		double priceValue = currency.getCode().equals("USD") ? value: value * rate;
+		if (value < 1.0) {
+			price.append(String.format(Locale.US, "%.4f", priceValue));
+		} else if (value < 1000) {
+			price.append(String.format(Locale.US,"%.2f", priceValue));
+		} else {
+			DecimalFormat dFormat = new DecimalFormat("###,###");
+			price.append(dFormat.format(priceValue));
+		}
+		return price.toString();
 	}
 }

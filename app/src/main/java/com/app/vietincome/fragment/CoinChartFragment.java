@@ -14,6 +14,7 @@ import com.app.vietincome.model.Price;
 import com.app.vietincome.model.Volume;
 import com.app.vietincome.model.responses.ChartResponse;
 import com.app.vietincome.network.ApiClient;
+import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.utils.Constant;
 import com.app.vietincome.utils.DateUtil;
 import com.app.vietincome.view.PriceAxisValueFormatter;
@@ -203,7 +204,7 @@ public class CoinChartFragment extends BaseFragment {
 
 			@Override
 			public void onFailure(Call<ChartResponse> call, Throwable t) {
-				showAlert("Failure", t.getMessage());
+				showAlert("Failure","Get History: " + t.getMessage());
 			}
 		});
 	}
@@ -221,7 +222,7 @@ public class CoinChartFragment extends BaseFragment {
 
 			@Override
 			public void onFailure(Call<ChartResponse> call, Throwable t) {
-				showAlert("Failure", t.getMessage());
+				showAlert("Failure","Get History: " + t.getMessage());
 			}
 		});
 	}
@@ -246,6 +247,8 @@ public class CoinChartFragment extends BaseFragment {
 			data.setData(generateBarChart(chartResponse.getVolumes()));
 			chart.getAxisLeft().setAxisMaximum(data.getYMax(YAxis.AxisDependency.LEFT) * 4);
 		}
+		tvLowValue.setText(CommonUtil.formatCurrency(data.getYMin(YAxis.AxisDependency.RIGHT), rate, AppPreference.INSTANCE.getCurrency()));
+		tvHighValue.setText(CommonUtil.formatCurrency(data.getYMax(YAxis.AxisDependency.RIGHT), rate, AppPreference.INSTANCE.getCurrency()));
 		chart.setData(data);
 		chart.animateXY(1000, 1000);
 		chart.invalidate();

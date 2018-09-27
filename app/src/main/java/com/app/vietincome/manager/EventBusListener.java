@@ -1,6 +1,7 @@
 package com.app.vietincome.manager;
 
 import com.app.vietincome.model.Data;
+import com.app.vietincome.model.Event;
 import com.app.vietincome.model.News;
 
 import java.util.ArrayList;
@@ -41,6 +42,16 @@ public class EventBusListener {
 
 		public AddNews(ArrayList<News> news, int position){
 			this.news = news;
+			this.position = position;
+		}
+	}
+
+	public static class AddEvent{
+		public ArrayList<Event> events;
+		public int position;
+
+		public AddEvent(ArrayList<Event> events, int position){
+			this.events = events;
 			this.position = position;
 		}
 	}

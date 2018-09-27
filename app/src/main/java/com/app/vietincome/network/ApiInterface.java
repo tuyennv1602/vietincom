@@ -1,7 +1,8 @@
 package com.app.vietincome.network;
 
+import com.app.vietincome.model.CoinResponse;
+import com.app.vietincome.model.responses.TokenResponse;
 import com.app.vietincome.model.responses.ChartResponse;
-import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.model.responses.EventResponse;
 import com.app.vietincome.model.responses.GlobalResponse;
 import com.app.vietincome.model.responses.RateResponse;
@@ -9,8 +10,6 @@ import com.app.vietincome.model.responses.NewsResponse;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -24,10 +23,10 @@ public interface ApiInterface {
 	Observable<NewsResponse> getNewsInPage(@Query("page") int page);
 
 	@GET("ticker/?structure=array&limit=100&convert=BTC")
-	Observable<CoinResponse> getCoinInPage(@Query("start") int start);
+	Observable<com.app.vietincome.model.responses.CoinResponse> getCoinInPage(@Query("start") int start);
 
 	@GET("ticker/?structure=array&limit=100&convert=BTC")
-	Call<CoinResponse> getCoinFirstPage();
+	Call<com.app.vietincome.model.responses.CoinResponse> getCoinFirstPage();
 
 	@GET("price?fsym=USD")
 	Call<RateResponse> getRate(@Query("tsyms") String toSymbol);
@@ -43,15 +42,28 @@ public interface ApiInterface {
 	Call<GlobalResponse> getGlobalData();
 
 	@GET("ticker/?limit=10&sort=market_cap&structure=array&convert=BTC")
-	Call<CoinResponse> getTopMarketCap();
+	Call<com.app.vietincome.model.responses.CoinResponse> getTopMarketCap();
 
 	@GET("ticker/?limit=10&sort=volume_24h&structure=array&convert=BTC")
-	Call<CoinResponse> getTopVolume();
+	Call<com.app.vietincome.model.responses.CoinResponse> getTopVolume();
 
-	@GET("events?max=150&showMetadata=true")
+	@GET("v1/events?max=150&showMetadata=true&page=1")
 	Call<EventResponse> getEvent(@Query("access_token") String accessToken,
-	                             @Query("page") int page,
 	                             @Query("dateRangeStart") String dateStart,
 	                             @Query("dateRangeEnd") String dateEnd,
 	                             @Query("coins") String coins);
+
+	@GET("v1/events?max=150&showMetadata=true")
+	Observable<EventResponse> getEventInPage(@Query("access_token") String accessToken,
+	                             @Query("dateRangeStart") String dateStart,
+	                             @Query("dateRangeEnd") String dateEnd,
+	                             @Query("page") int page,
+	                             @Query("coins") String coins);
+
+	@GET("oauth/v2/token?grant_type=client_credentials")
+	Call<TokenResponse> getToken(@Query("client_id") String clientId,
+	                             @Query("client_secret") String clientSecret);
+
+	@GET("v1/coins")
+	Call<CoinResponse> getCoins();
 }

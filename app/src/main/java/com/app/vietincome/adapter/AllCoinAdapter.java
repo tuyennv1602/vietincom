@@ -20,6 +20,7 @@ import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.model.USD;
+import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.view.HighLightRelativeLayout;
 
 import java.text.DecimalFormat;
@@ -169,22 +170,12 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			tv24H.setText(usd.getPercentChange24h());
 			tv7D.setText(usd.getPercentChange7d());
 			tvPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, isBTC ? 10 : 12);
-			StringBuilder price = new StringBuilder();
+			String price;
 			if (isBTC) {
-				price.append(itemView.getContext().getString(R.string.bitcoin));
-				price.append(String.format("%.8f", (item.getQuotes().getBTC().getPrice())));
+				price = itemView.getContext().getString(R.string.bitcoin) + String.format("%.8f", (item.getQuotes().getBTC().getPrice()));
 			} else {
 				Currency currency = AppPreference.INSTANCE.getCurrency();
-				price.append(currency.getSymbol());
-				double priceValue = AppPreference.INSTANCE.getCurrency().getCode().equals("USD") ? usd.getPrice() : usd.getPrice() * rate;
-				if (usd.getPrice() < 1.0) {
-					price.append(String.format("%.4f", priceValue));
-				} else if (usd.getPrice() < 1000) {
-					price.append(String.format("%.2f", priceValue));
-				} else {
-					DecimalFormat dFormat = new DecimalFormat("###,###");
-					price.append(dFormat.format(priceValue));
-				}
+				price = CommonUtil.formatCurrency(usd.getPrice(), rate, currency);
 			}
 			tvPrice.setText(price);
 //			imgStar.setVisibility(item.isFavourite() ? View.VISIBLE : View.GONE);

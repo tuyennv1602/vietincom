@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/light_background">
+
+	<TextView
+		android:id="@+id/tvChooseCoin"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:fontFamily="@font/helvetica_neue_medium"
+		android:gravity="center_vertical"
+		android:paddingLeft="20dp"
+		android:text="Choose Coin"
+		android:textSize="18sp"/>
+
+	<RelativeLayout
+		android:id="@+id/layoutSearch"
+		android:layout_below="@id/tvChooseCoin"
+		android:layout_width="match_parent"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:layout_height="wrap_content">
+
+		<EditText
+			android:id="@+id/edtSearch"
+			style="@style/DefaultEditText"
+			android:hint="Search"
+			android:maxLines="1"
+			android:layout_centerVertical="true"
+			android:imeOptions="actionSearch"
+			android:paddingRight="40dp"
+			android:textCursorDrawable="@null"
+			/>
+
+		<com.app.vietincome.view.HighLightImageView
+			android:id="@+id/imgClose"
+			android:layout_width="@dimen/width_image"
+			android:layout_height="@dimen/width_image"
+			android:layout_alignParentRight="true"
+			android:padding="18dp"
+			android:visibility="gone"
+			android:src="@drawable/close"/>
+
+	</RelativeLayout>
+
+	<LinearLayout
+		android:id="@+id/layoutBottom"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:layout_alignParentBottom="true"
+		android:gravity="right">
+
+		<com.app.vietincome.view.HighLightTextView
+			android:id="@+id/tvCancel"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:gravity="center"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:text="CANCEL"
+			android:textSize="16sp"/>
+
+	</LinearLayout>
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/rcvCoin"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="51dp"
+		android:paddingRight="10dp"
+		android:paddingLeft="10dp"
+		android:layout_below="@id/layoutSearch"
+		android:background="@color/color_line"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.5dp"
+		android:layout_above="@id/layoutBottom"
+		android:background="@color/color_line"/>
+
+</RelativeLayout>
