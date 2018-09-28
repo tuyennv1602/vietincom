@@ -10,7 +10,7 @@
 		android:id="@+id/tvChooseCoin"
 		style="@style/DefaultTextView"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
+		android:layout_height="45dp"
 		android:fontFamily="@font/helvetica_neue_medium"
 		android:gravity="center_vertical"
 		android:paddingLeft="20dp"
@@ -21,8 +21,8 @@
 		android:id="@+id/layoutSearch"
 		android:layout_below="@id/tvChooseCoin"
 		android:layout_width="match_parent"
-		android:layout_marginLeft="15dp"
-		android:layout_marginRight="15dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
 		android:layout_height="wrap_content">
 
 		<EditText
@@ -38,8 +38,8 @@
 
 		<com.app.vietincome.view.HighLightImageView
 			android:id="@+id/imgClose"
-			android:layout_width="@dimen/width_image"
-			android:layout_height="@dimen/width_image"
+			android:layout_width="50dp"
+			android:layout_height="50dp"
 			android:layout_alignParentRight="true"
 			android:padding="18dp"
 			android:visibility="gone"
@@ -68,15 +68,30 @@
 
 	</LinearLayout>
 
-	<android.support.v7.widget.RecyclerView
-		android:id="@+id/rcvCoin"
+	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_marginBottom="51dp"
-		android:paddingRight="10dp"
-		android:paddingLeft="10dp"
 		android:layout_below="@id/layoutSearch"
-		android:background="@color/color_line"/>
+		android:layout_height="match_parent">
+
+		<TextView
+			android:id="@+id/tvLoading"
+			android:layout_width="match_parent"
+			android:text="Loading coins..."
+			android:gravity="center"
+			android:fontFamily="@font/helvetica_neue_medium"
+			android:textSize="17sp"
+			android:layout_height="match_parent"/>
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/rcvCoin"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="51dp"
+			android:nestedScrollingEnabled="false"
+			android:background="@color/color_line"/>
+
+	</RelativeLayout>
+
 
 	<View
 		android:layout_width="match_parent"

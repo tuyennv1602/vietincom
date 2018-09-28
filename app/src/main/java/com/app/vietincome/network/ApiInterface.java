@@ -1,12 +1,14 @@
 package com.app.vietincome.network;
 
-import com.app.vietincome.model.CoinResponse;
+import com.app.vietincome.model.Coin;
 import com.app.vietincome.model.responses.TokenResponse;
 import com.app.vietincome.model.responses.ChartResponse;
 import com.app.vietincome.model.responses.EventResponse;
 import com.app.vietincome.model.responses.GlobalResponse;
 import com.app.vietincome.model.responses.RateResponse;
 import com.app.vietincome.model.responses.NewsResponse;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
@@ -65,5 +67,5 @@ public interface ApiInterface {
 	                             @Query("client_secret") String clientSecret);
 
 	@GET("v1/coins")
-	Call<CoinResponse> getCoins();
+	Call<List<Coin>> getCoins(@Query("access_token") String accessToken);
 }

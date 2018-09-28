@@ -74,6 +74,11 @@ public class CurrencyDialog extends BaseDialogFragment implements ItemClickListe
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		tvCurrency.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+		tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		tvSelect.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
+		rcvCurrency.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
 		currencies = AppPreference.INSTANCE.mGson.fromJson(
 				CommonUtil.getStringFromAssets(getContext(), "common-currency.json"),
 				new TypeToken<ArrayList<Currency>>() {
@@ -92,11 +97,6 @@ public class CurrencyDialog extends BaseDialogFragment implements ItemClickListe
 			currencyAdapter = new CurrencyAdapter(currencies, this);
 		}
 		rcvCurrency.setAdapter(currencyAdapter);
-		tvCurrency.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-		tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
-		tvSelect.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
-		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
-		rcvCurrency.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
 	}
 
 	@OnClick(R.id.tvCancel)

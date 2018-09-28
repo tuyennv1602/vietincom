@@ -26,6 +26,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
 
 	private ArrayList<Currency> currencies;
 	private ItemClickListener itemClickListener;
+	boolean isDarkTheme = AppPreference.INSTANCE.darkTheme;
 
 	public CurrencyAdapter(ArrayList<Currency> currencies, ItemClickListener itemClickListener) {
 		this.currencies = currencies;
@@ -77,7 +78,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
 		}
 
 		public void onBind(Currency currency) {
-			boolean isDarkTheme = AppPreference.INSTANCE.darkTheme;
 			layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 			ColorStateList colorStateList = new ColorStateList(
 					new int[][]{

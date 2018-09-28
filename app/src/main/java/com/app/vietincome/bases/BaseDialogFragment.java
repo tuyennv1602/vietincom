@@ -1,6 +1,9 @@
 package com.app.vietincome.bases;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
 import com.app.vietincome.R;
@@ -66,5 +70,26 @@ public abstract class BaseDialogFragment extends DialogFragment {
 	public int getColor(int color){
 		return ContextCompat.getColor(getContext(), color);
 	}
+
+	protected void showKeyboard(final View target) {
+		if (target == null || getActivity() == null) {
+			return;
+		}
+		((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(target,
+				InputMethodManager.SHOW_IMPLICIT);
+	}
+
+	protected void hideKeyboard() {
+		if (getActivity() == null) {
+			return;
+		}
+		View view = getActivity().getCurrentFocus();
+		if (view != null) {
+			((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(),
+					InputMethodManager.HIDE_NOT_ALWAYS);
+		}
+	}
+
+
 
 }
