@@ -14,13 +14,11 @@
 		android:orientation="horizontal"
 		android:weightSum="2">
 
-		<com.app.vietincome.view.HighLightLinearLayout
+		<com.app.vietincome.view.HighLightRelativeLayout
 			android:id="@+id/layoutPeriod"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:orientation="vertical">
+			android:layout_weight="1">
 
 			<TextView
 				android:id="@+id/tvPeriod"
@@ -28,6 +26,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="Period"
+				android:layout_centerHorizontal="true"
 				android:textColor="@color/light_text"/>
 
 			<TextView
@@ -35,25 +34,27 @@
 				style="@style/DefaultTextView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_below="@id/tvPeriod"
+				android:layout_marginTop="-5dp"
 				android:ellipsize="end"
+				android:layout_centerHorizontal="true"
 				android:fontFamily="@font/helvetica_neue_medium"
 				android:maxLines="1"
 				android:text="Time"
 				android:textColor="@color/light_text"
 				android:textSize="16sp"/>
 
-		</com.app.vietincome.view.HighLightLinearLayout>
+		</com.app.vietincome.view.HighLightRelativeLayout>
 
-		<com.app.vietincome.view.HighLightLinearLayout
+		<com.app.vietincome.view.HighLightRelativeLayout
 			android:id="@+id/layoutCoin"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:orientation="vertical">
+			android:layout_weight="1">
 
 			<TextView
 				android:id="@+id/tvCoin"
+				android:layout_centerHorizontal="true"
 				style="@style/DefaultTextView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -65,14 +66,17 @@
 				style="@style/DefaultTextView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_below="@id/tvCoin"
+				android:layout_marginTop="-5dp"
 				android:ellipsize="end"
+				android:layout_centerHorizontal="true"
 				android:fontFamily="@font/helvetica_neue_medium"
 				android:maxLines="1"
 				android:text="All"
 				android:textColor="@color/light_text"
 				android:textSize="16sp"/>
 
-		</com.app.vietincome.view.HighLightLinearLayout>
+		</com.app.vietincome.view.HighLightRelativeLayout>
 
 	</LinearLayout>
 
