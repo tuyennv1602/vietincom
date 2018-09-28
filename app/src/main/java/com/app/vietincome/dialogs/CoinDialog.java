@@ -1,5 +1,6 @@
 package com.app.vietincome.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.vietincome.R;
 import com.app.vietincome.adapter.CoinAdapter;
@@ -20,6 +22,7 @@ import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.manager.interfaces.OnSelectedCoin;
 import com.app.vietincome.model.Coin;
+import com.app.vietincome.model.Data;
 import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.HighLightTextView;
@@ -30,6 +33,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,10 +64,10 @@ public class CoinDialog extends BaseDialogFragment implements ItemClickListener 
 	TextView tvLoading;
 
 	private OnSelectedCoin onSelectedCoin;
-	private ArrayList<Coin> coins;
+	private ArrayList<Coin> coins, searchCoins;
 	private CoinAdapter coinAdapter;
 
-	public static CoinDialog newIntance(OnSelectedCoin onSelectedCoin){
+	public static CoinDialog newIntance(OnSelectedCoin onSelectedCoin) {
 		CoinDialog dialog = new CoinDialog();
 		Bundle args = new Bundle();
 		dialog.setArguments(args);
@@ -95,10 +101,10 @@ public class CoinDialog extends BaseDialogFragment implements ItemClickListener 
 		edtSearch.setHintTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		edtSearch.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 		imgClose.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
-		if(coins == null){
+		if (coins == null) {
 			coins = new ArrayList<>();
 		}
-		if(coinAdapter == null){
+		if (coinAdapter == null) {
 			coinAdapter = new CoinAdapter(coins, this);
 		}
 		rcvCoin.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -108,12 +114,15 @@ public class CoinDialog extends BaseDialogFragment implements ItemClickListener 
 		getCoins();
 	}
 
-	private void getCoins(){
+	private void getCoins() {
+		tvLoading.setVisibility(View.VISIBLE);
 		ApiClient.getEventService().getCoins(AppPreference.INSTANCE.getToken().getAccessToken()).enqueue(new Callback<List<Coin>>() {
 			@Override
 			public void onResponse(Call<List<Coin>> call, Response<List<Coin>> response) {
-				if(response.isSuccessful()){
-					if(response.body() != null){
+				tvLoading.setVisibility(View.GONE);
+				if (response.isSuccessful()) {
+					if (response.body() != null) {
+						searchCoins = (ArrayList<Coin>) response.body();
 						coins.addAll(response.body());
 						coinAdapter.notifyDataSetChanged();
 					}
@@ -122,13 +131,18 @@ public class CoinDialog extends BaseDialogFragment implements ItemClickListener 
 
 			@Override
 			public void onFailure(Call<List<Coin>> call, Throwable t) {
+				tvLoading.setVisibility(View.GONE);
 			}
 		});
 
 	}
+
 	@Override
 	public void onItemClicked(int position) {
-
+		if (onSelectedCoin != null) {
+			onSelectedCoin.onSelectedCoin(searchCoins.get(position).getId(), searchCoins.get(position).getName());
+			getDialog().dismiss();
+		}
 	}
 
 	@OnTextChanged(R.id.edtSearch)
@@ -138,15 +152,33 @@ public class CoinDialog extends BaseDialogFragment implements ItemClickListener 
 		} else {
 			imgClose.setVisibility(View.VISIBLE);
 		}
+		searchCoin(text.toString());
 	}
 
 	@OnClick(R.id.tvCancel)
-	void onCancel(){
-		if(onSelectedCoin != null){
+	void onCancel() {
+		if (onSelectedCoin != null) {
 			onSelectedCoin.onCancel();
 		}
 		getDialog().dismiss();
 	}
 
+	@OnClick(R.id.imgClose)
+	void onClearSearch() {
+		edtSearch.setText("");
+	}
+
+	@SuppressLint("CheckResult")
+	public void searchCoin(String key) {
+		Observable.fromIterable(coins)
+				.observeOn(Schedulers.computation())
+				.observeOn(AndroidSchedulers.mainThread())
+				.filter(data -> data.getName().contains(key) || data.getSymbol().contains(key.toUpperCase()))
+				.toList()
+				.subscribe(data -> {
+					searchCoins = (ArrayList<Coin>) data;
+					coinAdapter.setCoins(searchCoins);
+				});
+	}
 
 }

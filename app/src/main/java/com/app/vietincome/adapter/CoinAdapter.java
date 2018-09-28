@@ -29,6 +29,11 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
 		this.itemClickListener = itemClickListener;
 	}
 
+	public void setCoins(ArrayList<Coin> coins){
+		this.coins = coins;
+		notifyDataSetChanged();
+	}
+
 	@NonNull
 	@Override
 	public CoinViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

@@ -262,7 +262,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 	}
 
 	@OnClick(R.id.layoutCoin)
-	void getCoin(){
+	void getCoin() {
 		CoinDialog dialog = CoinDialog.newIntance(this);
 		dialog.show(getFragmentManager(), "coin");
 	}
@@ -270,7 +270,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 	private void showDatePickerStart() {
 		final Calendar c = Calendar.getInstance();
 		DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (datePicker, year, month, day) -> {
-			dateStart = (day / 10 == 0 ? "0" + day : day )
+			dateStart = (day / 10 == 0 ? "0" + day : day)
 					+ "/" + ((month + 1) / 10 == 0 ? "0" + (month + 1) : month + 1) + "/" + year;
 			showDatePickerEnd();
 		}, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -281,7 +281,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 		final Calendar c = Calendar.getInstance();
 		DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (datePicker, year, month, day) -> {
 			isCompleted = true;
-			dateEnd =  (day / 10 == 0 ? "0" + day : day )
+			dateEnd = (day / 10 == 0 ? "0" + day : day)
 					+ "/" + ((month + 1) / 10 == 0 ? "0" + (month + 1) : month + 1) + "/" + year;
 			setTextPeriod();
 			page = 1;
@@ -290,21 +290,25 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 		datePickerDialog.show();
 	}
 
-	private void setTextPeriod(){
-		if(dateEnd.isEmpty() || dateEnd.equals(DateUtil.getStrCurrentDate())){
+	private void setTextPeriod() {
+		if (dateEnd.isEmpty() || dateEnd.equals(DateUtil.getStrCurrentDate())) {
 			tvPeriodValue.setText(dateStart + "-Today");
-		}else{
+		} else {
 			tvPeriodValue.setText(dateStart + "-" + dateEnd);
 		}
 	}
 
 	@Override
-	public void onSelectedCoin(String coinId) {
-
+	public void onSelectedCoin(String coinId, String name) {
+		this.coins = coinId;
+		tvCoinValue.setText(name);
+		getEvents(true, false);
 	}
 
 	@Override
 	public void onCancel() {
-
+		this.coins = "";
+		tvCoinValue.setText("All");
+		getEvents(true, false);
 	}
 }
