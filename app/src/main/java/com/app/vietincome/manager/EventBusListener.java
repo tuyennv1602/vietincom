@@ -55,4 +55,8 @@ public class EventBusListener {
 			this.position = position;
 		}
 	}
+
+	public static class UpdateEvent{
+
+	}
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:paddingRight="20dp"
+	android:paddingTop="20dp"
+	android:paddingLeft="20dp">
+
+	<TextView
+		android:id="@+id/tvRateApp"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:fontFamily="@font/helvetica_neue_medium"
+		android:text="Rate App"
+		android:textSize="20dp"/>
+
+	<TextView
+		android:id="@+id/tvRateContent"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/we_aim_"
+		android:textSize="16sp"/>
+
+	<me.zhanghai.android.materialratingbar.MaterialRatingBar
+		android:id="@+id/ratingBar"
+		style="@style/Widget.MaterialRatingBar.RatingBar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginLeft="-3dp"
+		android:layout_marginRight="-3dp"
+		android:padding="5dp"
+		android:stepSize="1"
+		app:mrb_progressTint="@color/light_image"
+		app:mrb_secondaryProgressTint="@color/light_image"/>
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvLater"
+		style="@style/DefaultTextView"
+		android:layout_width="100dp"
+		android:layout_height="50dp"
+		android:layout_gravity="right"
+		android:gravity="center_vertical|right"
+		android:text="LATER"
+		android:textSize="17sp"/>
+
+</LinearLayout>

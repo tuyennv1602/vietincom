@@ -73,15 +73,6 @@
 		android:layout_below="@id/layoutSearch"
 		android:layout_height="match_parent">
 
-		<TextView
-			android:id="@+id/tvLoading"
-			android:layout_width="match_parent"
-			android:text="Loading coins..."
-			android:gravity="center"
-			android:fontFamily="@font/helvetica_neue_medium"
-			android:textSize="17sp"
-			android:layout_height="match_parent"/>
-
 		<android.support.v7.widget.RecyclerView
 			android:id="@+id/rcvCoin"
 			android:layout_width="match_parent"

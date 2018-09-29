@@ -40,6 +40,17 @@ public abstract class BaseDialogFragment extends DialogFragment {
 		dialog.getWindow().getAttributes().windowAnimations = animation;
 	}
 
+	protected void setAttribute(Dialog dialog, boolean canOutside, int animation) {
+		dialog.setCanceledOnTouchOutside(canOutside);
+		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+		lp.copyFrom(dialog.getWindow().getAttributes());
+		lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+		lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+		dialog.getWindow().setAttributes(lp);
+		dialog.getWindow().setDimAmount(0.5f);
+		dialog.getWindow().getAttributes().windowAnimations = animation;
+	}
+
 	protected void setMarginView(View view, int marginLeft, int marginTop, int marginRight, int marginBottom) {
 		if (!(view.getLayoutParams() instanceof RelativeLayout.LayoutParams))
 			return;
@@ -89,7 +100,5 @@ public abstract class BaseDialogFragment extends DialogFragment {
 					InputMethodManager.HIDE_NOT_ALWAYS);
 		}
 	}
-
-
 
 }

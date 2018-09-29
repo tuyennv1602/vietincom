@@ -13,4 +13,7 @@
 	<string name="added_favourite">%s added to favourite</string>
 	<string name="bitcoin">฿</string>
 	<string name="no_alert">You have no %s alert yet</string>
+	<string name="we_aim_">We aim to create the best cryptocurrency app. We will be happy to get positive feedback on Google play. Please select rating.\nThanks for your support!</string>
+	<string name="help_us">Help us make app better! If you still have a question, Feel free to message us</string>
+	<string name="credit_content">We are using CoinMarketCap API for the top coins list. Also we awesome CryptoCompare API service to get charts data and other features. We appreciate both of them.</string>
 </resources>

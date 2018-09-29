@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.manager.interfaces.EventClickListener;
 import com.app.vietincome.model.Event;
+import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.utils.DateUtil;
 import com.app.vietincome.view.CustomSeekbar;
 import com.app.vietincome.view.HighLightTextView;
@@ -132,6 +133,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 			seekBar.setThumb(isDarkTheme ? itemView.getContext().getDrawable(R.drawable.seekbar_thumb_gray) : itemView.getContext().getDrawable(R.drawable.seekbar_thumb_white));
 			seekBar.setTextColor(isDarkTheme ? getColor(R.color.dark_blue) : getColor(R.color.dark_blue));
 			seekBar.setProgress(event.getPercentage());
+			if(event.getPercentage() < 5){
+				seekBar.setPadding(CommonUtil.dp2pxInt(10), 0, 0, 0);
+			}
 		}
 
 		private int getColor(int color) {

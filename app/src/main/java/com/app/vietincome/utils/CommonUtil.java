@@ -1,5 +1,6 @@
 package com.app.vietincome.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
@@ -68,4 +69,5 @@ public class CommonUtil {
 		}
 		return price.toString();
 	}
+
 }

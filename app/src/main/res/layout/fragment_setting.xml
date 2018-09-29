@@ -18,6 +18,7 @@
 
 
 			<com.app.vietincome.view.HighLightRelativeLayout
+				android:id="@+id/layoutRate"
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/item_setting_height">
 
@@ -46,8 +47,8 @@
 						style="@style/DefaultTextView"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:textColor="@color/light_gray"
 						android:text="It helps us make to move on"
+						android:textColor="@color/light_gray"
 						android:textSize="13sp"/>
 				</LinearLayout>
 
@@ -56,6 +57,7 @@
 			<include layout="@layout/view_line"/>
 
 			<com.app.vietincome.view.HighLightLinearLayout
+				android:id="@+id/layoutTelegram"
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/item_setting_height">
 
@@ -71,8 +73,32 @@
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
 					android:gravity="center_vertical"
-					android:textSize="16sp"
-					android:text="Join Telegram chat"/>
+					android:text="Join Telegram channel"
+					android:textSize="16sp"/>
+
+			</com.app.vietincome.view.HighLightLinearLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<com.app.vietincome.view.HighLightLinearLayout
+				android:id="@+id/layoutDonate"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height">
+
+				<ImageView
+					android:id="@+id/imgDonate"
+					android:layout_width="@dimen/item_setting_height"
+					android:layout_height="match_parent"
+					android:padding="15dp"
+					android:src="@drawable/donation"/>
+
+				<TextView
+					android:id="@+id/tvDonate"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:gravity="center_vertical"
+					android:text="Donate us"
+					android:textSize="16sp"/>
 
 			</com.app.vietincome.view.HighLightLinearLayout>
 
@@ -108,13 +134,13 @@
 				<TextView
 					android:id="@+id/tvCurrencyValue"
 					style="@style/DefaultTextView"
-					android:text="USD"
-					android:textSize="16sp"
-					android:paddingLeft="20dp"
-					android:gravity="center_vertical"
 					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
 					android:layout_alignParentRight="true"
-					android:layout_height="match_parent"/>
+					android:gravity="center_vertical"
+					android:paddingLeft="20dp"
+					android:text="USD"
+					android:textSize="16sp"/>
 
 			</RelativeLayout>
 
@@ -237,8 +263,114 @@
 				android:gravity="bottom"
 				android:paddingLeft="10dp"
 				android:paddingRight="10dp"
-				android:text="About"
+				android:text="About us"
 				android:textSize="20sp"/>
+
+
+			<com.app.vietincome.view.HighLightLinearLayout
+				android:id="@+id/layoutContact"
+				android:layout_width="match_parent"
+				android:layout_height="70dp"
+				android:gravity="center_vertical"
+				android:orientation="vertical"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp">
+
+				<TextView
+					android:id="@+id/tvContact"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Feedback"
+					android:textSize="16sp"/>
+
+				<TextView
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="If you still have a question, Feel free to message us"
+					android:textColor="@color/light_gray"
+					android:textSize="13sp"/>
+
+			</com.app.vietincome.view.HighLightLinearLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<com.app.vietincome.view.HighLightLinearLayout
+				android:id="@+id/layoutCooperation"
+				android:layout_width="match_parent"
+				android:layout_height="70dp"
+				android:gravity="center_vertical"
+				android:orientation="vertical"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp">
+
+				<TextView
+					android:id="@+id/tvCooperation"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Advertising"
+					android:textSize="16sp"/>
+
+				<TextView
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="We cooperate with anyone who wants to advertise on our website"
+					android:textColor="@color/light_gray"
+					android:textSize="13sp"/>
+
+			</com.app.vietincome.view.HighLightLinearLayout>
+
+			<include layout="@layout/view_line"/>
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvShare"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:gravity="center_vertical"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="Share Vietincome"
+				android:textSize="16sp"/>
+
+			<include layout="@layout/view_line"/>
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvCredit"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:gravity="center_vertical"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="Credits"
+				android:textSize="16sp"/>
+
+			<include layout="@layout/view_line"/>
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvAppInfo"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:gravity="center_vertical"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="App info"
+				android:textSize="16sp"/>
+
+			<include layout="@layout/view_line"/>
+
+			<TextView
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="60dp"
+				android:gravity="center"
+				android:text="Vietincome for Android v1.0.1"
+				android:textColor="@color/light_gray"/>
 
 		</LinearLayout>
 	</ScrollView>

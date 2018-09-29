@@ -217,7 +217,7 @@ public class GlobalFragment extends BaseFragment {
 
 	private void initChartView() {
 		if (chartViewPagerAdapter == null) {
-			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), "global", rate);
+			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), "global", 0, rate);
 		}
 		viewPagerChart.setAdapter(chartViewPagerAdapter);
 		viewPagerChart.setOffscreenPageLimit(6);

@@ -15,11 +15,13 @@ import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.EventClickListener;
 import com.app.vietincome.manager.interfaces.OnSelectedCoin;
+import com.app.vietincome.model.Coin;
 import com.app.vietincome.model.Event;
 import com.app.vietincome.model.responses.EventResponse;
 import com.app.vietincome.model.responses.TokenResponse;
 import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.network.AppConfig;
+import com.app.vietincome.utils.Constant;
 import com.app.vietincome.utils.DateUtil;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.NavigationTopBar;
@@ -29,8 +31,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -64,11 +71,13 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 	@BindView(R.id.tvNotFound)
 	TextView tvNotFound;
 
+
 	private ArrayList<Event> events;
 	private EventAdapter eventAdapter;
-	private String coins = "";
-	private String dateStart = DateUtil.getFirstDayMonth();
-	private String dateEnd = "";
+	private ArrayList<Coin> coins;
+	private String coin = "";
+	private String dateStart = DateUtil.getStrCurrentDate();
+	private String dateEnd = DateUtil.getFirstDay3Years();
 	private int page = 1;
 	private boolean isCompleted = true;
 
@@ -79,6 +88,15 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventRefreshData(EventBusListener.RefreshData event) {
+		page = 1;
+		getEvents(true, false);
+	}
+
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onEventUpdateEvents(EventBusListener.UpdateEvent event) {
+		page = 1;
+		getEvents(true, false);
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
@@ -108,8 +126,11 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 		rcvEvent.setAdapter(eventAdapter);
 		checkToken();
 		onUpdatedTheme();
-		setTextPeriod();
-
+		try {
+			setTextPeriod();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void checkToken() {
@@ -162,7 +183,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 				AppPreference.INSTANCE.getToken().getAccessToken(),
 				dateStart,
 				dateEnd,
-				coins
+				coin
 		).enqueue(new Callback<EventResponse>() {
 			@Override
 			public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
@@ -198,7 +219,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 						dateStart,
 						dateEnd,
 						integer,
-						coins))
+						coin))
 				.doOnError(throwable -> {
 
 				})
@@ -219,6 +240,30 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 
 					}
 				});
+	}
+
+	private void getListCoins() {
+		showProgressDialog();
+		ApiClient.getEventService().getCoins(AppPreference.INSTANCE.getToken().getAccessToken()).enqueue(new Callback<List<Coin>>() {
+			@Override
+			public void onResponse(Call<List<Coin>> call, Response<List<Coin>> response) {
+				hideProgressDialog();
+				if (response.isSuccessful()) {
+					if (response.body() != null) {
+						coins = (ArrayList<Coin>) response.body();
+						CoinDialog dialog = CoinDialog.newIntance(coins, EventFragment.this);
+						dialog.show(getFragmentManager(), "coin");
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Coin>> call, Throwable t) {
+				showAlert("Failure", t.getMessage());
+			}
+		});
+
+
 	}
 
 	@Override
@@ -263,8 +308,12 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 
 	@OnClick(R.id.layoutCoin)
 	void getCoin() {
-		CoinDialog dialog = CoinDialog.newIntance(this);
-		dialog.show(getFragmentManager(), "coin");
+		if (coins == null) {
+			getListCoins();
+		} else {
+			CoinDialog dialog = CoinDialog.newIntance(coins, this);
+			dialog.show(getFragmentManager(), "coin");
+		}
 	}
 
 	private void showDatePickerStart() {
@@ -283,31 +332,35 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 			isCompleted = true;
 			dateEnd = (day / 10 == 0 ? "0" + day : day)
 					+ "/" + ((month + 1) / 10 == 0 ? "0" + (month + 1) : month + 1) + "/" + year;
-			setTextPeriod();
+			try {
+				setTextPeriod();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			page = 1;
 			getEvents(true, false);
 		}, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 		datePickerDialog.show();
 	}
 
-	private void setTextPeriod() {
-		if (dateEnd.isEmpty() || dateEnd.equals(DateUtil.getStrCurrentDate())) {
-			tvPeriodValue.setText(dateStart + "-Today");
+	private void setTextPeriod() throws ParseException {
+		if (dateStart.equals(DateUtil.getStrCurrentDate())) {
+			tvPeriodValue.setText("Today" + "-" + DateUtil.parseDate(dateEnd, "dd/MM/yy"));
 		} else {
-			tvPeriodValue.setText(dateStart + "-" + dateEnd);
+			tvPeriodValue.setText(DateUtil.parseDate(dateStart, "dd/MM/yy") + "-" + DateUtil.parseDate(dateEnd, "dd/MM/yy"));
 		}
 	}
 
 	@Override
 	public void onSelectedCoin(String coinId, String name) {
-		this.coins = coinId;
+		this.coin = coinId;
 		tvCoinValue.setText(name);
 		getEvents(true, false);
 	}
 
 	@Override
 	public void onCancel() {
-		this.coins = "";
+		this.coin = "";
 		tvCoinValue.setText("All");
 		getEvents(true, false);
 	}

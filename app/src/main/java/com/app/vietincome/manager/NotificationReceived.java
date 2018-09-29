@@ -19,6 +19,9 @@ public class NotificationReceived implements OneSignal.NotificationReceivedHandl
 			if (message.getType() == Constant.TYPE_NEWS) {
 				AppPreference.INSTANCE.setNumNews();
 				EventBus.getDefault().post(new EventBusListener.UpdateNews());
+			}else if(message.getType() == Constant.TYPE_EVENT){
+				AppPreference.INSTANCE.setNumEvents();
+				EventBus.getDefault().post(new EventBusListener.UpdateEvent());
 			}
 		}
 	}

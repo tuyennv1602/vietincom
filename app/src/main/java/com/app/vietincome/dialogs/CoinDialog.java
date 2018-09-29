@@ -18,17 +18,13 @@ import android.widget.Toast;
 import com.app.vietincome.R;
 import com.app.vietincome.adapter.CoinAdapter;
 import com.app.vietincome.bases.BaseDialogFragment;
-import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.manager.interfaces.OnSelectedCoin;
 import com.app.vietincome.model.Coin;
-import com.app.vietincome.model.Data;
-import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.HighLightTextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -36,9 +32,6 @@ import butterknife.OnTextChanged;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CoinDialog extends BaseDialogFragment implements ItemClickListener {
 
@@ -60,18 +53,17 @@ public class CoinDialog extends BaseDialogFragment implements ItemClickListener 
 	@BindView(R.id.tvCancel)
 	HighLightTextView tvCancel;
 
-	@BindView(R.id.tvLoading)
-	TextView tvLoading;
-
 	private OnSelectedCoin onSelectedCoin;
 	private ArrayList<Coin> coins, searchCoins;
 	private CoinAdapter coinAdapter;
 
-	public static CoinDialog newIntance(OnSelectedCoin onSelectedCoin) {
+	public static CoinDialog newIntance(ArrayList<Coin> coins, OnSelectedCoin onSelectedCoin) {
 		CoinDialog dialog = new CoinDialog();
 		Bundle args = new Bundle();
 		dialog.setArguments(args);
 		dialog.onSelectedCoin = onSelectedCoin;
+		dialog.coins = coins;
+		dialog.searchCoins = coins;
 		return dialog;
 	}
 
@@ -94,7 +86,6 @@ public class CoinDialog extends BaseDialogFragment implements ItemClickListener 
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		tvChooseCoin.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-		tvLoading.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		rcvCoin.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
@@ -111,31 +102,8 @@ public class CoinDialog extends BaseDialogFragment implements ItemClickListener 
 		rcvCoin.setHasFixedSize(true);
 		rcvCoin.addItemDecoration(new CustomItemDecoration(1));
 		rcvCoin.setAdapter(coinAdapter);
-		getCoins();
 	}
 
-	private void getCoins() {
-		tvLoading.setVisibility(View.VISIBLE);
-		ApiClient.getEventService().getCoins(AppPreference.INSTANCE.getToken().getAccessToken()).enqueue(new Callback<List<Coin>>() {
-			@Override
-			public void onResponse(Call<List<Coin>> call, Response<List<Coin>> response) {
-				tvLoading.setVisibility(View.GONE);
-				if (response.isSuccessful()) {
-					if (response.body() != null) {
-						searchCoins = (ArrayList<Coin>) response.body();
-						coins.addAll(response.body());
-						coinAdapter.notifyDataSetChanged();
-					}
-				}
-			}
-
-			@Override
-			public void onFailure(Call<List<Coin>> call, Throwable t) {
-				tvLoading.setVisibility(View.GONE);
-			}
-		});
-
-	}
 
 	@Override
 	public void onItemClicked(int position) {

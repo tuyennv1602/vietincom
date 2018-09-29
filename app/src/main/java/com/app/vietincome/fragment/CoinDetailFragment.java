@@ -177,7 +177,7 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 
 	private void initChartView() {
 		if (chartViewPagerAdapter == null) {
-			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), data.getSymbol(), rate);
+			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), data.getSymbol(), data.getQuotes().getUSD().getPrice(), rate);
 		}
 		viewPagerChart.setAdapter(chartViewPagerAdapter);
 		viewPagerChart.setOffscreenPageLimit(6);

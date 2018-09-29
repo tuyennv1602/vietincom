@@ -1,6 +1,8 @@
 package com.app.vietincome.fragment;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -9,9 +11,13 @@ import android.widget.TextView;
 
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
+import com.app.vietincome.dialogs.CreditDialog;
 import com.app.vietincome.dialogs.CurrencyDialog;
+import com.app.vietincome.dialogs.FeedbackDialog;
+import com.app.vietincome.dialogs.RateDialog;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
+import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -69,6 +75,27 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 	@BindView(R.id.tvCurrencyValue)
 	TextView tvCurrencyValue;
 
+	@BindView(R.id.tvDonate)
+	TextView tvDonate;
+
+	@BindView(R.id.imgDonate)
+	ImageView imgDonate;
+
+	@BindView(R.id.tvContact)
+	TextView tvContact;
+
+	@BindView(R.id.tvCooperation)
+	TextView tvCooperation;
+
+	@BindView(R.id.tvShare)
+	TextView tvShare;
+
+	@BindView(R.id.tvCredit)
+	TextView tvCredit;
+
+	@BindView(R.id.tvAppInfo)
+	HighLightTextView tvAppInfo;
+
 	public static SettingFragment newInstance() {
 		SettingFragment fragment = new SettingFragment();
 		return fragment;
@@ -125,6 +152,7 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 	@Override
 	public void onUpdatedTheme() {
 		imgSend.setColorFilter(getColor(R.color.blue));
+		imgDonate.setColorFilter(getColor(R.color.blue));
 		setTextColor(tvRate);
 		setTextColor(tvTelegram);
 		setTextColor(tvGeneral);
@@ -134,7 +162,13 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 		setTextColor(tvShowVolume);
 		setTextColor(tvShowHorizontal);
 		setTextColor(tvShowVertical);
+		setTextColor(tvDonate);
 		setTextColor(tvAbout);
+		setTextColor(tvContact);
+		setTextColor(tvCooperation);
+		setTextColor(tvAppInfo);
+		setTextColor(tvShare);
+		setTextColor(tvCredit);
 		setSwitchColor(swTheme);
 		setSwitchColor(swVolume);
 		setSwitchColor(swHorizontal);
@@ -155,5 +189,55 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 	@Override
 	public void onCurrencyValue(String currency) {
 		tvCurrencyValue.setText(currency);
+	}
+
+	@OnClick(R.id.layoutTelegram)
+	void openTelegram(){
+		openLink("https://t.me/vietincomeofficial");
+	}
+
+	@OnClick(R.id.layoutDonate)
+	void openDonate(){
+		openLink("https://vietincome.com/donate/");
+	}
+
+	@OnClick(R.id.layoutRate)
+	void rateApp(){
+		RateDialog rateDialog = new RateDialog();
+		rateDialog.show(getFragmentManager(), "rate");
+	}
+
+	@OnClick(R.id.layoutContact)
+	void contactUs(){
+		FeedbackDialog feedbackDialog = new FeedbackDialog();
+		feedbackDialog.show(getFragmentManager(), "feedback");
+	}
+
+	@OnClick(R.id.layoutCooperation)
+	void cooperation(){
+		Intent contactIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "contact@vietincome.com", null));
+		contactIntent.putExtra(Intent.EXTRA_SUBJECT, "Vietincome advertising");
+		startActivity(Intent.createChooser(contactIntent, "Choose app"));
+	}
+
+	@OnClick(R.id.tvAppInfo)
+	void appInfo(){
+		openLink("https://vietincome.com/app");
+	}
+
+	@OnClick(R.id.tvShare)
+	void shareApp(){
+		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+		sharingIntent.setType("text/plain");
+		String shareBody = "market://details?id=com.app.vietincome";
+		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download Vietincome app now!");
+		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+		startActivity(Intent.createChooser(sharingIntent, "Share Vietincome app"));
+	}
+
+	@OnClick(R.id.tvCredit)
+	void openCredit(){
+		CreditDialog creditDialog = new CreditDialog();
+		creditDialog.show(getFragmentManager(), "credit");
 	}
 }

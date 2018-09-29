@@ -125,8 +125,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingStart="0dp"
-			android:max="105"
 			android:paddingEnd="0dp"
+			android:max="106"
 			android:thumb="@drawable/seekbar_thumb_white"/>
 
 	</LinearLayout>

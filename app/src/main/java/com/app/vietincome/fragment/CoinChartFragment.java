@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.Price;
 import com.app.vietincome.model.Volume;
 import com.app.vietincome.model.responses.ChartResponse;
@@ -32,6 +33,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -74,12 +76,15 @@ public class CoinChartFragment extends BaseFragment {
 	private int time;
 	private boolean isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
 	private double rate;
+	private double price;
+	private Currency currency = AppPreference.INSTANCE.getCurrency();
 
-	public static CoinChartFragment newInstance(String symbol, int time, double rate) {
+	public static CoinChartFragment newInstance(String symbol, int time, double price, double rate) {
 		CoinChartFragment fragment = new CoinChartFragment();
 		fragment.symbol = symbol;
 		fragment.time = time;
 		fragment.rate = rate;
+		fragment.price = price;
 		return fragment;
 	}
 
@@ -204,7 +209,7 @@ public class CoinChartFragment extends BaseFragment {
 
 			@Override
 			public void onFailure(Call<ChartResponse> call, Throwable t) {
-				showAlert("Failure","Get History: " + t.getMessage());
+				showAlert("Failure", "Get History: " + t.getMessage());
 			}
 		});
 	}
@@ -222,7 +227,7 @@ public class CoinChartFragment extends BaseFragment {
 
 			@Override
 			public void onFailure(Call<ChartResponse> call, Throwable t) {
-				showAlert("Failure","Get History: " + t.getMessage());
+				showAlert("Failure", "Get History: " + t.getMessage());
 			}
 		});
 	}
@@ -243,15 +248,30 @@ public class CoinChartFragment extends BaseFragment {
 	private void setData(ChartResponse chartResponse) {
 		CombinedData data = new CombinedData();
 		data.setData(generateLineData(chartResponse.getPrices()));
-		if(AppPreference.INSTANCE.isVolume()){
+		if (AppPreference.INSTANCE.isVolume()) {
 			data.setData(generateBarChart(chartResponse.getVolumes()));
 			chart.getAxisLeft().setAxisMaximum(data.getYMax(YAxis.AxisDependency.LEFT) * 4);
 		}
-		tvLowValue.setText(CommonUtil.formatCurrency(data.getYMin(YAxis.AxisDependency.RIGHT), rate, AppPreference.INSTANCE.getCurrency()));
-		tvHighValue.setText(CommonUtil.formatCurrency(data.getYMax(YAxis.AxisDependency.RIGHT), rate, AppPreference.INSTANCE.getCurrency()));
+		tvLowValue.setText(CommonUtil.formatCurrency(data.getYMin(YAxis.AxisDependency.RIGHT), rate, currency));
+		tvHighValue.setText(CommonUtil.formatCurrency(data.getYMax(YAxis.AxisDependency.RIGHT), rate, currency));
+		getPricePercent(data.getYMin(YAxis.AxisDependency.RIGHT));
 		chart.setData(data);
 		chart.animateXY(1000, 1000);
 		chart.invalidate();
+	}
+
+	private void getPricePercent(double lowPrice) {
+		double delta = price - lowPrice;
+		float percent = (float) (delta / price) * 100;
+		String price = CommonUtil.formatCurrency(Math.abs(delta), rate, currency);
+		String strPercent = String.format(Locale.US, "%.2f", percent);
+		if (delta > 0) {
+			tvExchange.setTextColor(getColor(R.color.green));
+			tvExchange.setText(new StringBuilder().append("+").append(price).append(" (+").append(strPercent).append("%)").toString());
+		} else {
+			tvExchange.setTextColor(getColor(R.color.red));
+			tvExchange.setText(new StringBuilder().append("-").append(price).append(" (").append(strPercent).append("%)").toString());
+		}
 	}
 
 	private LineData generateLineData(ArrayList<Price> prices) {

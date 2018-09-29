@@ -56,7 +56,7 @@ public class Event implements Parcelable {
 	@SerializedName("can_occur_before")
 	@Expose
 	private Boolean canOccurBefore;
-	@SerializedName("categories")
+	@SerializedName("coins")
 	@Expose
 	private List<Category> categories = null;
 	public final static Parcelable.Creator<Event> CREATOR = new Creator<Event>() {

@@ -11,7 +11,8 @@ public class Constant {
 	public static final String KEY_RATE = "rate";
 
 	public static final int TYPE_NEWS = 1;
-	public static final int TYPE_ALERTS = 2;
+	public static final int TYPE_EVENT = 2;
+	public static final int TYPE_ALERTS = 3;
 
 	public static final int COIN_DETAIL = 1;
 	public static final int GLOBAL_MARKET = 2;

@@ -30,11 +30,13 @@ public enum AppPreference {
 	private static final String KEY_VERTICAL = "vertical";
 	private static final String KEY_NEWS = "news";
 	private static final String KEY_TOKEN = "token";
+	private static final String KEY_EVENTS = "events";
 
 	public boolean darkTheme;
 	private SharedPreferences preferences;
 	public Gson mGson;
 	public int numNews;
+	public int numEvents;
 	private ArrayList<Integer> newsRead = new ArrayList<>();
 	private ArrayList<Integer> favouriteCoin = new ArrayList<>();
 	private ArrayList<News> news = new ArrayList<>();
@@ -54,6 +56,7 @@ public enum AppPreference {
 	private void readData() {
 		darkTheme = preferences.getBoolean(KEY_THEME, true);
 		numNews = preferences.getInt(KEY_NUMNEWS, 0);
+		numEvents = preferences.getInt(KEY_EVENTS, 0);
 		currency = mGson.fromJson(preferences.getString(KEY_CURRENCY, null), Currency.class);
 		token = mGson.fromJson(preferences.getString(KEY_TOKEN, null), TokenResponse.class);
 		isVolume = preferences.getBoolean(KEY_VOLUME, true);
@@ -125,6 +128,20 @@ public enum AppPreference {
 		preferences.edit().putString(KEY_READ, mGson.toJson(newsRead)).apply();
 	}
 
+	public int getNumEvents() {
+		return numEvents;
+	}
+
+	public void setNumEvents() {
+		numEvents++;
+		preferences.edit().putInt(KEY_EVENTS, numEvents).apply();
+	}
+
+	public void clearNumEvents() {
+		numEvents = 0;
+		preferences.edit().putInt(KEY_EVENTS, numEvents).apply();
+	}
+
 	public int getNumNews() {
 		return numNews;
 	}
@@ -133,6 +150,7 @@ public enum AppPreference {
 		numNews++;
 		preferences.edit().putInt(KEY_NUMNEWS, numNews).apply();
 	}
+
 
 	public void clearNumNews() {
 		numNews = 0;

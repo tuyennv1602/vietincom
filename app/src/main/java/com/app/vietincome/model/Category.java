@@ -11,7 +11,7 @@ public class Category implements Parcelable
 
 	@SerializedName("id")
 	@Expose
-	private Integer id;
+	private String id;
 	@SerializedName("name")
 	@Expose
 	private String name;
@@ -33,18 +33,18 @@ public class Category implements Parcelable
 			;
 
 	protected Category(Parcel in) {
-		this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
+		this.id = ((String) in.readValue((String.class.getClassLoader())));
 		this.name = ((String) in.readValue((String.class.getClassLoader())));
 	}
 
 	public Category() {
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
