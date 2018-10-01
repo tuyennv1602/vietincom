@@ -11,7 +11,7 @@ public class Portfolio implements Parcelable {
 	private String name;
 	private String symbol;
 	private Quotes quotes;
-	private ArrayList<Item> items;
+	private ArrayList<Transaction> transactions;
 
 	public final static Parcelable.Creator<Portfolio> CREATOR = new Creator<Portfolio>() {
 
@@ -33,7 +33,7 @@ public class Portfolio implements Parcelable {
 		this.name = ((String) in.readValue(String.class.getClassLoader()));
 		this.symbol = ((String) in.readValue(String.class.getClassLoader()));
 		this.quotes = ((Quotes) in.readValue(Quotes.class.getClassLoader()));
-		in.readList(this.items, (Item.class.getClassLoader()));
+		in.readList(this.transactions, (Transaction.class.getClassLoader()));
 	}
 
 	public Portfolio(){}
@@ -70,12 +70,20 @@ public class Portfolio implements Parcelable {
 		this.quotes = quotes;
 	}
 
-	public ArrayList<Item> getItems() {
-		return items;
+	public ArrayList<Transaction> getTransactions() {
+		return transactions;
 	}
 
-	public void setItems(ArrayList<Item> items) {
-		this.items = items;
+	public void setTransactions(ArrayList<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public int getNumHold(){
+		int total = 0;
+		for(Transaction item : transactions){
+			total += item.getQuantity();
+		}
+		return total;
 	}
 
 	public static Creator<Portfolio> getCREATOR() {
@@ -87,7 +95,7 @@ public class Portfolio implements Parcelable {
 		dest.writeValue(name);
 		dest.writeValue(symbol);
 		dest.writeValue(quotes);
-		dest.writeValue(items);
+		dest.writeValue(transactions);
 	}
 
 	public int describeContents() {

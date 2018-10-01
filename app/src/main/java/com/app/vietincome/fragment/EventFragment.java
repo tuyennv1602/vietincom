@@ -43,7 +43,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -88,7 +90,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventRefreshData(EventBusListener.RefreshData event) {
-		if(event.tab == Constant.TAB_EVENT) {
+		if (event.tab == Constant.TAB_EVENT) {
 			page = 1;
 			getEvents(true, false);
 		}
@@ -99,12 +101,6 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 	public void onEventUpdateEvents(EventBusListener.UpdateEvent event) {
 		page = 1;
 		getEvents(true, false);
-	}
-
-	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onEventAddNews(EventBusListener.AddEvent event) {
-		events.addAll(event.events);
-		eventAdapter.notifyItemRangeChanged(event.position, events.size());
 	}
 
 	@Override
@@ -119,15 +115,14 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 		}
 		if (eventAdapter == null) {
 			eventAdapter = new EventAdapter(events, this);
-			eventAdapter.setDarkTheme(isDarkTheme);
 		}
+		onUpdatedTheme();
 		rcvEvent.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvEvent.addItemDecoration(new CustomItemDecoration(30));
-		rcvEvent.setDemoShimmerDuration(100000);
+		rcvEvent.setDemoShimmerDuration(1000000);
 		rcvEvent.setNestedScrollingEnabled(false);
 		rcvEvent.setAdapter(eventAdapter);
 		checkToken();
-		onUpdatedTheme();
 		try {
 			setTextPeriod();
 		} catch (ParseException e) {
@@ -205,7 +200,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 			public void onFailure(Call<EventResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvEvent.hideShimmerAdapter();
-				showAlert("Failure", "Get Events: " + t.getMessage());
+				showAlert("Failed", "Get Events: " + t.getMessage());
 			}
 		});
 	}
@@ -221,22 +216,29 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 						integer,
 						coin))
 				.doOnError(throwable -> {
-
-				})
-				.doOnNext(eventResponse -> {
-					page++;
-					EventBus.getDefault().post(new EventBusListener.AddEvent(eventResponse.getEvents(), (page - 1) * 150));
-					Log.d("__new", "getNextPage: ");
+					Log.d("__event", "getNextPage: error");
 				})
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Consumer<EventResponse>() {
+				.subscribeWith(new Observer<EventResponse>() {
 					@Override
-					public void accept(EventResponse eventResponse) throws Exception {
+					public void onSubscribe(Disposable d) {
 
 					}
-				}, new Consumer<Throwable>() {
+
 					@Override
-					public void accept(Throwable throwable) throws Exception {
+					public void onNext(EventResponse eventResponse) {
+						page++;
+						events.addAll(eventResponse.getEvents());
+						eventAdapter.notifyItemRangeChanged((page - 1) * 150, events.size());
+					}
+
+					@Override
+					public void onError(Throwable e) {
+						showAlert("Failed", "Get Events: " + e.getMessage());
+					}
+
+					@Override
+					public void onComplete() {
 
 					}
 				});

@@ -3,6 +3,7 @@ package com.app.vietincome.manager;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.model.Event;
 import com.app.vietincome.model.News;
+import com.app.vietincome.model.Portfolio;
 
 import java.util.ArrayList;
 
@@ -26,37 +27,15 @@ public class EventBusListener {
 	public static class UpdateNews {
 	}
 
-	public static class AddCoin {
-		public ArrayList<Data> data;
-		public int position;
-
-		public AddCoin(ArrayList<Data> data, int position) {
-			this.data = data;
-			this.position = position;
-		}
-	}
-
-	public static class AddNews{
-		public ArrayList<News> news;
-		public int position;
-
-		public AddNews(ArrayList<News> news, int position){
-			this.news = news;
-			this.position = position;
-		}
-	}
-
-	public static class AddEvent{
-		public ArrayList<Event> events;
-		public int position;
-
-		public AddEvent(ArrayList<Event> events, int position){
-			this.events = events;
-			this.position = position;
-		}
-	}
-
 	public static class UpdateEvent{
 
+	}
+
+	public static class UpdatePortfolio{
+		public Portfolio portfolio;
+
+		public UpdatePortfolio(Portfolio portfolio){
+			this.portfolio = portfolio;
+		}
 	}
 }

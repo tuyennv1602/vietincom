@@ -1,5 +1,6 @@
 package com.app.vietincome.fragment;
 
+import android.app.DatePickerDialog;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -15,7 +16,7 @@ import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.model.Data;
-import com.app.vietincome.model.Item;
+import com.app.vietincome.model.Transaction;
 import com.app.vietincome.model.Portfolio;
 import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.network.ApiClient;
@@ -26,6 +27,7 @@ import com.app.vietincome.view.NavigationTopBar;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -90,7 +92,7 @@ public class AddTransactionFragment extends BaseFragment {
 	HighLightTextView tvSave;
 
 	private int portId;
-	private Item item;
+	private Transaction item;
 	private String name;
 	private String symbol;
 	private Data data;
@@ -103,7 +105,7 @@ public class AddTransactionFragment extends BaseFragment {
 		return fragment;
 	}
 
-	public static AddTransactionFragment newInstance(int portId, String portName, String portSymbol, Item item) {
+	public static AddTransactionFragment newInstance(int portId, String portName, String portSymbol, Transaction item) {
 		AddTransactionFragment fragment = new AddTransactionFragment();
 		fragment.portId = portId;
 		fragment.name = portName;
@@ -131,7 +133,7 @@ public class AddTransactionFragment extends BaseFragment {
 
 	@Override
 	public void onNavigationTopUpdate(NavigationTopBar navitop) {
-		navitop.setTvTitle("Add transaction (" + symbol + ")");
+		navitop.setTvTitle("Add item (" + symbol + ")");
 		navitop.showImgLeft(true);
 		navitop.setImgLeft(R.drawable.back);
 		navitop.showImgRight(false);
@@ -238,7 +240,7 @@ public class AddTransactionFragment extends BaseFragment {
 			tvTotalPrice.setText("Total (BTC)");
 			edtPrice.setText(String.format(Locale.US, "%.8f", data.getQuotes().getBTC().getPrice()));
 		}
-		tvTotalPriceValue.setText(canculateTotal());
+		tvTotalPriceValue.setText(new StringBuilder().append(canculateTotal()).append(btnUSD.isChecked() ? " $" : " ฿").toString());
 	}
 
 	private String canculateTotal() {
@@ -253,38 +255,37 @@ public class AddTransactionFragment extends BaseFragment {
 
 	@OnTextChanged(R.id.edtQuantity)
 	void onChangeQuantity(CharSequence text) {
-		tvTotalPriceValue.setText(canculateTotal());
+		tvTotalPriceValue.setText(new StringBuilder().append(canculateTotal()).append(btnUSD.isChecked() ? " $" : " ฿").toString());
 	}
 
 	@OnTextChanged(R.id.edtPrice)
 	void onChangePrice(CharSequence text) {
-		tvTotalPriceValue.setText(canculateTotal());
+		tvTotalPriceValue.setText(new StringBuilder().append(canculateTotal()).append(btnUSD.isChecked() ? " $" : " ฿").toString());
 	}
 
 	@OnClick(R.id.tvSave)
 	void saveTransaction() {
 		if(checkFillData()){
 			Portfolio portfolio = AppPreference.INSTANCE.getPortfolioById(portId);
-			ArrayList<Item> items = portfolio.getItems();
-			if(items == null){
-				items = new ArrayList<>();
+			ArrayList<Transaction> transactions = portfolio.getTransactions();
+			if(transactions == null){
+				transactions = new ArrayList<>();
 			}
-			Item newItem = new Item(
-					items.size(),
+			Transaction transaction = new Transaction(
+					transactions.size(),
 					data.getQuotes().getUSD().getPrice(),
 					data.getQuotes().getBTC().getPrice(),
 					tvTradeTime.getText().toString(),
 					Integer.valueOf(edtQuantity.getText().toString()),
 					btnBuy.isChecked());
-			items.add(newItem);
+			transactions.add(transaction);
 			portfolio.setId(portId);
 			portfolio.setName(data.getName());
 			portfolio.setSymbol(data.getSymbol());
-			portfolio.setItems(items);
+			portfolio.setTransactions(transactions);
 			portfolio.setQuotes(data.getQuotes());
 			AppPreference.INSTANCE.addPortfolio(portfolio);
-			showToast("Save successful");
-			popFragment(2);
+			getActivity().finish();
 		}
 	}
 
@@ -298,5 +299,16 @@ public class AddTransactionFragment extends BaseFragment {
 			return false;
 		}
 		return true;
+	}
+
+	@OnClick(R.id.tvTradeTime)
+	void selectTradeDate(){
+		final Calendar c = Calendar.getInstance();
+		DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (datePicker, year, month, day) -> {
+			String result = (day / 10 == 0 ? "0" + day : day)
+					+ "/" + ((month + 1) / 10 == 0 ? "0" + (month + 1) : month + 1) + "/" + year;
+			tvTradeTime.setText(result);
+		}, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+		datePickerDialog.show();
 	}
 }

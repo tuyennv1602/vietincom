@@ -39,7 +39,7 @@ public class ApiClient {
 			return chain.proceed(original);
 		});
 		httpClient.addInterceptor(logging);
-		httpClient.connectTimeout(60, TimeUnit.SECONDS);
+		httpClient.connectTimeout(90, TimeUnit.SECONDS);
 		return httpClient.build();
 	}
 

@@ -19,6 +19,7 @@ import com.app.vietincome.manager.interfaces.ItemClickCancelListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.Data;
+import com.app.vietincome.model.Portfolio;
 import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.model.responses.GlobalResponse;
 import com.app.vietincome.model.responses.RateResponse;
@@ -40,7 +41,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -103,6 +106,8 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	private boolean isLoading = true;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
 	private boolean isFirstLoad = true;
+	private Disposable disposable;
+	private ArrayList<Portfolio> portfolios = new ArrayList<>();
 
 	public static HomeFragment newInstance() {
 		HomeFragment fragment = new HomeFragment();
@@ -126,12 +131,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onEventExpand(EventBusListener.ExpanableView event) {
 		appBarLayout.setExpanded(true);
 		rcvAllCoin.scrollToPosition(0);
-	}
-
-	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onAddedCoin(EventBusListener.AddCoin event) {
-		allCoins.addAll(event.data);
-		allCoinAdapter.notifyItemRangeChanged(event.position, allCoins.size());
+		if (disposable != null && !disposable.isDisposed()) {
+			disposable.dispose();
+		}
 	}
 
 	@Override
@@ -147,13 +149,12 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		}
 		if (allCoinAdapter == null) {
 			allCoinAdapter = new AllCoinAdapter(allCoins, this, this);
-			allCoinAdapter.setDarkTheme(isDarkTheme);
 		}
+		onUpdatedTheme();
 		rcvAllCoin.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvAllCoin.addItemDecoration(new CustomItemDecoration(2));
-		rcvAllCoin.setDemoShimmerDuration(100000);
+		rcvAllCoin.setDemoShimmerDuration(1000000);
 		rcvAllCoin.setAdapter(allCoinAdapter);
-		onUpdatedTheme();
 		getData(true);
 		setupUI(view);
 	}
@@ -204,7 +205,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onCloseSearch() {
 		super.onCloseSearch();
 		hideKeyboard();
-		resultSearchCoin.clear();
+		if (resultSearchCoin != null) {
+			resultSearchCoin.clear();
+		}
 		allCoinAdapter.setCoins(allCoins);
 	}
 
@@ -227,7 +230,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!isFirstLoad) {
+		if (!isFirstLoad) {
 			getCoins(allCoins.size() == 0);
 		}
 		isFirstLoad = false;
@@ -295,6 +298,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	}
 
 	public void getCoins(boolean showShimmer) {
+		portfolios.addAll(AppPreference.INSTANCE.getPortfolios());
 		isLoading = true;
 		navigationTopBar.showProgressBar();
 		if (showShimmer) {
@@ -315,6 +319,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 						if (response.body().getData().size() == perPage) {
 							getNextPage(response.body().getMetadata().getNumCryptocurrencies());
 						}
+						updatePortfolioId(response.body().getData());
 					}
 				}
 			}
@@ -323,7 +328,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvAllCoin.hideShimmerAdapter();
-				showAlert("Failure","Get Coins: " + t.getMessage());
+				showAlert("Failure", "Get Coins: " + t.getMessage());
 			}
 		});
 	}
@@ -333,12 +338,31 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		Observable.fromIterable(allCoins)
 				.observeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
+				.doOnError(throwable -> {
+					Log.d("__home", "searchCoin: error");
+				})
 				.filter(data -> data.getName().contains(key) || data.getSymbol().contains(key.toUpperCase()))
 				.toList()
 				.subscribe(data -> {
 					resultSearchCoin = (ArrayList<Data>) data;
 					allCoinAdapter.setCoins(resultSearchCoin);
 				});
+	}
+
+	@SuppressLint("CheckResult")
+	private void updatePortfolioId(ArrayList<Data> coins) {
+		if (portfolios.size() == 0) return;
+		for (Data data : coins) {
+			for (int i = portfolios.size() - 1; i >= 0; i--) {
+				if (data.getId() == portfolios.get(i).getId()) {
+					Portfolio portfolio = portfolios.get(i);
+					portfolio.setQuotes(data.getQuotes());
+					EventBus.getDefault().post(new EventBusListener.UpdatePortfolio(portfolio));
+					portfolios.remove(i);
+					break;
+				}
+			}
+		}
 	}
 
 	@SuppressLint("CheckResult")
@@ -349,18 +373,35 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 			numPage += 1;
 		}
 		Observable.range(1, numPage)
-				.subscribeOn(Schedulers.computation())
+				.subscribeOn(Schedulers.io())
 				.concatMap((Function<Integer, ObservableSource<CoinResponse>>) integer -> ApiClient.getAllCoinService().getCoinInPage((integer * perPage) + 1))
-				.doOnNext(coinResponse -> {
-					Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
-					EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), coinResponse.getData().get(0).getRank() - 1));
-					start += perPage;
+				.doOnError(throwable -> {
+					Log.d("__home", "getNextPage: error");
 				})
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(coinResponse -> {
+				.subscribeWith(new Observer<CoinResponse>() {
+					@Override
+					public void onSubscribe(Disposable d) {
+						disposable = d;
+					}
 
-				}, throwable -> {
+					@Override
+					public void onNext(CoinResponse coinResponse) {
+						start += perPage;
+						allCoins.addAll(coinResponse.getData());
+						allCoinAdapter.notifyItemRangeChanged(coinResponse.getData().get(0).getRank() - 1, allCoins.size());
+						updatePortfolioId(coinResponse.getData());
+					}
 
+					@Override
+					public void onError(Throwable e) {
+						showAlert("Failed", "Get Coins: " + e.getMessage());
+					}
+
+					@Override
+					public void onComplete() {
+
+					}
 				});
 	}
 
@@ -368,9 +409,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onItemClicked(int position) {
 		if (isLoading) return;
 		Intent parent = new Intent(getContext(), ParentActivity.class);
-		if(resultSearchCoin != null && resultSearchCoin.size() != 0){
+		if (resultSearchCoin != null && resultSearchCoin.size() != 0) {
 			parent.putExtra("coin", resultSearchCoin.get(position));
-		}else {
+		} else {
 			parent.putExtra("coin", allCoins.get(position));
 		}
 		parent.putExtra(Constant.KEY_SCREEN, Constant.COIN_DETAIL);
@@ -388,4 +429,8 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 //		AppPreference.INSTANCE.addFavourite(allCoins.get(position).getId());
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+	}
 }

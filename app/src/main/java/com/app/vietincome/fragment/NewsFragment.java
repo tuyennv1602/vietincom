@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -75,13 +76,6 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		getNews(false);
 	}
 
-	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onEventAddNews(EventBusListener.AddNews event) {
-		news.addAll(event.news);
-		newsAdapter.notifyItemRangeChanged(event.position, news.size());
-		AppPreference.INSTANCE.setNews(news);
-	}
-
 	@Override
 	public int getLayoutId() {
 		return R.layout.fragment_news;
@@ -98,7 +92,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		}
 		rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvNews.addItemDecoration(new CustomItemDecoration(2));
-		rcvNews.setDemoShimmerDuration(100000);
+		rcvNews.setDemoShimmerDuration(1000000);
 		rcvNews.setNestedScrollingEnabled(false);
 		rcvNews.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_news_dark : R.layout.layout_demo_news_light);
 		rcvNews.setAdapter(newsAdapter);
@@ -166,7 +160,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 			public void onFailure(Call<NewsResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvNews.hideShimmerAdapter();
-				showAlert("Failure", "Get News: " + t.getMessage());
+				showAlert("Failed", "Get News: " + t.getMessage());
 			}
 		});
 	}
@@ -177,22 +171,30 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 				.subscribeOn(Schedulers.io())
 				.concatMap((Function<Integer, ObservableSource<NewsResponse>>) integer -> ApiClient.getNewsService().getNewsInPage(integer))
 				.doOnError(throwable -> {
-
-				})
-				.doOnNext(newsResponse -> {
-					page++;
-					EventBus.getDefault().post(new EventBusListener.AddNews(newsResponse.getNews(), (page - 1) * 10));
-					Log.d("__new", "getNextPage: ");
+					Log.d("__news", "getNextPage: error");
 				})
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Consumer<NewsResponse>() {
+				.subscribeWith(new Observer<NewsResponse>() {
 					@Override
-					public void accept(NewsResponse coinResponse) throws Exception {
+					public void onSubscribe(Disposable d) {
 
 					}
-				}, new Consumer<Throwable>() {
+
 					@Override
-					public void accept(Throwable throwable) throws Exception {
+					public void onNext(NewsResponse newsResponse) {
+						page++;
+						news.addAll(newsResponse.getNews());
+						newsAdapter.notifyItemRangeChanged((page - 1) * 10, news.size());
+						AppPreference.INSTANCE.setNews(news);
+					}
+
+					@Override
+					public void onError(Throwable e) {
+						showAlert("Failed", "Get News: " + e.getMessage());
+					}
+
+					@Override
+					public void onComplete() {
 
 					}
 				});

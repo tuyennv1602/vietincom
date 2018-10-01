@@ -25,7 +25,7 @@
 				android:layout_height="wrap_content"
 				android:layout_centerInParent="true"
 				android:fontFamily="@font/helvetica_neue_medium"
-				android:text="$100"
+				android:text="$0"
 				android:textColor="@color/white"
 				android:textSize="20sp"/>
 
@@ -42,12 +42,13 @@
 				android:gravity="center_vertical"
 				android:scaleX="0.7"
 				android:scaleY="0.7"
-				android:text="BTC"
+				android:text="USD"
 				android:textColor="@color/white"
 				android:textSize="24sp"/>
 		</RelativeLayout>
 
 		<LinearLayout
+			android:id="@+id/layoutIntro"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_below="@id/layoutTop"
@@ -114,7 +115,7 @@
 					android:textSize="16sp"
 					android:textColor="@color/green"
 					android:layout_height="wrap_content"
-					android:text="$10000/17%"/>
+					android:text="$0/0%"/>
 
 			</LinearLayout>
 
@@ -124,11 +125,11 @@
 				style="@style/DefaultTextView"
 				android:text="Coin distribution in Portfolio"
 				android:layout_gravity="center_horizontal"
-				android:padding="5dp"
 				android:textColor="@color/light_gray"
 				android:layout_height="wrap_content"/>
 
 			<LinearLayout
+				android:layout_marginTop="10dp"
 				android:layout_width="match_parent"
 				android:orientation="horizontal"
 				android:weightSum="4"
@@ -139,10 +140,11 @@
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					style="@style/DefaultTextView"
-					android:fontFamily="@font/helvetica_neue_bold"
+					android:fontFamily="@font/helvetica_neue_medium"
 					android:text="Coin"
 					android:textSize="16dp"
-					android:gravity="center"
+					android:gravity="center_vertical"
+					android:paddingLeft="5dp"
 					android:layout_height="match_parent"/>
 
 				<TextView
@@ -150,9 +152,9 @@
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					style="@style/DefaultTextView"
-					android:fontFamily="@font/helvetica_neue_bold"
+					android:fontFamily="@font/helvetica_neue_medium"
 					android:text="Price"
-					android:paddingRight="10dp"
+					android:paddingRight="5dp"
 					android:textSize="16dp"
 					android:gravity="center_vertical|right"
 					android:layout_height="match_parent"/>
@@ -162,9 +164,10 @@
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					style="@style/DefaultTextView"
-					android:fontFamily="@font/helvetica_neue_bold"
+					android:fontFamily="@font/helvetica_neue_medium"
 					android:text="Holdings"
 					android:textSize="16dp"
+					android:paddingRight="5dp"
 					android:gravity="center_vertical|right"
 					android:layout_height="match_parent"/>
 
@@ -173,9 +176,9 @@
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					style="@style/DefaultTextView"
-					android:fontFamily="@font/helvetica_neue_bold"
+					android:fontFamily="@font/helvetica_neue_medium"
 					android:text="Cost"
-					android:paddingRight="10dp"
+					android:paddingRight="5dp"
 					android:textSize="16dp"
 					android:gravity="center_vertical|right"
 					android:layout_height="match_parent"/>

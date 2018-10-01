@@ -11,8 +11,9 @@ import android.widget.TextView;
 
 import com.app.vietincome.R;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
-import com.app.vietincome.model.Item;
+import com.app.vietincome.model.Transaction;
 import com.app.vietincome.model.Portfolio;
+import com.app.vietincome.utils.CommonUtil;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 	private ArrayList<Portfolio> portfolios;
 	private ItemClickListener itemClickListener;
 	private boolean isDarkTheme;
-	private boolean isBTC = false;
+	private boolean isUSD = true;
 
 	public PortAdapter(ArrayList<Portfolio> portfolios, ItemClickListener itemClickListener){
 		this.portfolios = portfolios;
@@ -41,7 +42,7 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 	}
 
 	public void changeCurrency() {
-		isBTC = !isBTC;
+		isUSD = !isUSD;
 		notifyDataSetChanged();
 	}
 
@@ -106,22 +107,31 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 			tvCost.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvName.setText(portfolio.getName());
 			tvSymbol.setText(portfolio.getSymbol());
-			int numHold = 0;
-			double priceHold= 0;
-			for(Item i : portfolio.getItems()){
-				numHold = numHold + i.getQuantity();
-				if(isBTC){
-					priceHold += priceHold + (i.getQuantity() * i.getPriceBTC());
+			int numHold = portfolio.getNumHold();
+			double cost= 0;
+			for(Transaction i : portfolio.getTransactions()){
+				if(!isUSD){
+					cost += cost + (i.getQuantity() * i.getPriceBTC());
 				}else{
-					priceHold += priceHold + (i.getQuantity() * i.getPriceUSD());
+					cost += cost + (i.getQuantity() * i.getPriceUSD());
 				}
 			}
-			tvHoldingPrice.setText("$" + priceHold);
-			tvNumHolding.setText(numHold + "");
+			double price = isUSD ? portfolio.getQuotes().getUSD().getPrice() : portfolio.getQuotes().getBTC().getPrice();
+			double percent = isUSD ? portfolio.getQuotes().getUSD().percentChange24h : portfolio.getQuotes().getBTC().percentChange24h;
+			tvCost.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(cost, isUSD)).toString());
+			tvNumHolding.setText(String.valueOf(numHold));
+			tvPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(price, isUSD)).toString());
+			tvChange24h.setTextColor(isPlus(percent) ? getColor(R.color.green) : getColor(R.color.red));
+			tvChange24h.setText(isUSD ? portfolio.getQuotes().getUSD().getPercentChange24h() : portfolio.getQuotes().getBTC().getPercentChange24h());
+			tvHoldingPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(price * numHold, isUSD)).toString());
 		}
+
 		private int getColor(int color) {
 			return ContextCompat.getColor(itemView.getContext(), color);
 		}
 
+		public boolean isPlus(double value){
+			return !String.valueOf(value).contains("-");
+		}
 	}
 }

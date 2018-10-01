@@ -75,4 +75,8 @@ public interface ApiInterface {
 
 	@GET("ticker/{id}/?convert=BTC&structure=array")
 	Call<CoinResponse> getCoinDetail(@Path("id") int id);
+
+	@GET("ticker/{id}/?convert=BTC&structure=array")
+	Observable<CoinResponse> getCoinDetailObservable(@Path("id") int id);
+
 }

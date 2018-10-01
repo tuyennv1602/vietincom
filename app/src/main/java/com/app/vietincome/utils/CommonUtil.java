@@ -81,9 +81,8 @@ public class CommonUtil {
 				DecimalFormat dFormat = new DecimalFormat("###,###,###,###,##0.00");
 				value = dFormat.format(price);
 			}
-			value = value + " $";
 		} else {
-			value = String.format(Locale.US, "%.6f", price) + " ฿";
+			value = String.format(Locale.US, "%.6f", price);
 		}
 		return value;
 	}

@@ -1,9 +1,6 @@
 package com.app.vietincome.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -11,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,16 +17,20 @@ import com.app.vietincome.activity.ParentActivity;
 import com.app.vietincome.adapter.PortAdapter;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Data;
-import com.app.vietincome.model.Item;
 import com.app.vietincome.model.Portfolio;
 import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.network.ApiClient;
+import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -76,13 +78,29 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 	@BindView(R.id.rcvPortfolio)
 	RecyclerView rcvPortfolio;
 
+	@BindView(R.id.layoutListPortfolio)
+	LinearLayout layoutPortfolio;
+
+	@BindView(R.id.layoutIntro)
+	LinearLayout layoutIntro;
+
 	private ArrayList<Data> coins;
 	private ArrayList<Portfolio> portfolios = AppPreference.INSTANCE.getPortfolios();
 	private PortAdapter portAdapter;
+	private boolean isUSD = true;
 
-	public static PortfolioFragment newInstance(){
+	public static PortfolioFragment newInstance() {
 		PortfolioFragment fragment = new PortfolioFragment();
 		return fragment;
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onUpdatePortfolio(EventBusListener.UpdatePortfolio event){
+		int position = portfolios.indexOf(event.portfolio);
+		portfolios.set(position, event.portfolio);
+		portAdapter.notifyItemChanged(position);
+		AppPreference.INSTANCE.addPortfolio(event.portfolio);
+		tvTotalPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(getTotal(), isUSD)).toString());
 	}
 
 	@Override
@@ -93,17 +111,38 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 	@Override
 	public void onFragmentReady(View view) {
 		getCoinsId();
-		if(portfolios == null){
+		if (portfolios == null) {
 			portfolios = new ArrayList<>();
 		}
-		if(portAdapter == null){
-			portAdapter  = new PortAdapter(portfolios, this);
+		if (portAdapter == null) {
+			portAdapter = new PortAdapter(portfolios, this);
 		}
+		onUpdatedTheme();
 		rcvPortfolio.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvPortfolio.setHasFixedSize(true);
 		rcvPortfolio.addItemDecoration(new CustomItemDecoration(1));
 		rcvPortfolio.setAdapter(portAdapter);
-		onUpdatedTheme();
+		if (portfolios.size() == 0) {
+			layoutIntro.setVisibility(View.VISIBLE);
+			layoutPortfolio.setVisibility(View.GONE);
+		} else {
+			layoutIntro.setVisibility(View.GONE);
+			layoutPortfolio.setVisibility(View.VISIBLE);
+		}
+		tvTotalPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(getTotal(), isUSD)).toString());
+	}
+
+	private double getTotal(){
+		double total = 0;
+		for(Portfolio item : portfolios){
+			Log.d("__port", "getTotal: " + item.getQuotes().getUSD().getPrice() * item.getNumHold());
+			if(isUSD){
+				total += item.getQuotes().getUSD().getPrice() * item.getNumHold();
+			}else{
+				total += item.getQuotes().getBTC().getPrice() * item.getNumHold();
+			}
+		}
+		return total;
 	}
 
 	@Override
@@ -121,7 +160,7 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 		setTextColor(tvPrice);
 		setTextColor(tvHolding);
 		setTextColor(tvCost);
-		layoutTop.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_image): getColor(R.color.light_image));
+		layoutTop.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvAddCoin.setBackground(isDarkTheme ? getResources().getDrawable(R.drawable.bg_add_coin_dark) : getResources().getDrawable(R.drawable.bg_add_coin_light));
 		setTextViewDrawableColor(tvChangeCoin);
 		rcvPortfolio.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
@@ -129,14 +168,14 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 		portAdapter.notifyDataSetChanged();
 	}
 
-	private void getCoinsId(){
+	private void getCoinsId() {
 		navigationTopBar.showProgressBar();
 		ApiClient.getAllCoinService().getAllCoinId().enqueue(new Callback<CoinResponse>() {
 			@Override
 			public void onResponse(Call<CoinResponse> call, Response<CoinResponse> response) {
 				navigationTopBar.hideProgressBar();
-				if(response.isSuccessful()){
-					if(response.body().getMetadata().isSuccess()){
+				if (response.isSuccessful()) {
+					if (response.body().getMetadata().isSuccess()) {
 						coins = response.body().getData();
 					}
 				}
@@ -151,8 +190,8 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 	}
 
 	@OnClick(R.id.tvAddCoin)
-	void onSelectCoin(){
-		if(coins == null) return;
+	void onSelectCoin() {
+		if (coins == null) return;
 		Intent parent = new Intent(getContext(), ParentActivity.class);
 		parent.putExtra(Constant.KEY_SCREEN, Constant.SELECT_COIN);
 		parent.putExtra("coins", coins);
@@ -163,12 +202,12 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 		Drawable right = ContextCompat.getDrawable(getContext(), R.drawable.next);
 		right = DrawableCompat.wrap(right);
 		DrawableCompat.setTint(right.mutate(), getColor(R.color.white));
-		right.setBounds( 0, 0, right.getIntrinsicWidth(), right.getIntrinsicHeight());
+		right.setBounds(0, 0, right.getIntrinsicWidth(), right.getIntrinsicHeight());
 
 		Drawable left = ContextCompat.getDrawable(getContext(), R.drawable.previous);
 		left = DrawableCompat.wrap(left);
 		DrawableCompat.setTint(left.mutate(), getColor(R.color.white));
-		left.setBounds( 0, 0, left.getIntrinsicWidth(), left.getIntrinsicHeight());
+		left.setBounds(0, 0, left.getIntrinsicWidth(), left.getIntrinsicHeight());
 
 		textView.setCompoundDrawables(left, null, right, null);
 	}

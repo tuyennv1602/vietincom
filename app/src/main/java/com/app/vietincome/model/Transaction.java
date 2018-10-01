@@ -3,7 +3,7 @@ package com.app.vietincome.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Item implements Parcelable {
+public class Transaction implements Parcelable {
 
 	private int id;
 	private double priceUSD;
@@ -12,19 +12,19 @@ public class Item implements Parcelable {
 	private int quantity;
 	private boolean isBuy;
 
-	public static final Creator<Item> CREATOR = new Creator<Item>() {
+	public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
 		@Override
-		public Item createFromParcel(Parcel in) {
-			return new Item(in);
+		public Transaction createFromParcel(Parcel in) {
+			return new Transaction(in);
 		}
 
 		@Override
-		public Item[] newArray(int size) {
-			return new Item[size];
+		public Transaction[] newArray(int size) {
+			return new Transaction[size];
 		}
 	};
 
-	protected Item(Parcel in) {
+	protected Transaction(Parcel in) {
 		this.id = ((Integer) in.readValue(Integer.class.getClassLoader()));
 		this.priceUSD = ((Double) in.readValue(Double.class.getClassLoader()));
 		this.priceBTC = ((Double) in.readValue(Double.class.getClassLoader()));
@@ -33,7 +33,7 @@ public class Item implements Parcelable {
 		this.isBuy = ((Boolean) in.readValue(Boolean.class.getClassLoader()));
 	}
 
-	public Item(int id, double priceUSD, double priceBTC, String dateAdd, int quantity, boolean isBuy) {
+	public Transaction(int id, double priceUSD, double priceBTC, String dateAdd, int quantity, boolean isBuy) {
 		this.id = id;
 		this.priceUSD = priceUSD;
 		this.priceBTC = priceBTC;
@@ -90,7 +90,7 @@ public class Item implements Parcelable {
 		this.priceBTC = priceBTC;
 	}
 
-	public static Creator<Item> getCREATOR() {
+	public static Creator<Transaction> getCREATOR() {
 		return CREATOR;
 	}
 

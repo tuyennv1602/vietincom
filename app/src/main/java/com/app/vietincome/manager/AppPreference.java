@@ -218,8 +218,8 @@ public enum AppPreference {
 	}
 
 	public Portfolio getPortfolioById(int id) {
-		for(Portfolio item : portfolios){
-			if(item.getId() == id){
+		for (Portfolio item : portfolios) {
+			if (item.getId() == id) {
 				return item;
 			}
 		}

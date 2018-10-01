@@ -39,7 +39,7 @@ public class MainActivity extends BaseActivity {
 	RelativeLayout mainLayout;
 
 	private HomeViewpagerAdapter homeViewPagerAdapter;
-	private int selectedTab = 3;
+	private int selectedTab = 2;
 	private Stack<Fragment> backStack = new Stack<>();
 	private int numNews = AppPreference.INSTANCE.getNumNews();
 	private int numEvents = AppPreference.INSTANCE.getNumEvents();
