@@ -80,27 +80,42 @@
 
 			<include layout="@layout/view_line"/>
 
-			<com.app.vietincome.view.HighLightLinearLayout
-				android:id="@+id/layoutDonate"
+
+			<TextView
+				android:id="@+id/tvSignal"
+				style="@style/DefaultTextView"
 				android:layout_width="match_parent"
-				android:layout_height="@dimen/item_setting_height">
+				android:layout_height="@dimen/item_setting_height"
+				android:fontFamily="@font/helvetica_neue_bold"
+				android:gravity="bottom"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="Get signal access for free"
+				android:textSize="20sp"/>
 
-				<ImageView
-					android:id="@+id/imgDonate"
-					android:layout_width="@dimen/item_setting_height"
-					android:layout_height="match_parent"
-					android:padding="15dp"
-					android:src="@drawable/donation"/>
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvDonate"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:gravity="center_vertical"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="Donate us"
+				android:textSize="16sp"/>
 
-				<TextView
-					android:id="@+id/tvDonate"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:gravity="center_vertical"
-					android:text="Donate us"
-					android:textSize="16sp"/>
+			<include layout="@layout/view_line"/>
 
-			</com.app.vietincome.view.HighLightLinearLayout>
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvTelegramPremium"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/item_setting_height"
+				android:gravity="center_vertical"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:text="Telegram signal premium"
+				android:textSize="16sp"/>
 
 			<include layout="@layout/view_line"/>
 

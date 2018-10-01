@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.util.TypedValue;
@@ -293,6 +294,10 @@ public class NavigationTopBar {
 	public void setBackgroundBorder(){
 		topLayout.setBackground(isDarkTheme ? context.getDrawable(R.drawable.border_evulation_gray_dark) : context.getDrawable(R.drawable.border_evulation_gray));
 		layoutSecond.setBackground(isDarkTheme ? context.getDrawable(R.drawable.border_evulation_dark) : context.getDrawable(R.drawable.border_evulation_light));
+	}
 
+	public void changeFontTitle(int res){
+		tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+		tvTitle.setTypeface(ResourcesCompat.getFont(context, res));
 	}
 }

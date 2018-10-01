@@ -5,6 +5,9 @@
 	style="@style/DefaultTextView"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:padding="15dp"
+	android:paddingLeft="15dp"
+	android:paddingRight="15dp"
+	android:paddingTop="10dp"
+	android:padding="10dp"
 	android:text="Coins"
-	android:textSize="17sp"/>
+	android:textSize="16sp"/>

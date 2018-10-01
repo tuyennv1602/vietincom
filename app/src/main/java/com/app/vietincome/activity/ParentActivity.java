@@ -7,6 +7,7 @@ import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseActivity;
 import com.app.vietincome.fragment.CoinDetailFragment;
 import com.app.vietincome.fragment.GlobalFragment;
+import com.app.vietincome.fragment.SelectCoinFragment;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.utils.Constant;
 
@@ -48,6 +49,9 @@ public class ParentActivity extends BaseActivity {
 				double rate = getIntent().getDoubleExtra(Constant.KEY_RATE, 1);
 				pushFragment(GlobalFragment.newInstance(rate)
 						, R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+			} else if (screen == Constant.SELECT_COIN) {
+				ArrayList<Data> data = getIntent().getParcelableArrayListExtra("coins");
+				pushFragment(SelectCoinFragment.newInstance(data), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 			}
 		}
 	}

@@ -53,9 +53,8 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 
 	private NewsAdapter newsAdapter;
 	private ArrayList<News> news;
-	private LinearLayoutManager linearLayoutManager;
 	private int page = 1;
-	private boolean needReload;
+	private boolean needReload = true;
 
 	public static NewsFragment newInstance() {
 		NewsFragment fragment = new NewsFragment();
@@ -97,8 +96,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 			newsAdapter = new NewsAdapter(news, this);
 			newsAdapter.setDarkTheme(isDarkTheme);
 		}
-		linearLayoutManager = new LinearLayoutManager(getContext());
-		rcvNews.setLayoutManager(linearLayoutManager);
+		rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvNews.addItemDecoration(new CustomItemDecoration(2));
 		rcvNews.setDemoShimmerDuration(100000);
 		rcvNews.setNestedScrollingEnabled(false);

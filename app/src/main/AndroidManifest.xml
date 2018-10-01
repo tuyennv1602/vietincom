@@ -17,6 +17,7 @@
 		tools:ignore="GoogleAppIndexingWarning">
 		<activity android:name=".activity.MainActivity"
 		          android:screenOrientation="portrait"
+		          android:launchMode="singleTask"
 		          android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
 			>
 			<intent-filter>
@@ -28,6 +29,7 @@
 		<activity
 			android:name=".activity.ParentActivity"
 			android:screenOrientation="portrait"
+			android:launchMode="singleTask"
 			android:theme="@style/TransparentActivity"
 			/>
 	</application>

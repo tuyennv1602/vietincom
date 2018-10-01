@@ -53,11 +53,11 @@ public class CoinInfoAdapter extends RecyclerView.Adapter<CoinInfoAdapter.CoinVi
 		public CoinViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
+			tvLabel.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+			tvValue.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 		}
 
 		public void onBind(CoinInfo coinInfo){
-			tvLabel.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
-			tvValue.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvLabel.setText(coinInfo.getLabel());
 			tvValue.setText(coinInfo.getValue());
 		}

@@ -5,14 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.vietincome.R;
-import com.app.vietincome.fragment.AlertFragment;
+import com.app.vietincome.fragment.PortfolioFragment;
 import com.app.vietincome.fragment.EventFragment;
 import com.app.vietincome.fragment.HomeFragment;
 import com.app.vietincome.fragment.NewsFragment;
@@ -34,7 +33,7 @@ public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 			fragments.add(NewsFragment.newInstance());
 			fragments.add(EventFragment.newInstance());
 			fragments.add(HomeFragment.newInstance());
-			fragments.add(AlertFragment.newInstance());
+			fragments.add(PortfolioFragment.newInstance());
 			fragments.add(SettingFragment.newInstance());
 		}
 	}
@@ -54,7 +53,7 @@ public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 		if (position == Constant.TAB_NEWS) return this.context.getString(R.string.news);
 		else if (position == Constant.TAB_EVENT) return this.context.getString(R.string.event);
 		else if (position == Constant.TAB_ALL_COIN) return this.context.getString(R.string.all_coin);
-		else if (position == Constant.TAB_ALERTS) return this.context.getString(R.string.alert);
+		else if (position == Constant.TAB_PORTFOLIO) return this.context.getString(R.string.portfolio);
 		else return this.context.getString(R.string.setting);
 	}
 
@@ -62,7 +61,7 @@ public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 		if (position == Constant.TAB_NEWS) return R.drawable.news;
 		else if (position == Constant.TAB_EVENT) return R.drawable.event;
 		else if (position == Constant.TAB_ALL_COIN) return R.drawable.analytic;
-		else if (position == Constant.TAB_ALERTS) return R.drawable.notification;
+		else if (position == Constant.TAB_PORTFOLIO) return R.drawable.notification;
 		else return R.drawable.settings;
 	}
 

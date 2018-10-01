@@ -70,14 +70,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
 		public CurrencyViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
-			itemView.setOnClickListener(view -> {
-				if (itemClickListener != null) {
-					itemClickListener.onItemClicked(getAdapterPosition());
-				}
-			});
-		}
-
-		public void onBind(Currency currency) {
 			layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 			ColorStateList colorStateList = new ColorStateList(
 					new int[][]{
@@ -91,6 +83,14 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
 			);
 			rdSelected.setButtonTintList(colorStateList);
 			tvCurrency.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+			itemView.setOnClickListener(view -> {
+				if (itemClickListener != null) {
+					itemClickListener.onItemClicked(getAdapterPosition());
+				}
+			});
+		}
+
+		public void onBind(Currency currency) {
 			rdSelected.setChecked(currency.isSelected());
 			tvCurrency.setText(new StringBuilder().append(currency.getCode()).append(" (").append(currency.getSymbol()).append(")").toString());
 		}

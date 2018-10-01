@@ -64,10 +64,28 @@ public class CommonUtil {
 		} else if (value < 1000) {
 			price.append(String.format(Locale.US,"%.2f", priceValue));
 		} else {
-			DecimalFormat dFormat = new DecimalFormat("###,###");
+			DecimalFormat dFormat = new DecimalFormat("###,###,###,###");
 			price.append(dFormat.format(priceValue));
 		}
 		return price.toString();
+	}
+
+	public static String formatCurrency(double price, boolean isUsd){
+		String value;
+		if (isUsd) {
+			if (price < 1.0) {
+				value = String.format(Locale.US, "%.4f", price);
+			} else if (price < 1000) {
+				value = String.format(Locale.US, "%.2f", price);
+			} else {
+				DecimalFormat dFormat = new DecimalFormat("###,###,###,###,##0.00");
+				value = dFormat.format(price);
+			}
+			value = value + " $";
+		} else {
+			value = String.format(Locale.US, "%.6f", price) + " ฿";
+		}
+		return value;
 	}
 
 }

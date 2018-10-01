@@ -6,7 +6,7 @@
 	<string name="news">News</string>
 	<string name="event">Events</string>
 	<string name="home">Home</string>
-	<string name="alert">Alerts</string>
+	<string name="portfolio">Portfolio</string>
 	<string name="setting">Settings</string>
 	<string name="all_coin">All Coins</string>
 	<string name="failed">Failed</string>
@@ -16,4 +16,5 @@
 	<string name="we_aim_">We aim to create the best cryptocurrency app. We will be happy to get positive feedback on Google play. Please select rating.\nThanks for your support!</string>
 	<string name="help_us">Help us make app better! If you still have a question, Feel free to message us</string>
 	<string name="credit_content">We are using CoinMarketCap API for the top coins list. Also we awesome CryptoCompare API service to get charts data and other features. We appreciate both of them.</string>
+	<string name="portfolio_intro">Add coin transactions here to track profit/loss and portfolio distributions. See an example of a standard portfolio below.</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.app.vietincome.network;
 
 import com.app.vietincome.model.Coin;
+import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.model.responses.TokenResponse;
 import com.app.vietincome.model.responses.ChartResponse;
 import com.app.vietincome.model.responses.EventResponse;
@@ -25,10 +26,10 @@ public interface ApiInterface {
 	Observable<NewsResponse> getNewsInPage(@Query("page") int page);
 
 	@GET("ticker/?structure=array&limit=100&convert=BTC")
-	Observable<com.app.vietincome.model.responses.CoinResponse> getCoinInPage(@Query("start") int start);
+	Observable<CoinResponse> getCoinInPage(@Query("start") int start);
 
 	@GET("ticker/?structure=array&limit=100&convert=BTC")
-	Call<com.app.vietincome.model.responses.CoinResponse> getCoinFirstPage();
+	Call<CoinResponse> getCoinFirstPage();
 
 	@GET("price?fsym=USD")
 	Call<RateResponse> getRate(@Query("tsyms") String toSymbol);
@@ -44,10 +45,10 @@ public interface ApiInterface {
 	Call<GlobalResponse> getGlobalData();
 
 	@GET("ticker/?limit=10&sort=market_cap&structure=array&convert=BTC")
-	Call<com.app.vietincome.model.responses.CoinResponse> getTopMarketCap();
+	Call<CoinResponse> getTopMarketCap();
 
 	@GET("ticker/?limit=10&sort=volume_24h&structure=array&convert=BTC")
-	Call<com.app.vietincome.model.responses.CoinResponse> getTopVolume();
+	Call<CoinResponse> getTopVolume();
 
 	@GET("v1/events?max=150&showMetadata=true&page=1")
 	Call<EventResponse> getEvent(@Query("access_token") String accessToken,
@@ -68,4 +69,10 @@ public interface ApiInterface {
 
 	@GET("v1/coins")
 	Call<List<Coin>> getCoins(@Query("access_token") String accessToken);
+
+	@GET("listings/")
+	Call<CoinResponse> getAllCoinId();
+
+	@GET("ticker/{id}/?convert=BTC&structure=array")
+	Call<CoinResponse> getCoinDetail(@Path("id") int id);
 }

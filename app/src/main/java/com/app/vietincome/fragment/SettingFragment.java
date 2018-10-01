@@ -76,10 +76,7 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 	TextView tvCurrencyValue;
 
 	@BindView(R.id.tvDonate)
-	TextView tvDonate;
-
-	@BindView(R.id.imgDonate)
-	ImageView imgDonate;
+	HighLightTextView tvDonate;
 
 	@BindView(R.id.tvContact)
 	TextView tvContact;
@@ -95,6 +92,12 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 
 	@BindView(R.id.tvAppInfo)
 	HighLightTextView tvAppInfo;
+
+	@BindView(R.id.tvSignal)
+	TextView tvSignal;
+
+	@BindView(R.id.tvTelegramPremium)
+	HighLightTextView tvTelegramPremium;
 
 	public static SettingFragment newInstance() {
 		SettingFragment fragment = new SettingFragment();
@@ -152,8 +155,9 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 	@Override
 	public void onUpdatedTheme() {
 		imgSend.setColorFilter(getColor(R.color.blue));
-		imgDonate.setColorFilter(getColor(R.color.blue));
 		setTextColor(tvRate);
+		setTextColor(tvSignal);
+		setTextColor(tvTelegramPremium);
 		setTextColor(tvTelegram);
 		setTextColor(tvGeneral);
 		setTextColor(tvCurrency);
@@ -196,7 +200,7 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 		openLink("https://t.me/vietincomeofficial");
 	}
 
-	@OnClick(R.id.layoutDonate)
+	@OnClick(R.id.tvDonate)
 	void openDonate(){
 		openLink("https://vietincome.com/donate/");
 	}
@@ -239,5 +243,10 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 	void openCredit(){
 		CreditDialog creditDialog = new CreditDialog();
 		creditDialog.show(getFragmentManager(), "credit");
+	}
+
+	@OnClick(R.id.tvTelegramPremium)
+	void openTelegramPremium(){
+		openLink("https://vietincome.com/channel-vietincome-signal-premium/");
 	}
 }

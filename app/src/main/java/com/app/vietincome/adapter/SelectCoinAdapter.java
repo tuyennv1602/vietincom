@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.app.vietincome.R;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
-import com.app.vietincome.model.Coin;
+import com.app.vietincome.model.Data;
 import com.app.vietincome.view.HighLightTextView;
 
 import java.util.ArrayList;
@@ -18,18 +18,18 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder>{
+public class SelectCoinAdapter extends RecyclerView.Adapter<SelectCoinAdapter.CoinViewHolder>{
 
-	private ArrayList<Coin> coins;
+	private ArrayList<Data> coins;
 	private boolean isDarkTheme = AppPreference.INSTANCE.darkTheme;
 	private ItemClickListener itemClickListener;
 
-	public CoinAdapter(ArrayList<Coin> coins, ItemClickListener itemClickListener){
+	public SelectCoinAdapter(ArrayList<Data> coins, ItemClickListener itemClickListener){
 		this.coins = coins;
 		this.itemClickListener = itemClickListener;
 	}
 
-	public void setCoins(ArrayList<Coin> coins){
+	public void setCoins(ArrayList<Data> coins){
 		this.coins = coins;
 		notifyDataSetChanged();
 	}
@@ -67,7 +67,7 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
 			});
 		}
 
-		void onBind(Coin coin){
+		void onBind(Data coin){
 			tvCoin.setText(new StringBuilder().append(coin.getName()).append(" (").append(coin.getSymbol()).append(")").toString());
 		}
 

@@ -88,8 +88,10 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventRefreshData(EventBusListener.RefreshData event) {
-		page = 1;
-		getEvents(true, false);
+		if(event.tab == Constant.TAB_EVENT) {
+			page = 1;
+			getEvents(true, false);
+		}
 	}
 
 
@@ -136,11 +138,9 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 	private void checkToken() {
 		if (AppPreference.INSTANCE.getToken() == null) {
 			getToken();
-			showToast("Get token");
 			return;
 		} else if (DateUtil.getDiffMinutes(DateUtil.getCurrentDate(), AppPreference.INSTANCE.getToken().getExpireAt()) < 1440) {
 			getToken();
-			showToast("Get token");
 			return;
 		}
 		Log.d("__event", "checkToken: " + DateUtil.getDiffMinutes(DateUtil.getCurrentDate(), AppPreference.INSTANCE.getToken().getExpireAt()));

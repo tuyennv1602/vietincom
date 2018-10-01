@@ -101,6 +101,11 @@ public class TopCoinAdapter extends RecyclerView.Adapter<TopCoinAdapter.TopCoinV
 		public TopCoinViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
+			layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
+			tvRank.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+			tvName.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+			tvPercent.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+			tvValue.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			itemView.setOnClickListener(view -> {
 				if (itemClickListener != null) {
 					itemClickListener.onItemClicked(getAdapterPosition());
@@ -109,11 +114,6 @@ public class TopCoinAdapter extends RecyclerView.Adapter<TopCoinAdapter.TopCoinV
 		}
 
 		public void onBind(Data data, int position) {
-			layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
-			tvRank.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-			tvName.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-			tvPercent.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-			tvValue.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvRank.setText(String.valueOf(position));
 			tvName.setText(data.getName());
 			if (type == Constant.MARKET_CAP) {

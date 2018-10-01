@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.News;
+import com.app.vietincome.model.Portfolio;
 import com.app.vietincome.model.responses.TokenResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,7 +20,6 @@ public enum AppPreference {
 
 	INSTANCE;
 
-	private static final String KEY_ACCESS_TOKEN = "access_token";
 	private static final String KEY_THEME = "theme";
 	private static final String KEY_READ = "read";
 	private static final String KEY_NUMNEWS = "numnews";
@@ -31,6 +31,7 @@ public enum AppPreference {
 	private static final String KEY_NEWS = "news";
 	private static final String KEY_TOKEN = "token";
 	private static final String KEY_EVENTS = "events";
+	private static final String KEY_PORTFOLIO = "portfolio";
 
 	public boolean darkTheme;
 	private SharedPreferences preferences;
@@ -45,6 +46,7 @@ public enum AppPreference {
 	private boolean isVolume;
 	private boolean isHorizontal;
 	private boolean isVertical;
+	private ArrayList<Portfolio> portfolios = new ArrayList<>();
 
 	public static void init(Context context) {
 		INSTANCE.preferences =
@@ -75,11 +77,16 @@ public enum AppPreference {
 			favouriteCoin = mGson.fromJson(coinData, type);
 		}
 		String newsData = preferences.getString(KEY_NEWS, null);
-		if(newsData != null){
-			Type type = new TypeToken<ArrayList<News>>(){
-
+		if (newsData != null) {
+			Type type = new TypeToken<ArrayList<News>>() {
 			}.getType();
 			news = mGson.fromJson(newsData, type);
+		}
+		String portData = preferences.getString(KEY_PORTFOLIO, null);
+		if (portData != null) {
+			Type type = new TypeToken<ArrayList<Portfolio>>() {
+			}.getType();
+			portfolios = mGson.fromJson(portData, type);
 		}
 	}
 
@@ -181,8 +188,8 @@ public enum AppPreference {
 		preferences.edit().putString(KEY_CURRENCY, mGson.toJson(currency)).apply();
 	}
 
-	public Currency getCurrency(){
-		if(this.currency == null){
+	public Currency getCurrency() {
+		if (this.currency == null) {
 			return new Currency("USD", "$", "");
 		}
 		return this.currency;
@@ -204,6 +211,39 @@ public enum AppPreference {
 	public void setNews(ArrayList<News> news) {
 		this.news = news;
 		preferences.edit().putString(KEY_NEWS, mGson.toJson(news)).apply();
+	}
+
+	public ArrayList<Portfolio> getPortfolios() {
+		return portfolios;
+	}
+
+	public Portfolio getPortfolioById(int id) {
+		for(Portfolio item : portfolios){
+			if(item.getId() == id){
+				return item;
+			}
+		}
+		return new Portfolio();
+	}
+
+	public void addPortfolio(Portfolio portfolio) {
+		if (portfolios.size() == 0) {
+			portfolios.add(portfolio);
+		} else {
+			int position = -1;
+			for (int i = 0; i < portfolios.size(); i++) {
+				if (portfolios.get(i).getId() == portfolio.getId()) {
+					position = i;
+					break;
+				}
+			}
+			if (position == -1) {
+				portfolios.add(portfolio);
+			} else {
+				portfolios.set(position, portfolio);
+			}
+		}
+		preferences.edit().putString(KEY_PORTFOLIO, mGson.toJson(portfolios)).apply();
 	}
 
 }

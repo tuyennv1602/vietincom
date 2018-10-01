@@ -92,17 +92,17 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@BindView(R.id.appbarLayout)
 	AppBarLayout appBarLayout;
 
-	private ArrayList<Data> allCoins, resultSearchCoin;
+	public static ArrayList<Data> allCoins;
+	private ArrayList<Data> resultSearchCoin;
 	private AllCoinAdapter allCoinAdapter;
 	private int start = 1;
 	private int perPage = 100;
-	private LinearLayoutManager linearLayoutManager;
 	private boolean isBTC = false;
 	private boolean isSortUp = true;
 	private double rate = 1;
 	private boolean isLoading = true;
-	private Data global;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
+	private boolean isFirstLoad = true;
 
 	public static HomeFragment newInstance() {
 		HomeFragment fragment = new HomeFragment();
@@ -142,7 +142,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@SuppressLint("CheckResult")
 	@Override
 	public void onFragmentReady(View view) {
-		linearLayoutManager = new LinearLayoutManager(getContext());
 		if (allCoins == null) {
 			allCoins = new ArrayList<>();
 		}
@@ -150,7 +149,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 			allCoinAdapter = new AllCoinAdapter(allCoins, this, this);
 			allCoinAdapter.setDarkTheme(isDarkTheme);
 		}
-		rcvAllCoin.setLayoutManager(linearLayoutManager);
+		rcvAllCoin.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvAllCoin.addItemDecoration(new CustomItemDecoration(2));
 		rcvAllCoin.setDemoShimmerDuration(100000);
 		rcvAllCoin.setAdapter(allCoinAdapter);
@@ -228,7 +227,10 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Override
 	public void onResume() {
 		super.onResume();
-		getCoins(allCoins.size() == 0);
+		if(!isFirstLoad) {
+			getCoins(allCoins.size() == 0);
+		}
+		isFirstLoad = false;
 	}
 
 	@Override
@@ -308,10 +310,10 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 					if (response.body().getMetadata().isSuccess()) {
 						allCoins.clear();
 						allCoins.addAll(response.body().getData());
-						allCoinAdapter.notifyDataSetChanged();
+						allCoinAdapter.setCoins(allCoins);
 						start += perPage;
 						if (response.body().getData().size() == perPage) {
-//							getNextPage(response.body().getMetadata().getNumCryptocurrencies());
+							getNextPage(response.body().getMetadata().getNumCryptocurrencies());
 						}
 					}
 				}
@@ -351,20 +353,14 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				.concatMap((Function<Integer, ObservableSource<CoinResponse>>) integer -> ApiClient.getAllCoinService().getCoinInPage((integer * perPage) + 1))
 				.doOnNext(coinResponse -> {
 					Log.d("__home", "getNextPage: " + coinResponse.getData().get(0).getRank());
-					EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), start - 1));
+					EventBus.getDefault().post(new EventBusListener.AddCoin(coinResponse.getData(), coinResponse.getData().get(0).getRank() - 1));
 					start += perPage;
 				})
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Consumer<CoinResponse>() {
-					@Override
-					public void accept(CoinResponse coinResponse) throws Exception {
+				.subscribe(coinResponse -> {
 
-					}
-				}, new Consumer<Throwable>() {
-					@Override
-					public void accept(Throwable throwable) throws Exception {
+				}, throwable -> {
 
-					}
 				});
 	}
 
@@ -391,4 +387,5 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onLongClicked(int position) {
 //		AppPreference.INSTANCE.addFavourite(allCoins.get(position).getId());
 	}
+
 }
