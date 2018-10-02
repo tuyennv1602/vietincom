@@ -23,8 +23,8 @@ public class CommonUtil {
 		return (int) (dp * context.getResources().getDisplayMetrics().density);
 	}
 
-	public static int pxToDp(Context context, int px){
-		return px / ( context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+	public static int pxToDp(Context context, int px) {
+		return px / (context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
 	}
 
 	public static String getStringFromAssets(Context context, String assetsName) {
@@ -46,23 +46,23 @@ public class CommonUtil {
 		}
 	}
 
-	public static float dp2px(float dp){
+	public static float dp2px(float dp) {
 		Resources r = Resources.getSystem();
 		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
 	}
 
-	public static int dp2pxInt(float dp){
+	public static int dp2pxInt(float dp) {
 		return (int) dp2px(dp);
 	}
 
-	public static String formatCurrency(double value, double rate, Currency currency){
+	public static String formatCurrency(double value, double rate, Currency currency) {
 		StringBuilder price = new StringBuilder();
 		price.append(currency.getSymbol());
-		double priceValue = currency.getCode().equals("USD") ? value: value * rate;
+		double priceValue = currency.getCode().equals("USD") ? value : value * rate;
 		if (value < 1.0) {
 			price.append(String.format(Locale.US, "%.4f", priceValue));
 		} else if (value < 1000) {
-			price.append(String.format(Locale.US,"%.2f", priceValue));
+			price.append(String.format(Locale.US, "%.2f", priceValue));
 		} else {
 			DecimalFormat dFormat = new DecimalFormat("###,###,###,###");
 			price.append(dFormat.format(priceValue));
@@ -70,10 +70,12 @@ public class CommonUtil {
 		return price.toString();
 	}
 
-	public static String formatCurrency(double price, boolean isUsd){
+	public static String formatCurrency(double price, boolean isUsd) {
 		String value;
 		if (isUsd) {
-			if (price < 1.0) {
+			if (price == 0) {
+				value = String.format(Locale.US, "%.1f", price);
+			} else if (price < 1.0) {
 				value = String.format(Locale.US, "%.4f", price);
 			} else if (price < 1000) {
 				value = String.format(Locale.US, "%.2f", price);
@@ -82,7 +84,16 @@ public class CommonUtil {
 				value = dFormat.format(price);
 			}
 		} else {
-			value = String.format(Locale.US, "%.6f", price);
+			if (price == 0) {
+				value = String.format(Locale.US, "%.1f", price);
+			} else if (price < 1.0) {
+				value = String.format(Locale.US, "%.6f", price);
+			} else if (price < 1000) {
+				value = String.format(Locale.US, "%.4f", price);
+			} else {
+				DecimalFormat dFormat = new DecimalFormat("###,###,###,###,##0.00");
+				value = dFormat.format(price);
+			}
 		}
 		return value;
 	}

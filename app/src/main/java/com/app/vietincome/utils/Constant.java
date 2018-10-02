@@ -17,6 +17,7 @@ public class Constant {
 	public static final int COIN_DETAIL = 1;
 	public static final int GLOBAL_MARKET = 2;
 	public static final int SELECT_COIN = 3;
+	public static final int PORTFOLIO_DETAIL = 4;
 
 	public static final int HIS_24H = 0;
 	public static final int HIS_7D = 1;

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.model.Transaction;
 import com.app.vietincome.model.Portfolio;
@@ -24,6 +25,8 @@ import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.utils.DateUtil;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -96,12 +99,14 @@ public class AddTransactionFragment extends BaseFragment {
 	private String name;
 	private String symbol;
 	private Data data;
+	private boolean isBackRoot;
 
-	public static AddTransactionFragment newInstance(Data data) {
+	public static AddTransactionFragment newInstance(Data data, boolean isBackRoot) {
 		AddTransactionFragment fragment = new AddTransactionFragment();
 		fragment.portId = data.getId();
 		fragment.name = data.getName();
 		fragment.symbol = data.getSymbol();
+		fragment.isBackRoot = isBackRoot;
 		return fragment;
 	}
 
@@ -123,6 +128,7 @@ public class AddTransactionFragment extends BaseFragment {
 	public void onFragmentReady(View view) {
 		onUpdatedTheme();
 		sgmGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+			changeSegmentColor();
 		});
 		rdGroupCurrency.setOnCheckedChangeListener((radioGroup, i) -> {
 			fillData();
@@ -133,14 +139,20 @@ public class AddTransactionFragment extends BaseFragment {
 
 	@Override
 	public void onNavigationTopUpdate(NavigationTopBar navitop) {
-		navitop.setTvTitle("Add item (" + symbol + ")");
+		navitop.setTvTitle("Add transaction (" + symbol + ")");
 		navitop.showImgLeft(true);
 		navitop.setImgLeft(R.drawable.back);
 		navitop.showImgRight(false);
 		navitop.changeFontTitle(R.font.helvetica_neue);
 	}
 
-
+	private void changeSegmentColor(){
+		if(btnBuy.isChecked()){
+			sgmGroup.setTintColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		}else{
+			sgmGroup.setTintColor(getColor(R.color.red));
+		}
+	}
 	@Override
 	public void onLeftClicked() {
 		super.onLeftClicked();
@@ -285,7 +297,13 @@ public class AddTransactionFragment extends BaseFragment {
 			portfolio.setTransactions(transactions);
 			portfolio.setQuotes(data.getQuotes());
 			AppPreference.INSTANCE.addPortfolio(portfolio);
-			getActivity().finish();
+			if(isBackRoot) {
+				EventBus.getDefault().post(new EventBusListener.AddPortfolio(portfolio));
+				getActivity().finish();
+			}else{
+				EventBus.getDefault().post(new EventBusListener.AddTransaction(transaction));
+				goBack();
+			}
 		}
 	}
 

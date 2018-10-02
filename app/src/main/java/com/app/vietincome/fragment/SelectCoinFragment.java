@@ -120,6 +120,6 @@ public class SelectCoinFragment extends BaseFragment implements ItemClickListene
 
 	@Override
 	public void onItemClicked(int position) {
-		pushFragment(AddTransactionFragment.newInstance(searchCoins.get(position)), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+		pushFragment(AddTransactionFragment.newInstance(searchCoins.get(position), true), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 	}
 }

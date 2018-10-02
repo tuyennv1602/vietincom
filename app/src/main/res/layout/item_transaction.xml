@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:swipe="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@color/dark_background"
+	swipe:rightEdgeSwipeOffset="0dp">
+
+	<com.app.vietincome.view.HighLightRelativeLayout
+		android:id="@+id/layoutDelete"
+		android:layout_width="70dp"
+		android:layout_height="match_parent"
+		android:background="@color/red">
+
+		<ImageView
+			android:id="@+id/imgDelete"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_centerInParent="true"
+			android:src="@drawable/delete"/>
+
+	</com.app.vietincome.view.HighLightRelativeLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:paddingTop="10dp"
+		android:paddingBottom="10dp"
+		android:weightSum="4">
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="0.7"
+			android:gravity="center_vertical"
+			android:orientation="vertical"
+			android:paddingLeft="5dp">
+
+			<TextView
+				android:id="@+id/tvHolding"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:scaleY="1.2"
+				android:text="0"
+				android:textSize="13sp"/>
+
+			<TextView
+				android:id="@+id/tvType"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="3dp"
+				android:background="@drawable/bg_buy"
+				android:paddingLeft="5dp"
+				android:paddingTop="1dp"
+				android:paddingRight="5dp"
+				android:paddingBottom="1dp"
+				android:text="Buy"
+				android:textColor="@color/green"
+				android:textSize="10sp"/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_weight="1.1"
+			android:gravity="center_vertical|end"
+			android:orientation="vertical"
+			android:paddingRight="5dp">
+
+			<TextView
+				android:id="@+id/tvPrice"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:scaleY="1.2"
+				android:text="$0"
+				android:textSize="13sp"/>
+
+			<TextView
+				android:id="@+id/tvDate"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:scaleY="1.2"
+				android:text="2018/01/01"
+				android:textColor="@color/light_gray"
+				android:textSize="13sp"/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_weight="1.1"
+			android:gravity="center_vertical|end"
+			android:orientation="vertical"
+			android:paddingRight="5dp">
+
+			<TextView
+				android:id="@+id/tvTotal"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:scaleY="1.2"
+				android:text="$0"
+				android:textSize="13sp"/>
+
+			<TextView
+				android:id="@+id/tvTotalPercent"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:scaleY="1.2"
+				android:text="0"
+				android:textColor="@color/light_gray"
+				android:textSize="13sp"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_weight="1.1"
+			android:gravity="center_vertical|end"
+			android:orientation="vertical"
+			android:paddingRight="5dp">
+
+			<TextView
+				android:id="@+id/tvProfit"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:scaleY="1.2"
+				android:text="$0"
+				android:textSize="13sp"/>
+
+			<TextView
+				android:id="@+id/tvProfitPercent"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:scaleY="1.2"
+				android:text="0"
+				android:textColor="@color/light_gray"
+				android:textSize="13sp"/>
+		</LinearLayout>
+	</LinearLayout>
+</com.daimajia.swipe.SwipeLayout>

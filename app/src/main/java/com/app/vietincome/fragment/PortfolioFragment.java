@@ -6,7 +6,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,6 +23,7 @@ import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.model.Portfolio;
+import com.app.vietincome.model.Transaction;
 import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.utils.CommonUtil;
@@ -33,6 +36,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -95,12 +99,29 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onUpdatePortfolio(EventBusListener.UpdatePortfolio event){
+	public void onUpdatePortfolio(EventBusListener.UpdatePortfolio event) {
 		int position = portfolios.indexOf(event.portfolio);
 		portfolios.set(position, event.portfolio);
 		portAdapter.notifyItemChanged(position);
 		AppPreference.INSTANCE.addPortfolio(event.portfolio);
-		tvTotalPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(getTotal(), isUSD)).toString());
+		setupCommonData();
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onAddPortfolio(EventBusListener.AddPortfolio event) {
+		int position = portfolios.indexOf(event.portfolio);
+		if (position != -1) {
+			portfolios.set(position, event.portfolio);
+			portAdapter.notifyItemChanged(position);
+		} else {
+			portfolios.add(event.portfolio);
+			portAdapter.notifyItemInserted(portfolios.size() - 1);
+		}
+		if (layoutIntro.getVisibility() == View.VISIBLE) {
+			layoutIntro.setVisibility(View.GONE);
+			layoutPortfolio.setVisibility(View.VISIBLE);
+		}
+		setupCommonData();
 	}
 
 	@Override
@@ -129,17 +150,49 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 			layoutIntro.setVisibility(View.GONE);
 			layoutPortfolio.setVisibility(View.VISIBLE);
 		}
-		tvTotalPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(getTotal(), isUSD)).toString());
+		setupCommonData();
 	}
 
-	private double getTotal(){
+	private void setupCommonData() {
+		double total = getTotal();
+		double cost = getCost();
+		tvTotalPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(total, isUSD)).toString());
+		double profit = total - cost;
+		float percent = (float) (profit / total);
+		tvProValue.setTextColor(profit > 0 ? getColor(R.color.green) : getColor(R.color.red));
+		tvProValue.setText(generateProfitValue(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(profit, isUSD)).append(" / ").append(String.format(Locale.US, "%.4f", percent)).append("%").toString()));
+	}
+
+	private SpannableStringBuilder generateProfitValue(String text){
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+		SpannableString string = new SpannableString(text);
+		String dash = "/";
+		string.setSpan(new ForegroundColorSpan(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text)), 0, string.toString().indexOf(dash) + dash.length(), 0);
+		builder.append(string);
+		return builder;
+	}
+
+	private double getTotal() {
 		double total = 0;
-		for(Portfolio item : portfolios){
-			Log.d("__port", "getTotal: " + item.getQuotes().getUSD().getPrice() * item.getNumHold());
-			if(isUSD){
+		for (Portfolio item : portfolios) {
+			if (isUSD) {
 				total += item.getQuotes().getUSD().getPrice() * item.getNumHold();
-			}else{
+			} else {
 				total += item.getQuotes().getBTC().getPrice() * item.getNumHold();
+			}
+		}
+		return total;
+	}
+
+	private double getCost() {
+		double total = 0;
+		for (Portfolio item : portfolios) {
+			for (Transaction transaction : item.getTransactions()) {
+				if (isUSD) {
+					total += (transaction.getQuantity() * transaction.getPriceUSD());
+				} else {
+					total += (transaction.getQuantity() * transaction.getPriceBTC());
+				}
 			}
 		}
 		return total;
@@ -214,6 +267,17 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 
 	@Override
 	public void onItemClicked(int position) {
+		Intent parent = new Intent(getContext(), ParentActivity.class);
+		parent.putExtra(Constant.KEY_SCREEN, Constant.PORTFOLIO_DETAIL);
+		parent.putExtra("portId", portfolios.get(position).getId());
+		startActivity(parent);
+	}
 
+	@OnClick(R.id.tvChangeCoin)
+	void onChangeCoin(){
+		isUSD = !isUSD;
+		tvChangeCoin.setText(isUSD ? "USD" : "BTC");
+		setupCommonData();
+		portAdapter.changeCurrency();
 	}
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@color/dark_background"
 	android:orientation="vertical">
 
 	<include layout="@layout/navi_top_bar"/>
@@ -47,32 +47,6 @@
 				android:textSize="24sp"/>
 		</RelativeLayout>
 
-		<LinearLayout
-			android:id="@+id/layoutIntro"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/layoutTop"
-			android:layout_above="@id/tvAddCoin"
-			android:orientation="vertical"
-			android:visibility="gone">
-
-			<TextView
-				style="@style/DefaultTextView"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:padding="5dp"
-				android:text="@string/portfolio_intro"
-				android:textColor="@color/light_gray"/>
-
-			<ImageView
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:layout_margin="30dp"
-				android:layout_gravity="center_horizontal"
-				android:src="@drawable/portfolio"/>
-		</LinearLayout>
-
 		<com.app.vietincome.view.HighLightTextView
 			android:id="@+id/tvAddCoin"
 			style="@style/DefaultTextView"
@@ -80,7 +54,7 @@
 			android:layout_height="40dp"
 			android:layout_alignParentBottom="true"
 			android:layout_centerHorizontal="true"
-			android:layout_margin="10dp"
+			android:layout_margin="15dp"
 			android:background="@drawable/bg_add_coin_dark"
 			android:gravity="center"
 			android:text="Add Coin"
@@ -88,106 +62,111 @@
 			android:textSize="16sp"/>
 
 		<LinearLayout
-			android:id="@+id/layoutListPortfolio"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_above="@id/tvAddCoin"
 			android:layout_below="@id/layoutTop"
 			android:orientation="vertical">
 
-			<LinearLayout
-				android:layout_width="wrap_content"
-				android:layout_gravity="center_horizontal"
+			<RelativeLayout
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:padding="10dp"
-				android:orientation="horizontal">
+				android:layout_gravity="center_horizontal"
+				android:orientation="horizontal"
+				android:padding="10dp">
 
 				<TextView
-					android:id="@+id/tvProfitLoss"
+					android:id="@+id/tvAllHolding"
 					style="@style/DefaultTextView"
-					android:layout_width="match_parent"
+					android:fontFamily="@font/helvetica_neue_medium"
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:textSize="16sp"
-					android:text="Profit: "/>
+					android:text="Holdings: 0"
+					android:textSize="16sp"/>
 
 				<TextView
-					android:id="@+id/tvProfitValue"
+					android:id="@+id/tvCurrentPrice"
 					style="@style/DefaultTextView"
-					android:layout_width="match_parent"
-					android:textSize="16sp"
-					android:textColor="@color/green"
+					android:layout_alignParentEnd="true"
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="$0/0%"/>
+					android:text="$0"
+					android:fontFamily="@font/helvetica_neue_medium"
+					android:textSize="16sp"/>
 
-			</LinearLayout>
+			</RelativeLayout>
 
 			<TextView
-				android:id="@+id/tvCoinDistribute"
-				android:layout_width="wrap_content"
+				android:id="@+id/tvWallet"
 				style="@style/DefaultTextView"
-				android:text="Coin distribution in Portfolio"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:layout_gravity="center_horizontal"
-				android:textColor="@color/light_gray"
-				android:layout_height="wrap_content"/>
+				android:text="Manual Wallet"
+				android:textSize="16sp"
+				android:textColor="@color/light_gray"/>
 
 			<LinearLayout
-				android:layout_marginTop="10dp"
 				android:layout_width="match_parent"
+				android:layout_height="33dp"
+				android:layout_marginTop="10dp"
 				android:orientation="horizontal"
-				android:weightSum="4"
-				android:layout_height="33dp">
-
-				<TextView
-					android:id="@+id/tvCoin"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					style="@style/DefaultTextView"
-					android:fontFamily="@font/helvetica_neue_medium"
-					android:text="Coin"
-					android:textSize="16dp"
-					android:gravity="center_vertical"
-					android:paddingLeft="5dp"
-					android:layout_height="match_parent"/>
-
-				<TextView
-					android:id="@+id/tvPrice"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					style="@style/DefaultTextView"
-					android:fontFamily="@font/helvetica_neue_medium"
-					android:text="Price"
-					android:paddingRight="5dp"
-					android:textSize="16dp"
-					android:gravity="center_vertical|right"
-					android:layout_height="match_parent"/>
+				android:weightSum="4">
 
 				<TextView
 					android:id="@+id/tvHolding"
-					android:layout_width="0dp"
-					android:layout_weight="1"
 					style="@style/DefaultTextView"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="0.7"
 					android:fontFamily="@font/helvetica_neue_medium"
-					android:text="Holdings"
-					android:textSize="16dp"
-					android:paddingRight="5dp"
-					android:gravity="center_vertical|right"
-					android:layout_height="match_parent"/>
+					android:gravity="center_vertical"
+					android:paddingStart="5dp"
+					android:text="Holding"
+					android:textSize="16dp"/>
 
 				<TextView
-					android:id="@+id/tvCost"
-					android:layout_width="0dp"
-					android:layout_weight="1"
+					android:id="@+id/tvPrice"
 					style="@style/DefaultTextView"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1.1"
 					android:fontFamily="@font/helvetica_neue_medium"
-					android:text="Cost"
-					android:paddingRight="5dp"
-					android:textSize="16dp"
 					android:gravity="center_vertical|right"
-					android:layout_height="match_parent"/>
+					android:paddingRight="5dp"
+					android:text="Price"
+					android:textSize="16dp"/>
+
+
+				<TextView
+					android:id="@+id/tvTotal"
+					style="@style/DefaultTextView"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1.1"
+					android:fontFamily="@font/helvetica_neue_medium"
+					android:gravity="center_vertical|end"
+					android:text="Total"
+					android:paddingRight="5dp"
+					android:textSize="16dp"/>
+
+				<TextView
+					android:id="@+id/tvProfit"
+					style="@style/DefaultTextView"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1.1"
+					android:fontFamily="@font/helvetica_neue_medium"
+					android:gravity="center_vertical|right"
+					android:paddingRight="5dp"
+					android:text="Profit"
+					android:textSize="16dp"/>
+
+
 			</LinearLayout>
 
 			<android.support.v7.widget.RecyclerView
-				android:id="@+id/rcvPortfolio"
+				android:id="@+id/rcvTransaction"
 				android:nestedScrollingEnabled="false"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"/>

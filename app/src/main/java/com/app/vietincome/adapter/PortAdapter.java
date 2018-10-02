@@ -27,14 +27,9 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 	private boolean isDarkTheme;
 	private boolean isUSD = true;
 
-	public PortAdapter(ArrayList<Portfolio> portfolios, ItemClickListener itemClickListener){
+	public PortAdapter(ArrayList<Portfolio> portfolios, ItemClickListener itemClickListener) {
 		this.portfolios = portfolios;
 		this.itemClickListener = itemClickListener;
-	}
-
-	public void addPortfolio(Portfolio portfolio){
-		this.portfolios.add(portfolio);
-		notifyItemInserted(portfolios.size() + 1);
 	}
 
 	public void setDarkTheme(boolean darkTheme) {
@@ -59,10 +54,10 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 
 	@Override
 	public int getItemCount() {
-		return portfolios == null ? 0: portfolios.size();
+		return portfolios == null ? 0 : portfolios.size();
 	}
 
-	class PortViewHolder extends  RecyclerView.ViewHolder{
+	class PortViewHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R.id.layoutRoot)
 		LinearLayout layoutRoot;
@@ -92,13 +87,13 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 			itemView.setOnClickListener(view -> {
-				if(itemClickListener != null){
+				if (itemClickListener != null) {
 					itemClickListener.onItemClicked(getAdapterPosition());
 				}
 			});
 		}
 
-		void onBind(Portfolio portfolio){
+		void onBind(Portfolio portfolio) {
 			layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 			tvName.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvSymbol.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
@@ -108,12 +103,12 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 			tvName.setText(portfolio.getName());
 			tvSymbol.setText(portfolio.getSymbol());
 			int numHold = portfolio.getNumHold();
-			double cost= 0;
-			for(Transaction i : portfolio.getTransactions()){
-				if(!isUSD){
-					cost += cost + (i.getQuantity() * i.getPriceBTC());
-				}else{
-					cost += cost + (i.getQuantity() * i.getPriceUSD());
+			double cost = 0;
+			for (Transaction i : portfolio.getTransactions()) {
+				if (!isUSD) {
+					cost += (i.getQuantity() * i.getPriceBTC());
+				} else {
+					cost += (i.getQuantity() * i.getPriceUSD());
 				}
 			}
 			double price = isUSD ? portfolio.getQuotes().getUSD().getPrice() : portfolio.getQuotes().getBTC().getPrice();
@@ -121,7 +116,11 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 			tvCost.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(cost, isUSD)).toString());
 			tvNumHolding.setText(String.valueOf(numHold));
 			tvPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(price, isUSD)).toString());
-			tvChange24h.setTextColor(isPlus(percent) ? getColor(R.color.green) : getColor(R.color.red));
+			if (percent != 0) {
+				tvChange24h.setTextColor(isPlus(percent) ? getColor(R.color.green) : getColor(R.color.red));
+			} else {
+				tvChange24h.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+			}
 			tvChange24h.setText(isUSD ? portfolio.getQuotes().getUSD().getPercentChange24h() : portfolio.getQuotes().getBTC().getPercentChange24h());
 			tvHoldingPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(price * numHold, isUSD)).toString());
 		}
@@ -130,7 +129,7 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 			return ContextCompat.getColor(itemView.getContext(), color);
 		}
 
-		public boolean isPlus(double value){
+		public boolean isPlus(double value) {
 			return !String.valueOf(value).contains("-");
 		}
 	}

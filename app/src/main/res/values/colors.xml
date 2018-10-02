@@ -33,4 +33,5 @@
 	<color name="light_event">#2e7dd7</color>
 	<color name="dark_info">#505658</color>
 	<color name="light_info">#ffffff</color>
+	<color name="pink"></color>
 </resources>
