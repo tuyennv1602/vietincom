@@ -95,7 +95,6 @@ public class AddTransactionFragment extends BaseFragment {
 	HighLightTextView tvSave;
 
 	private int portId;
-	private Transaction item;
 	private String name;
 	private String symbol;
 	private Data data;
@@ -107,15 +106,6 @@ public class AddTransactionFragment extends BaseFragment {
 		fragment.name = data.getName();
 		fragment.symbol = data.getSymbol();
 		fragment.isBackRoot = isBackRoot;
-		return fragment;
-	}
-
-	public static AddTransactionFragment newInstance(int portId, String portName, String portSymbol, Transaction item) {
-		AddTransactionFragment fragment = new AddTransactionFragment();
-		fragment.portId = portId;
-		fragment.name = portName;
-		fragment.symbol = portSymbol;
-		fragment.item = item;
 		return fragment;
 	}
 
@@ -153,6 +143,7 @@ public class AddTransactionFragment extends BaseFragment {
 			sgmGroup.setTintColor(getColor(R.color.red));
 		}
 	}
+
 	@Override
 	public void onLeftClicked() {
 		super.onLeftClicked();
@@ -259,10 +250,9 @@ public class AddTransactionFragment extends BaseFragment {
 		if (edtQuantity.getText().toString().isEmpty() || edtPrice.getText().toString().isEmpty()) {
 			return "0.0" + (btnUSD.isChecked() ? " $" : " ฿");
 		} else {
-			float total = (float) ((btnUSD.isChecked() ? data.getQuotes().getUSD().getPrice() : data.getQuotes().getBTC().getPrice()) * Float.valueOf(edtQuantity.getText().toString()));
+			float total = (float) (Float.valueOf(edtPrice.getText().toString().replaceAll(",", ""))) * Float.valueOf(edtQuantity.getText().toString());
 			return CommonUtil.formatCurrency(total, btnUSD.isChecked());
 		}
-
 	}
 
 	@OnTextChanged(R.id.edtQuantity)
@@ -285,11 +275,18 @@ public class AddTransactionFragment extends BaseFragment {
 			}
 			Transaction transaction = new Transaction(
 					transactions.size(),
-					data.getQuotes().getUSD().getPrice(),
-					data.getQuotes().getBTC().getPrice(),
+					0,
+					0,
 					tvTradeTime.getText().toString(),
 					Integer.valueOf(edtQuantity.getText().toString()),
 					btnBuy.isChecked());
+			if(btnUSD.isChecked()){
+				transaction.setPriceUSD(Double.valueOf(edtPrice.getText().toString()));
+				transaction.setPriceBTC(data.getQuotes().getBTC().getPrice());
+			}else{
+				transaction.setPriceBTC(Double.valueOf(edtPrice.getText().toString()));
+				transaction.setPriceUSD(data.getQuotes().getUSD().getPrice());
+			}
 			transactions.add(transaction);
 			portfolio.setId(portId);
 			portfolio.setName(data.getName());

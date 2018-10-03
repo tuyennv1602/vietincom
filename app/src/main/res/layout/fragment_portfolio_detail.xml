@@ -122,8 +122,7 @@
 					android:fontFamily="@font/helvetica_neue_medium"
 					android:gravity="center_vertical"
 					android:paddingStart="5dp"
-					android:text="Holding"
-					android:textSize="16dp"/>
+					android:text="Holding"/>
 
 				<TextView
 					android:id="@+id/tvPrice"
@@ -135,8 +134,7 @@
 					android:gravity="center_vertical|right"
 					android:paddingRight="5dp"
 					android:text="Price"
-					android:textSize="16dp"/>
-
+					/>
 
 				<TextView
 					android:id="@+id/tvTotal"
@@ -147,8 +145,7 @@
 					android:fontFamily="@font/helvetica_neue_medium"
 					android:gravity="center_vertical|end"
 					android:text="Total"
-					android:paddingRight="5dp"
-					android:textSize="16dp"/>
+					android:paddingRight="5dp"/>
 
 				<TextView
 					android:id="@+id/tvProfit"
@@ -159,9 +156,7 @@
 					android:fontFamily="@font/helvetica_neue_medium"
 					android:gravity="center_vertical|right"
 					android:paddingRight="5dp"
-					android:text="Profit"
-					android:textSize="16dp"/>
-
+					android:text="Profit"/>
 
 			</LinearLayout>
 

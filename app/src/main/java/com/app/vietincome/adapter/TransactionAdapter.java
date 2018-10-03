@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
+import com.app.vietincome.manager.interfaces.OnDeleteItemListener;
 import com.app.vietincome.model.Transaction;
 import com.app.vietincome.utils.CommonUtil;
-import com.app.vietincome.view.HighLightImageView;
 import com.daimajia.swipe.SwipeLayout;
 
 import java.util.ArrayList;
@@ -30,14 +30,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 	private ArrayList<Transaction> transactions;
 	private ItemClickListener onItemClickListener;
+	private OnDeleteItemListener deleteItemListener;
 	private boolean isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
 	private boolean isUSD = true;
 	private double totalPrice;
 
-	public TransactionAdapter(ArrayList<Transaction> transactions, double totalPrice,ItemClickListener onItemClickListener){
+	public TransactionAdapter(ArrayList<Transaction> transactions, double totalPrice,ItemClickListener onItemClickListener, OnDeleteItemListener deleteItemListener){
 		this.transactions = transactions;
 		this.onItemClickListener = onItemClickListener;
 		this.totalPrice = totalPrice;
+		this.deleteItemListener = deleteItemListener;
 	}
 
 	public void changeCurrency() {
@@ -100,6 +102,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		@BindView(R.id.tvProfitPercent)
 		TextView tvProfitPercent;
 
+		@BindView(R.id.layoutMain)
+		LinearLayout layoutMain;
+
 		public TransactionViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
@@ -112,13 +117,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 			tvTotalPercent.setVisibility(View.INVISIBLE);
 			layoutRoot.setShowMode(SwipeLayout.ShowMode.PullOut);
 			layoutRoot.addDrag(SwipeLayout.DragEdge.Right, layoutDelete);
-			itemView.setOnClickListener(view -> {
+			layoutMain.setOnClickListener(view -> {
 				if(onItemClickListener != null){
 					onItemClickListener.onItemClicked(getAdapterPosition());
 				}
 			});
 			layoutDelete.setOnClickListener(view -> {
-				Log.d("__port", "TransactionViewHolder: delete");
+				if(deleteItemListener != null){
+					deleteItemListener.onItemDeleted(getAdapterPosition());
+				}
 			});
 		}
 

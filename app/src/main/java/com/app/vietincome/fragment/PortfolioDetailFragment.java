@@ -14,7 +14,9 @@ import com.app.vietincome.adapter.TransactionAdapter;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
+import com.app.vietincome.manager.interfaces.AlertListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
+import com.app.vietincome.manager.interfaces.OnDeleteItemListener;
 import com.app.vietincome.model.Data;
 import com.app.vietincome.model.Portfolio;
 import com.app.vietincome.model.Transaction;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class PortfolioDetailFragment extends BaseFragment implements ItemClickListener {
+public class PortfolioDetailFragment extends BaseFragment implements ItemClickListener, OnDeleteItemListener {
 
 	@BindView(R.id.tvChangeCoin)
 	HighLightTextView tvChangeCoin;
@@ -101,7 +103,7 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 		setupCommonData();
 		transactions = portfolio.getTransactions();
 		if (transactionAdapter == null) {
-			transactionAdapter = new TransactionAdapter(transactions, getTotalPrice(), this);
+			transactionAdapter = new TransactionAdapter(transactions, getTotalPrice(), this, this);
 		}
 		rcvTransaction.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvTransaction.addItemDecoration(new CustomItemDecoration(1));
@@ -194,6 +196,25 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 
 	@Override
 	public void onItemClicked(int position) {
+		pushFragment(EditTransactionFragment.newInstance(portfolio, transactions.get(position)), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+	}
+
+	@Override
+	public void onItemDeleted(int position) {
+		showAlert("Message", "Do you want to detele this transaction?", "YES", "NO", new AlertListener() {
+			@Override
+			public void onClickedOk() {
+				PortfolioDetailFragment.this.portfolio.getTransactions().remove(position);
+				AppPreference.INSTANCE.addPortfolio(portfolio);
+				transactionAdapter.notifyDataSetChanged();
+				setupCommonData();
+			}
+
+			@Override
+			public void onClickedCancel() {
+
+			}
+		});
 
 	}
 }

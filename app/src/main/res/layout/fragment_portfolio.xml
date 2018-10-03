@@ -144,7 +144,6 @@
 					style="@style/DefaultTextView"
 					android:fontFamily="@font/helvetica_neue_medium"
 					android:text="Coin"
-					android:textSize="16dp"
 					android:gravity="center_vertical"
 					android:paddingLeft="5dp"
 					android:layout_height="match_parent"/>
@@ -157,7 +156,6 @@
 					android:fontFamily="@font/helvetica_neue_medium"
 					android:text="Price"
 					android:paddingRight="5dp"
-					android:textSize="16dp"
 					android:gravity="center_vertical|right"
 					android:layout_height="match_parent"/>
 
@@ -168,7 +166,6 @@
 					style="@style/DefaultTextView"
 					android:fontFamily="@font/helvetica_neue_medium"
 					android:text="Holdings"
-					android:textSize="16dp"
 					android:paddingRight="5dp"
 					android:gravity="center_vertical|right"
 					android:layout_height="match_parent"/>
@@ -181,7 +178,6 @@
 					android:fontFamily="@font/helvetica_neue_medium"
 					android:text="Cost"
 					android:paddingRight="5dp"
-					android:textSize="16dp"
 					android:gravity="center_vertical|right"
 					android:layout_height="match_parent"/>
 			</LinearLayout>

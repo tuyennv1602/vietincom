@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/dark_background"
+	android:orientation="vertical">
+
+	<include layout="@layout/navi_top_bar"/>
+
+	<info.hoang8f.android.segmented.SegmentedGroup
+		android:id="@+id/sgmGroup"
+		android:layout_width="wrap_content"
+		android:layout_height="30dp"
+		android:layout_gravity="center_horizontal"
+		android:layout_margin="10dp"
+		android:orientation="horizontal"
+		segmentedgroup:sc_border_width="1dp"
+		segmentedgroup:sc_checked_text_color="@color/white"
+		segmentedgroup:sc_corner_radius="5dp"
+		segmentedgroup:sc_tint_color="@color/dark_image">
+
+		<RadioButton
+			android:id="@+id/btnSell"
+			style="@style/RadioButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:fontFamily="@font/helvetica_neue"
+			android:text="SELL"/>
+
+		<RadioButton
+			android:id="@+id/btnBuy"
+			style="@style/RadioButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="true"
+			android:fontFamily="@font/helvetica_neue"
+			android:text="BUY"/>
+
+	</info.hoang8f.android.segmented.SegmentedGroup>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height">
+
+		<TextView
+			android:id="@+id/tvCurrency"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:padding="7dp"
+			android:text="Base currency"
+			android:textColor="@color/white"
+			android:textSize="16sp"/>
+
+		<RadioGroup
+			android:id="@+id/rdGroupCurrency"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:orientation="horizontal">
+
+			<RadioButton
+				android:id="@+id/btnUSD"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:checked="true"
+				android:fontFamily="@font/helvetica_neue"
+				android:padding="7dp"
+				android:text="USD"
+				android:textSize="16sp"
+				android:textColor="@color/white"/>
+
+			<RadioButton
+				android:id="@+id/btnBTC"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:fontFamily="@font/helvetica_neue"
+				android:padding="7dp"
+				android:text="BTC"
+				android:textSize="16sp"
+				android:textColor="@color/white"/>
+
+		</RadioGroup>
+	</RelativeLayout>
+
+	<include layout="@layout/view_line"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height">
+
+		<TextView
+			android:id="@+id/tvQuantity"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:padding="7dp"
+			android:text="Quantity"
+			android:textColor="@color/white"
+			android:textSize="16sp"/>
+
+		<EditText
+			android:id="@+id/edtQuantity"
+			style="@style/DefaultEditText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:background="@null"
+			android:layout_marginLeft="20dp"
+			android:imeOptions="actionNext"
+			android:layout_toRightOf="@id/tvQuantity"
+			android:drawableEnd="@drawable/pen"
+			android:drawablePadding="7dp"
+			android:gravity="end"
+			android:inputType="numberDecimal"
+			android:hint="Enter quantity"
+			android:padding="7dp"
+			android:textSize="16sp"/>
+	</RelativeLayout>
+
+	<include layout="@layout/view_line"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height">
+
+		<TextView
+			android:id="@+id/tvPrice"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:padding="7dp"
+			android:text="Price (USD)"
+			android:textColor="@color/white"
+			android:textSize="16sp"/>
+
+		<EditText
+			android:id="@+id/edtPrice"
+			style="@style/DefaultEditText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:background="@null"
+			android:gravity="end"
+			android:layout_marginLeft="20dp"
+			android:layout_toRightOf="@id/tvPrice"
+			android:inputType="numberDecimal"
+			android:drawableEnd="@drawable/pen"
+			android:drawablePadding="7dp"
+			android:hint="Enter price"
+			android:imeOptions="actionDone"
+			android:padding="7dp"
+			android:textSize="16sp"/>
+	</RelativeLayout>
+
+	<include layout="@layout/view_line"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height">
+
+		<TextView
+			android:id="@+id/tvTradeDate"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:padding="7dp"
+			android:text="Trade date (optional)"
+			android:textColor="@color/white"
+			android:textSize="16sp"/>
+
+		<TextView
+			android:id="@+id/tvTradeTime"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:drawableEnd="@drawable/calendar"
+			android:drawablePadding="7dp"
+			android:padding="7dp"
+			android:text="30/09/2018"
+			android:textColor="@color/white"
+			android:textSize="16sp"/>
+	</RelativeLayout>
+
+
+	<include layout="@layout/view_line"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height">
+
+		<TextView
+			android:id="@+id/tvTotalPrice"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:fontFamily="@font/helvetica_neue_bold"
+			android:padding="7dp"
+			android:text="Total (USD)"
+			android:textColor="@color/white"
+			android:textSize="16sp"/>
+
+		<TextView
+			android:id="@+id/tvTotalValue"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:drawablePadding="7dp"
+			android:fontFamily="@font/helvetica_neue_bold"
+			android:padding="7dp"
+			android:text="0.0 $"
+			android:textColor="@color/white"
+			android:textSize="16sp"/>
+	</RelativeLayout>
+
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvSave"
+		style="@style/DefaultTextView"
+		android:layout_width="200dp"
+		android:layout_height="40dp"
+		android:layout_gravity="center_horizontal"
+		android:layout_margin="10dp"
+		android:background="@drawable/bg_add_coin_dark"
+		android:gravity="center"
+		android:textSize="16sp"
+		android:text="Save Transaction"
+		android:textColor="@color/white"/>
+
+</LinearLayout>
