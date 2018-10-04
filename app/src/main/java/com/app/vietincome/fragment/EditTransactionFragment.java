@@ -1,10 +1,10 @@
 package com.app.vietincome.fragment;
 
+import android.app.DatePickerDialog;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -14,16 +14,21 @@ import android.widget.TextView;
 
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
+import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.model.Portfolio;
 import com.app.vietincome.model.Transaction;
 import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 
-import java.text.DecimalFormat;
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.Calendar;
 import java.util.Locale;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import info.hoang8f.android.segmented.SegmentedGroup;
 
 public class EditTransactionFragment extends BaseFragment {
@@ -81,16 +86,18 @@ public class EditTransactionFragment extends BaseFragment {
 
 	private Portfolio portfolio;
 	private Transaction item;
+	private int position;
 
-	public static EditTransactionFragment newInstance(Portfolio portfolio, Transaction item) {
+	public static EditTransactionFragment newInstance(Portfolio portfolio, Transaction item, int position) {
 		EditTransactionFragment fragment = new EditTransactionFragment();
 		fragment.portfolio = portfolio;
 		fragment.item = item;
+		fragment.position = position;
 		return fragment;
 	}
 	@Override
 	public int getLayoutId() {
-		return R.layout.fragment_edit_transaction;
+		return R.layout.fragment_add_transaction;
 	}
 
 	@Override
@@ -118,15 +125,7 @@ public class EditTransactionFragment extends BaseFragment {
 			tvPrice.setText("Price (USD)");
 			tvTotalPrice.setText("Total (USD)");
 			double price = item.getPriceUSD();
-			String value;
-			if (price < 1.0) {
-				value = String.format(Locale.US, "%.4f", price);
-			} else if (price < 1000) {
-				value = String.format(Locale.US, "%.2f", price);
-			} else {
-				DecimalFormat dFormat = new DecimalFormat("###,###,###,##0.000");
-				value = dFormat.format(price);
-			}
+			String value = String.format(Locale.US, "%.4f", price);
 			edtPrice.setText(value);
 		} else {
 			tvPrice.setText("Price (BTC)");
@@ -138,9 +137,9 @@ public class EditTransactionFragment extends BaseFragment {
 
 	private String canculateTotal() {
 		if (edtQuantity.getText().toString().isEmpty() || edtPrice.getText().toString().isEmpty()) {
-			return "0.0" + (btnUSD.isChecked() ? " $" : " ฿");
+			return "0.0";
 		} else {
-			float total = (float) (Float.valueOf(edtPrice.getText().toString().replaceAll(",", ""))) * Float.valueOf(edtQuantity.getText().toString());
+			float total = (float) (Float.valueOf(edtPrice.getText().toString().trim())) * Float.valueOf(edtQuantity.getText().toString());
 			return CommonUtil.formatCurrency(total, btnUSD.isChecked());
 		}
 	}
@@ -156,9 +155,44 @@ public class EditTransactionFragment extends BaseFragment {
 
 	private void changeSegmentColor(){
 		if(btnBuy.isChecked()){
-			sgmGroup.setTintColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+			sgmGroup.setTintColor(getColor(R.color.green));
 		}else{
 			sgmGroup.setTintColor(getColor(R.color.red));
+		}
+	}
+
+	@OnTextChanged({R.id.edtQuantity, R.id.edtPrice})
+	void onChangeQuantity(CharSequence text) {
+		tvTotalPriceValue.setText(new StringBuilder().append(canculateTotal()).append(btnUSD.isChecked() ? " $" : " ฿").toString());
+	}
+
+	@OnClick(R.id.tvTradeTime)
+	void selectTradeDate(){
+		final Calendar c = Calendar.getInstance();
+		DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (datePicker, year, month, day) -> {
+			String result = (day / 10 == 0 ? "0" + day : day)
+					+ "/" + ((month + 1) / 10 == 0 ? "0" + (month + 1) : month + 1) + "/" + year;
+			tvTradeTime.setText(result);
+		}, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+		datePickerDialog.show();
+	}
+
+	@OnClick(R.id.tvSave)
+	void saveTransaction() {
+		if(checkFillData()){
+			item.setBuy(btnBuy.isChecked());
+			item.setDateAdd(tvTradeTime.getText().toString());
+			if(btnUSD.isChecked()){
+				item.setPriceUSD(Double.valueOf(edtPrice.getText().toString()));
+				item.setPriceBTC(portfolio.getQuotes().getBTC().getPrice());
+			}else{
+				item.setPriceBTC(Double.valueOf(edtPrice.getText().toString()));
+				item.setPriceUSD(portfolio.getQuotes().getUSD().getPrice());
+			}
+			item.setQuantity(Integer.valueOf(edtQuantity.getText().toString()));
+			portfolio.getTransactions().set(position, item);
+			EventBus.getDefault().post(new EventBusListener.AddTransaction(item));
+			goBack();
 		}
 	}
 
@@ -166,7 +200,18 @@ public class EditTransactionFragment extends BaseFragment {
 	public void onLeftClicked() {
 		super.onLeftClicked();
 		goBack();
-		Log.d("__trans", "onLeftClicked: ");
+	}
+
+	private boolean checkFillData() {
+		if (edtQuantity.getText().toString().isEmpty()) {
+			showAlert("Message", "Please enter quantity");
+			return false;
+		}
+		if (edtPrice.getText().toString().isEmpty()) {
+			showAlert("Message", "Please enter price");
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -219,4 +264,5 @@ public class EditTransactionFragment extends BaseFragment {
 		right.setBounds(0, 0, right.getIntrinsicWidth(), right.getIntrinsicHeight());
 		textView.setCompoundDrawables(null, null, right, null);
 	}
+
 }

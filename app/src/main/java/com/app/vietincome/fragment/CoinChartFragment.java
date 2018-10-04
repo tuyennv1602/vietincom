@@ -246,6 +246,9 @@ public class CoinChartFragment extends BaseFragment {
 	}
 
 	private void setData(ChartResponse chartResponse) {
+		if(chartResponse == null || chartResponse.getPrices() == null || chartResponse.getVolumes() == null){
+			return;
+		}
 		CombinedData data = new CombinedData();
 		data.setData(generateLineData(chartResponse.getPrices()));
 		if (AppPreference.INSTANCE.isVolume()) {

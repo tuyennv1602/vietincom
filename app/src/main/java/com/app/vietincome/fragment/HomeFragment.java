@@ -33,6 +33,7 @@ import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +44,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -106,7 +108,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	private boolean isLoading = true;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
 	private boolean isFirstLoad = true;
-	private Disposable disposable;
+	private CompositeDisposable disposable;
 	private ArrayList<Portfolio> portfolios = new ArrayList<>();
 
 	public static HomeFragment newInstance() {
@@ -131,6 +133,14 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onEventExpand(EventBusListener.ExpanableView event) {
 		appBarLayout.setExpanded(true);
 		rcvAllCoin.scrollToPosition(0);
+		if (disposable != null && !disposable.isDisposed()) {
+			disposable.dispose();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
 		if (disposable != null && !disposable.isDisposed()) {
 			disposable.dispose();
 		}
@@ -372,37 +382,21 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		if (totalItem % perPage != 0) {
 			numPage += 1;
 		}
-		Observable.range(1, numPage)
+		disposable = new CompositeDisposable();
+		Disposable subscribe = Observable.range(1, numPage)
 				.subscribeOn(Schedulers.io())
 				.concatMap((Function<Integer, ObservableSource<CoinResponse>>) integer -> ApiClient.getAllCoinService().getCoinInPage((integer * perPage) + 1))
 				.doOnError(throwable -> {
 					Log.d("__home", "getNextPage: error");
 				})
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribeWith(new Observer<CoinResponse>() {
-					@Override
-					public void onSubscribe(Disposable d) {
-						disposable = d;
-					}
-
-					@Override
-					public void onNext(CoinResponse coinResponse) {
-						start += perPage;
-						allCoins.addAll(coinResponse.getData());
-						allCoinAdapter.notifyItemRangeChanged(coinResponse.getData().get(0).getRank() - 1, allCoins.size());
-						updatePortfolioId(coinResponse.getData());
-					}
-
-					@Override
-					public void onError(Throwable e) {
-						showAlert("Failed", "Get Coins: " + e.getMessage());
-					}
-
-					@Override
-					public void onComplete() {
-
-					}
-				});
+				.subscribe(coinResponse -> {
+					start += perPage;
+					allCoins.addAll(coinResponse.getData());
+					allCoinAdapter.notifyItemRangeChanged(coinResponse.getData().get(0).getRank() - 1, allCoins.size());
+					updatePortfolioId(coinResponse.getData());
+				}, throwable -> showAlert("Failed", "Get Coins: " + throwable.getMessage()));
+		disposable.add(subscribe);
 	}
 
 	@Override
@@ -421,7 +415,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 	@Override
 	public void onCancelClicked(int position) {
-
 	}
 
 	@Override

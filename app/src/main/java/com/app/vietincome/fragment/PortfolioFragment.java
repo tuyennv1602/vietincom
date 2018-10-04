@@ -109,14 +109,8 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onAddPortfolio(EventBusListener.AddPortfolio event) {
-		int position = portfolios.indexOf(event.portfolio);
-		if (position != -1) {
-			portfolios.set(position, event.portfolio);
-			portAdapter.notifyItemChanged(position);
-		} else {
-			portfolios.add(event.portfolio);
-			portAdapter.notifyItemInserted(portfolios.size() - 1);
-		}
+		AppPreference.INSTANCE.addPortfolio(event.portfolio);
+		portAdapter.notifyDataSetChanged();
 		if (layoutIntro.getVisibility() == View.VISIBLE) {
 			layoutIntro.setVisibility(View.GONE);
 			layoutPortfolio.setVisibility(View.VISIBLE);
@@ -163,7 +157,7 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 		tvProValue.setText(generateProfitValue(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(profit, isUSD)).append(" / ").append(String.format(Locale.US, "%.4f", percent)).append("%").toString()));
 	}
 
-	private SpannableStringBuilder generateProfitValue(String text){
+	private SpannableStringBuilder generateProfitValue(String text) {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		SpannableString string = new SpannableString(text);
 		String dash = "/";
@@ -274,7 +268,7 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 	}
 
 	@OnClick(R.id.tvChangeCoin)
-	void onChangeCoin(){
+	void onChangeCoin() {
 		isUSD = !isUSD;
 		tvChangeCoin.setText(isUSD ? "USD" : "BTC");
 		setupCommonData();

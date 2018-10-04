@@ -33,8 +33,7 @@
 			android:gravity="center"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
-			android:text="CANCEL"
-			android:textSize="16sp"/>
+			android:text="CANCEL"/>
 
 		<com.app.vietincome.view.HighLightTextView
 			android:id="@+id/tvSelect"
@@ -45,8 +44,7 @@
 			android:gravity="center"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
-			android:text="SELECT"
-			android:textSize="16sp"/>
+			android:text="SELECT"/>
 
 	</LinearLayout>
 

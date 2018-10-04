@@ -6,6 +6,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -71,6 +73,9 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 	@BindView(R.id.rcvTransaction)
 	RecyclerView rcvTransaction;
 
+	@BindView(R.id.layoutRoot)
+	LinearLayout layoutRoot;
+
 	private Portfolio portfolio;
 	private int portId;
 	private ArrayList<Transaction> transactions;
@@ -90,6 +95,7 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 		transactionAdapter.setTotalPrice(getTotalPrice());
 		transactionAdapter.notifyDataSetChanged();
 		setupCommonData();
+		EventBus.getDefault().post(new EventBusListener.UpdatePortfolio(portfolio));
 	}
 
 	@Override
@@ -113,11 +119,12 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 
 	private void setupCommonData() {
 		tvAllHolding.setText(new StringBuilder().append("Holdings: ").append(portfolio.getNumHold()).toString());
-		if (isUSD) {
-			tvCurrentPrice.setText(new StringBuilder().append("Price: $").append(CommonUtil.formatCurrency(portfolio.getQuotes().getUSD().getPrice(), isUSD)).toString());
-		} else {
-			tvCurrentPrice.setText(new StringBuilder().append("Price: ฿").append(CommonUtil.formatCurrency(portfolio.getQuotes().getBTC().getPrice(), !isUSD)).toString());
-		}
+		double currentPrice = isUSD ?  portfolio.getQuotes().getUSD().getPrice() : portfolio.getQuotes().getBTC().getPrice();
+		StringBuilder strCurrentPrice = new StringBuilder();
+		strCurrentPrice.append("Price: ");
+		strCurrentPrice.append(isUSD ? "$" : "฿");
+		strCurrentPrice.append(CommonUtil.formatCurrency(currentPrice, isUSD));
+		tvCurrentPrice.setText(strCurrentPrice.toString());
 		tvTotalPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(getTotalPrice(), isUSD)).toString());
 	}
 
@@ -168,6 +175,7 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 
 	@Override
 	public void onUpdatedTheme() {
+		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		layoutTop.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvAddCoin.setBackground(isDarkTheme ? getResources().getDrawable(R.drawable.bg_add_coin_dark) : getResources().getDrawable(R.drawable.bg_add_coin_light));
 		setTextColor(tvAllHolding);
@@ -196,7 +204,7 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 
 	@Override
 	public void onItemClicked(int position) {
-		pushFragment(EditTransactionFragment.newInstance(portfolio, transactions.get(position)), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+		pushFragment(EditTransactionFragment.newInstance(portfolio, transactions.get(position), position), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 	}
 
 	@Override

@@ -138,7 +138,7 @@ public class AddTransactionFragment extends BaseFragment {
 
 	private void changeSegmentColor(){
 		if(btnBuy.isChecked()){
-			sgmGroup.setTintColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+			sgmGroup.setTintColor(getColor(R.color.green));
 		}else{
 			sgmGroup.setTintColor(getColor(R.color.red));
 		}
@@ -153,7 +153,7 @@ public class AddTransactionFragment extends BaseFragment {
 	@Override
 	public void onUpdatedTheme() {
 		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
-		sgmGroup.setTintColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		sgmGroup.setTintColor(getColor(R.color.green));
 		ColorStateList colorStateList = new ColorStateList(
 				new int[][]{
 						new int[]{-android.R.attr.state_checked},
@@ -228,15 +228,7 @@ public class AddTransactionFragment extends BaseFragment {
 			tvPrice.setText("Price (USD)");
 			tvTotalPrice.setText("Total (USD)");
 			double price = data.getQuotes().getUSD().getPrice();
-			String value;
-			if (price < 1.0) {
-				value = String.format(Locale.US, "%.4f", price);
-			} else if (price < 1000) {
-				value = String.format(Locale.US, "%.2f", price);
-			} else {
-				DecimalFormat dFormat = new DecimalFormat("###,###,###,##0.000");
-				value = dFormat.format(price);
-			}
+			String value = String.format(Locale.US, "%.4f", price);
 			edtPrice.setText(value);
 		} else {
 			tvPrice.setText("Price (BTC)");
@@ -248,20 +240,15 @@ public class AddTransactionFragment extends BaseFragment {
 
 	private String canculateTotal() {
 		if (edtQuantity.getText().toString().isEmpty() || edtPrice.getText().toString().isEmpty()) {
-			return "0.0" + (btnUSD.isChecked() ? " $" : " ฿");
+			return "0.0";
 		} else {
-			float total = (float) (Float.valueOf(edtPrice.getText().toString().replaceAll(",", ""))) * Float.valueOf(edtQuantity.getText().toString());
+			float total = (float) (Float.valueOf(edtPrice.getText().toString().trim())) * Float.valueOf(edtQuantity.getText().toString());
 			return CommonUtil.formatCurrency(total, btnUSD.isChecked());
 		}
 	}
 
-	@OnTextChanged(R.id.edtQuantity)
+	@OnTextChanged({R.id.edtQuantity, R.id.edtPrice})
 	void onChangeQuantity(CharSequence text) {
-		tvTotalPriceValue.setText(new StringBuilder().append(canculateTotal()).append(btnUSD.isChecked() ? " $" : " ฿").toString());
-	}
-
-	@OnTextChanged(R.id.edtPrice)
-	void onChangePrice(CharSequence text) {
 		tvTotalPriceValue.setText(new StringBuilder().append(canculateTotal()).append(btnUSD.isChecked() ? " $" : " ฿").toString());
 	}
 
@@ -293,7 +280,6 @@ public class AddTransactionFragment extends BaseFragment {
 			portfolio.setSymbol(data.getSymbol());
 			portfolio.setTransactions(transactions);
 			portfolio.setQuotes(data.getQuotes());
-			AppPreference.INSTANCE.addPortfolio(portfolio);
 			if(isBackRoot) {
 				EventBus.getDefault().post(new EventBusListener.AddPortfolio(portfolio));
 				getActivity().finish();
@@ -306,11 +292,11 @@ public class AddTransactionFragment extends BaseFragment {
 
 	private boolean checkFillData() {
 		if (edtQuantity.getText().toString().isEmpty()) {
-			showAlert("Message", "Please enter quantity");
+			showAlert("Message", "Please enter quantity!");
 			return false;
 		}
 		if (edtPrice.getText().toString().isEmpty()) {
-			showAlert("Message", "Please enter price");
+			showAlert("Message", "Please enter price!");
 			return false;
 		}
 		return true;

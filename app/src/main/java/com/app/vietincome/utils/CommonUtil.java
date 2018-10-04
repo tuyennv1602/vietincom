@@ -72,28 +72,15 @@ public class CommonUtil {
 
 	public static String formatCurrency(double price, boolean isUsd) {
 		String value;
-		if (isUsd) {
-			if (price == 0) {
-				value = String.format(Locale.US, "%.1f", price);
-			} else if (price < 1.0) {
-				value = String.format(Locale.US, "%.4f", price);
-			} else if (price < 1000) {
-				value = String.format(Locale.US, "%.2f", price);
-			} else {
-				DecimalFormat dFormat = new DecimalFormat("###,###,###,###,##0.00");
-				value = dFormat.format(price);
-			}
+		if (price == 0) {
+			value = String.format(Locale.US, "%.1f", price);
+		} else if (price < 1.0) {
+			value = String.format(Locale.US, isUsd ? "%.4f" : "%.8f", price);
+		} else if (price < 1000) {
+			value = String.format(Locale.US, isUsd ? "%.2f" : "%.4f", price);
 		} else {
-			if (price == 0) {
-				value = String.format(Locale.US, "%.1f", price);
-			} else if (price < 1.0) {
-				value = String.format(Locale.US, "%.6f", price);
-			} else if (price < 1000) {
-				value = String.format(Locale.US, "%.4f", price);
-			} else {
-				DecimalFormat dFormat = new DecimalFormat("###,###,###,###,##0.00");
-				value = dFormat.format(price);
-			}
+			DecimalFormat dFormat = new DecimalFormat("###,###,###,###,##0.00");
+			value = dFormat.format(price);
 		}
 		return value;
 	}
