@@ -41,6 +41,7 @@
 					android:textSize="30sp"/>
 
 				<TextView
+					android:id="@+id/tvIntroMarketCap"
 					style="@style/DefaultTextView"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -130,6 +131,7 @@
 					android:textSize="30sp"/>
 
 				<TextView
+					android:id="@+id/tvIntroVolume"
 					style="@style/DefaultTextView"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"

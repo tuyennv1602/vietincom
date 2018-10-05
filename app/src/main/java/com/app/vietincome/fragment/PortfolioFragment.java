@@ -152,7 +152,7 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 		double cost = getCost();
 		tvTotalPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(total, isUSD)).toString());
 		double profit = total - cost;
-		float percent = (float) (profit / total);
+		float percent = (float) (profit / total) * 100;
 		tvProValue.setTextColor(profit > 0 ? getColor(R.color.green) : getColor(R.color.red));
 		tvProValue.setText(generateProfitValue(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(profit, isUSD)).append(" / ").append(String.format(Locale.US, "%.4f", percent)).append("%").toString()));
 	}
@@ -201,18 +201,25 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 
 	@Override
 	public void onUpdatedTheme() {
-		setTextColor(tvProLoss);
-		setTextColor(tvCoinDistribute);
 		setTextColor(tvCoin);
 		setTextColor(tvPrice);
 		setTextColor(tvHolding);
 		setTextColor(tvCost);
+		tvProLoss.setTextColor(isDarkTheme ? getColor(R.color.white) : getColor(R.color.black));
+		tvCoinDistribute.setTextColor(isDarkTheme ? getColor(R.color.white) : getColor(R.color.black));
+		tvTotalPrice.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
+		tvAddCoin.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
+		tvChangeCoin.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
 		layoutTop.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvAddCoin.setBackground(isDarkTheme ? getResources().getDrawable(R.drawable.bg_add_coin_dark) : getResources().getDrawable(R.drawable.bg_add_coin_light));
 		setTextViewDrawableColor(tvChangeCoin);
 		rcvPortfolio.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
 		portAdapter.setDarkTheme(isDarkTheme);
 		portAdapter.notifyDataSetChanged();
+	}
+
+	public void setTextColor(TextView textView){
+		textView.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 	}
 
 	private void getCoinsId() {
@@ -248,12 +255,12 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 	private void setTextViewDrawableColor(TextView textView) {
 		Drawable right = ContextCompat.getDrawable(getContext(), R.drawable.next);
 		right = DrawableCompat.wrap(right);
-		DrawableCompat.setTint(right.mutate(), getColor(R.color.white));
+		DrawableCompat.setTint(right.mutate(), isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
 		right.setBounds(0, 0, right.getIntrinsicWidth(), right.getIntrinsicHeight());
 
 		Drawable left = ContextCompat.getDrawable(getContext(), R.drawable.previous);
 		left = DrawableCompat.wrap(left);
-		DrawableCompat.setTint(left.mutate(), getColor(R.color.white));
+		DrawableCompat.setTint(left.mutate(), isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
 		left.setBounds(0, 0, left.getIntrinsicWidth(), left.getIntrinsicHeight());
 
 		textView.setCompoundDrawables(left, null, right, null);

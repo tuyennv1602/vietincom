@@ -13,6 +13,9 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 public class MyMarkerView extends MarkerView {
 	private TextView tvPrice;
 	private TextView tvTime;
@@ -29,7 +32,9 @@ public class MyMarkerView extends MarkerView {
 	// content (user-interface)
 	@Override
 	public void refreshContent(Entry e, Highlight highlight) {
-		tvPrice.setText(AppPreference.INSTANCE.getCurrency().getSymbol() + Utils.formatNumber(e.getY(), 0, true));
+		DecimalFormat dfm = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
+		dfm.applyPattern("###,###,###,###,###");
+		tvPrice.setText(AppPreference.INSTANCE.getCurrency().getSymbol() + dfm.format(e.getY()));
 		tvTime.setText(xAxisValueFormatter.getFormattedValue(e.getX(), null));
 		super.refreshContent(e, highlight);
 	}

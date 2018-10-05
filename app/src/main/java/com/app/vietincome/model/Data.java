@@ -73,7 +73,7 @@ public class Data implements Parcelable
 	public Data(){
 	}
 
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -177,4 +177,15 @@ public class Data implements Parcelable
 		return 0;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) return true;
+		return this.toString().equals(obj.toString());
+	}
+
+
+	@Override
+	public String toString() {
+		return String.valueOf(id) + "/" + String.valueOf(quotes.getUSD().price) + "/" + String.valueOf(quotes.getBTC().price);
+	}
 }

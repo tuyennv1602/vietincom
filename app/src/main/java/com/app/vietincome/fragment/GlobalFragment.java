@@ -36,6 +36,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -118,11 +119,17 @@ public class GlobalFragment extends BaseFragment {
 	@BindView(R.id.tvShowVolume)
 	TextView tvShowVolume;
 
+	@BindView(R.id.tvIntroMarketCap)
+	TextView tvIntroMarketCap;
+
+	@BindView(R.id.tvIntroVolume)
+	TextView tvIntroVolume;
+
 	private ChartViewPagerAdapter chartViewPagerAdapter;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
 	private double rate;
 	private Data global;
-	private DecimalFormat dfm = new DecimalFormat("###,###,###,###");
+	private DecimalFormat dfm = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
 	private TopCoinAdapter topMarketAdapter;
 	private TopCoinAdapter topVolumeAdapter;
 	private ArrayList<Data> topMarkets;
@@ -156,15 +163,9 @@ public class GlobalFragment extends BaseFragment {
 	}
 
 	private void initData() {
+		dfm.applyPattern("###,###,###,###");
 		tvMarketValue.setText("$" + dfm.format(global.getQuotes().getUSD().getTotalMarketCap().longValue()));
 		tvVolumeValue.setText("$" + dfm.format(global.getQuotes().getUSD().getTotalVolume24h().longValue()));
-//		if (currency.getCode().equals("USD")) {
-//			tvMarketValue.setText(currency.getSymbol() + dfm.format(global.getQuotes().getUSD().getTotalMarketCap().longValue()));
-//			tvVolumeValue.setText(currency.getSymbol() + dfm.format(global.getQuotes().getUSD().getTotalVolume24h().longValue()));
-//		}else{
-//			tvMarketValue.setText(currency.getSymbol() + dfm.format(global.getQuotes().getUSD().getTotalMarketCap().longValue() * rate));
-//			tvVolumeValue.setText(currency.getSymbol() + dfm.format(global.getQuotes().getUSD().getTotalVolume24h().longValue() * rate));
-//		}
 		if(topMarkets == null){
 			topMarkets = new ArrayList<>();
 		}
@@ -356,6 +357,10 @@ public class GlobalFragment extends BaseFragment {
 	public void onUpdatedTheme() {
 		layoutVolume.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		layoutMarketCap.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		tvIntroMarketCap.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
+		tvIntroVolume.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
+		tvMarketValue.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
+		tvVolumeValue.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
 		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		view1.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
 		view2.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));

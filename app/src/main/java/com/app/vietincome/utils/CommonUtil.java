@@ -64,7 +64,8 @@ public class CommonUtil {
 		} else if (value < 1000) {
 			price.append(String.format(Locale.US, "%.2f", priceValue));
 		} else {
-			DecimalFormat dFormat = new DecimalFormat("###,###,###,###");
+			DecimalFormat dFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
+			dFormat.applyPattern("###,###,###,###,###");
 			price.append(dFormat.format(priceValue));
 		}
 		return price.toString();
@@ -79,7 +80,8 @@ public class CommonUtil {
 		} else if (price < 1000) {
 			value = String.format(Locale.US, isUsd ? "%.2f" : "%.4f", price);
 		} else {
-			DecimalFormat dFormat = new DecimalFormat("###,###,###,###,##0.00");
+			DecimalFormat dFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
+			dFormat.applyPattern("###,###,###,###,##0.00");
 			value = dFormat.format(price);
 		}
 		return value;

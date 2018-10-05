@@ -28,7 +28,6 @@ import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
 
-
 	@BindView(R.id.viewPagerMain)
 	NoneSwipeViewpager viewPagerMain;
 
@@ -96,7 +95,7 @@ public class MainActivity extends BaseActivity {
 	public void setTheme() {
 		tabLayoutBottom.setBackgroundColor(isDarkTheme ? getColorRes(R.color.dark_background) : getColorRes(R.color.light_background));
 		mainLayout.setBackgroundColor(isDarkTheme ? getColorRes(R.color.dark_background) : getColorRes(R.color.light_background));
-		tabLayoutBottom.setSelectedTabIndicatorColor(isDarkTheme ? getColorRes(R.color.dark_tab) : getColorRes(R.color.light_tab));
+		tabLayoutBottom.setSelectedTabIndicatorColor(getColorRes(R.color.dark_tab));
 	}
 
 	@Override
@@ -162,8 +161,8 @@ public class MainActivity extends BaseActivity {
 	private void changeHighLightTab(TabLayout.Tab tab, boolean isSelected) {
 		RelativeLayout layout = (RelativeLayout) tab.getCustomView();
 		if(isSelected){
-			((TextView) layout.getChildAt(0)).setTextColor(isDarkTheme ? getColorRes(R.color.dark_tab) : getColorRes(R.color.light_tab));
-			((ImageView) layout.getChildAt(1)).setColorFilter(isDarkTheme ? getColorRes(R.color.dark_tab) : getColorRes(R.color.light_tab));
+			((TextView) layout.getChildAt(0)).setTextColor(getColorRes(R.color.dark_tab));
+			((ImageView) layout.getChildAt(1)).setColorFilter(getColorRes(R.color.dark_tab));
 			(layout.getChildAt(2)).setVisibility(View.GONE);
 		}else{
 			((TextView) layout.getChildAt(0)).setTextColor(isDarkTheme ? getColorRes(R.color.dark_gray) : getColorRes(R.color.light_gray));

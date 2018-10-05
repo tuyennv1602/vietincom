@@ -162,7 +162,8 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 			price = path.substring(0, path.length() - 3);
 			endPrice = path.substring(path.length() - 3);
 		} else {
-			DecimalFormat dFormat = new DecimalFormat("###,###");
+			DecimalFormat dFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
+			dFormat.applyPattern("###,###");
 			price = dFormat.format(priceValue);
 		}
 		tvPrice.setText(price);
@@ -171,7 +172,7 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 
 		StringBuilder bitcoin = new StringBuilder();
 		bitcoin.append(getContext().getString(R.string.bitcoin));
-		bitcoin.append(String.format(Locale.US,"%.8f", (data.getQuotes().getBTC().getPrice())));
+		bitcoin.append(String.format(Locale.US, "%.8f", (data.getQuotes().getBTC().getPrice())));
 		tvBitcoin.setText(bitcoin.toString());
 	}
 
@@ -189,7 +190,8 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		if (coinInfos == null) {
 			coinInfos = new ArrayList<>();
 			coinInfos.add(new CoinInfo("Rank", "#" + data.getRank()));
-			DecimalFormat dFormat = new DecimalFormat("###,###,###,###");
+			DecimalFormat dFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
+			dFormat.applyPattern("###,###,###,###");
 			if (currency.getCode().equals("USD")) {
 				coinInfos.add(new CoinInfo("Market Cap", currency.getSymbol() + dFormat.format(data.getQuotes().getUSD().getMarketCap())));
 				coinInfos.add(new CoinInfo("Volume (24h)", currency.getSymbol() + dFormat.format(data.getQuotes().getUSD().getVolume24h())));
@@ -210,8 +212,8 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		rcvCoinInfo.setAdapter(coinInfoAdapter);
 	}
 
-	private void initNews(){
-		if(coinNewsAdapter == null){
+	private void initNews() {
+		if (coinNewsAdapter == null) {
 			coinNewsAdapter = new CoinNewsAdapter(news, isDarkTheme, this);
 		}
 		rcvNews.setHasFixedSize(true);
@@ -220,11 +222,11 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		rcvNews.setAdapter(coinNewsAdapter);
 	}
 
-	private void initTopMarket(){
-		if(markets == null){
+	private void initTopMarket() {
+		if (markets == null) {
 			markets = new ArrayList<>();
 		}
-		if(topMarketAdapter == null){
+		if (topMarketAdapter == null) {
 			topMarketAdapter = new TopMarketAdapter(markets, isDarkTheme);
 		}
 		rcvTopMarket.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -232,7 +234,6 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		rcvTopMarket.addItemDecoration(new CustomItemDecoration(1));
 		rcvTopMarket.setAdapter(topMarketAdapter);
 	}
-
 
 
 	@Override
@@ -259,9 +260,7 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		setTextColor(tvEndPrice);
 		rcvCoinInfo.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		tvCoinInfor.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
-		setTextColorGray(tvCoinInfor);
 		tvNews.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
-		setTextColorGray(tvNews);
 		rcvNews.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
 		tvShowNews.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		tvShowNews.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
@@ -271,21 +270,24 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		imgNotification.setColorFilter(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		tvCreateAlert.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvTopMarket.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
-		setTextColorGray(tvTopMarket);
 		rcvTopMarket.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
 		setTextColorGray(tvRank);
 		setTextColorGray(tvExchange);
 		setTextColorGray(tvPair);
 		setTextColorGray(tvPriceTop);
 		setTextColorGray(tvVolume);
+		tvCoinInfor.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		tvNews.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		tvTopMarket.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+
 	}
 
-	private void setTextColorGray(TextView tv){
+	private void setTextColorGray(TextView tv) {
 		tv.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 	}
 
 	@OnClick(R.id.tvShowNews)
-	void showAllNews(){
+	void showAllNews() {
 		pushFragment(NewsFragment.newInstance(news), R.anim.slide_up, R.anim.slide_down);
 	}
 

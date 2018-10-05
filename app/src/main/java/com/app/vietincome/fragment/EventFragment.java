@@ -288,6 +288,10 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 		eventAdapter.notifyDataSetChanged();
 	}
 
+	public void setTextColor(TextView textView){
+		textView.setTextColor(isDarkTheme ? getColor(R.color.yellow_text) : getColor(R.color.light_image));
+	}
+
 	@Override
 	public void onClickProof(int position) {
 		openLink(events.get(position).getProof());

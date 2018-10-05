@@ -234,6 +234,7 @@ public class EditTransactionFragment extends BaseFragment {
 		btnBTC.setTextColor(colorStateList);
 		setTextColor(tvCurrency);
 		setTextColor(tvQuantity);
+		tvSave.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
 		edtQuantity.setHintTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		edtQuantity.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 		edtPrice.setHintTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));

@@ -72,8 +72,8 @@ public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 		ImageView imgIcon = view.findViewById(R.id.imgTabHome);
 		imgIcon.setImageResource(getIcon(position));
 		if (position == selectedTab) {
-			imgIcon.setColorFilter(isDarkTheme ? getColor(R.color.dark_tab) : getColor(R.color.light_tab));
-			textView.setTextColor(isDarkTheme ? getColor(R.color.dark_tab) : getColor(R.color.light_tab));
+			imgIcon.setColorFilter(getColor(R.color.dark_tab));
+			textView.setTextColor(getColor(R.color.dark_tab));
 		} else {
 			imgIcon.setColorFilter(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 			textView.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));

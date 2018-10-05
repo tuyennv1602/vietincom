@@ -116,6 +116,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 			tvDescription.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			viewLine.setBackgroundColor(isDarkTheme ? getColor(R.color.white) : getColor(R.color.color_line));
 			tvValidation.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+			tvEventCate.setTextColor(isDarkTheme ? getColor(R.color.yellow_text) : getColor(R.color.white));
+			tvProof.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+			tvSource.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 			imgHot.setVisibility(event.getIsHot() ? View.VISIBLE : View.GONE);
 			tvTime.setText(DateUtil.getStringTime(event.getDateEvent(), DateUtil.FORMAT_EVENT));
 			StringBuilder builder = new StringBuilder();
@@ -129,9 +132,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 			tvTitle.setText(event.getTitle());
 			tvDescription.setText(event.getDescription());
 			tvValidation.setText(new StringBuilder().append("Validation (").append(event.getPositiveVoteCount()).append("/").append(event.getVoteCount()).append(" votes)").toString());
-			seekBar.getProgressDrawable().setColorFilter(getColor(R.color.dark_blue),PorterDuff.Mode.SRC_ATOP);
+			seekBar.getProgressDrawable().setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image),PorterDuff.Mode.SRC_ATOP);
 			seekBar.setThumb(isDarkTheme ? itemView.getContext().getDrawable(R.drawable.seekbar_thumb_gray) : itemView.getContext().getDrawable(R.drawable.seekbar_thumb_white));
-			seekBar.setTextColor(isDarkTheme ? getColor(R.color.dark_blue) : getColor(R.color.dark_blue));
+			seekBar.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 			seekBar.setProgress(event.getPercentage());
 			if(event.getPercentage() < 5){
 				seekBar.setPadding(CommonUtil.dp2pxInt(10), 0, 0, 0);

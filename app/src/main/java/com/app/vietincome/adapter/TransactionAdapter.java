@@ -26,7 +26,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>{
+public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
 
 	private ArrayList<Transaction> transactions;
 	private ItemClickListener onItemClickListener;
@@ -34,12 +34,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 	private boolean isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
 	private boolean isUSD = true;
 	private double totalPrice;
+	private double currentPrice;
 
-	public TransactionAdapter(ArrayList<Transaction> transactions, double totalPrice,ItemClickListener onItemClickListener, OnDeleteItemListener deleteItemListener){
+	public TransactionAdapter(ArrayList<Transaction> transactions, double totalPrice, double currentPrice, ItemClickListener onItemClickListener, OnDeleteItemListener deleteItemListener) {
 		this.transactions = transactions;
 		this.onItemClickListener = onItemClickListener;
 		this.totalPrice = totalPrice;
 		this.deleteItemListener = deleteItemListener;
+		this.currentPrice = currentPrice;
+		Log.d("__tran", "TransactionAdapter: " + currentPrice);
 	}
 
 	public void changeCurrency() {
@@ -47,8 +50,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		notifyDataSetChanged();
 	}
 
-	public void setTotalPrice(double totalPrice){
+	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public void setCurrentPrice(double currentPrice) {
+		this.currentPrice = currentPrice;
 	}
 
 	@NonNull
@@ -67,7 +74,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		return transactions == null ? 0 : transactions.size();
 	}
 
-	class TransactionViewHolder extends RecyclerView.ViewHolder{
+	class TransactionViewHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R.id.layoutRoot)
 		SwipeLayout layoutRoot;
@@ -118,29 +125,29 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 			layoutRoot.setShowMode(SwipeLayout.ShowMode.PullOut);
 			layoutRoot.addDrag(SwipeLayout.DragEdge.Right, layoutDelete);
 			layoutMain.setOnClickListener(view -> {
-				if(onItemClickListener != null){
+				if (onItemClickListener != null) {
 					onItemClickListener.onItemClicked(getAdapterPosition());
 				}
 			});
 			layoutDelete.setOnClickListener(view -> {
-				if(deleteItemListener != null){
+				if (deleteItemListener != null) {
 					deleteItemListener.onItemDeleted(getAdapterPosition());
 				}
 			});
 		}
 
-		void onBind(Transaction transaction){
+		void onBind(Transaction transaction) {
 			tvHolding.setText(String.valueOf(transaction.getQuantity()));
 			double price = isUSD ? transaction.getPriceUSD() : transaction.getPriceBTC();
 			tvPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(price, isUSD)).toString());
 			tvDate.setText(transaction.getDateAdd());
 			tvType.setText(transaction.isBuy() ? "BUY" : "SELL");
 			tvType.setTextColor(transaction.isBuy() ? getColor(R.color.green) : getColor(R.color.red));
-			tvType.setBackground(transaction.isBuy() ? itemView.getContext().getDrawable(R.drawable.bg_buy) :  itemView.getContext().getDrawable(R.drawable.bg_sell));
+			tvType.setBackground(transaction.isBuy() ? itemView.getContext().getDrawable(R.drawable.bg_buy) : itemView.getContext().getDrawable(R.drawable.bg_sell));
 			double total = price * transaction.getQuantity();
 			tvTotal.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(total, isUSD)).toString());
-			double profit = totalPrice - total;
-			float percent = (float) (profit / totalPrice);
+			double profit = transaction.getQuantity() * (currentPrice - price);
+			float percent = (float) (profit / (currentPrice * transaction.getQuantity())) * 100;
 			tvProfit.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(profit, isUSD)).toString());
 			if (percent != 0) {
 				tvProfitPercent.setTextColor(isPlus(percent) ? getColor(R.color.green) : getColor(R.color.red));

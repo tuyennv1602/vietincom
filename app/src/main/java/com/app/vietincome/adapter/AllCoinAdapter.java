@@ -2,8 +2,10 @@ package com.app.vietincome.adapter;
 
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import com.app.vietincome.R;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.CoinDiffCallBack;
 import com.app.vietincome.manager.interfaces.ItemClickCancelListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Currency;
@@ -25,6 +28,7 @@ import com.app.vietincome.view.HighLightRelativeLayout;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +58,15 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 		notifyDataSetChanged();
 	}
 
-	public void setRate(double rate){
+	public void updateAllCoin(ArrayList<Data> data) {
+		CoinDiffCallBack coinDiffCallBack = new CoinDiffCallBack(this.data, data);
+		DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(coinDiffCallBack);
+		diffResult.dispatchUpdatesTo(this);
+		this.data.clear();
+		this.data.addAll(data);
+	}
+
+	public void setRate(double rate) {
 		this.rate = rate;
 	}
 
@@ -71,6 +83,20 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 	@Override
 	public void onBindViewHolder(@NonNull AllCoinViewHolder allCoinViewHolder, int i) {
 		allCoinViewHolder.onBind(data.get(i));
+	}
+
+	@Override
+	public void onBindViewHolder(@NonNull AllCoinViewHolder holder, int position, @NonNull List<Object> payloads) {
+		if (payloads.isEmpty()) {
+			super.onBindViewHolder(holder, position, payloads);
+		} else {
+			Bundle o = (Bundle) payloads.get(0);
+			for (String key : o.keySet()) {
+				if(key.equals("quote")){
+					holder.fillData(data.get(position));
+				}
+			}
+		}
 	}
 
 	@Override
@@ -146,7 +172,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			tvPrice.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvPrice.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvSymbol.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
-			if(item.getQuotes() == null) return;
+			if (item.getQuotes() == null) return;
 			USD usd = item.getQuotes().getUSD();
 			if (usd.percentChange1h != 0) {
 				tv1H.setTextColor(usd.isPlus(usd.percentChange1h) ? getColor(R.color.green) : getColor(R.color.red));
@@ -163,6 +189,16 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			} else {
 				tv7D.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			}
+			fillData(item);
+//			imgStar.setVisibility(item.isFavourite() ? View.VISIBLE : View.GONE);
+//			tvAddFavourite.setText(itemView.getContext().getString(R.string.added_favourite, item.getName()));
+// 			layoutAddFavorite.setBackgroundColor(isDarkTheme ? getColor(R.color.light_background) : getColor(R.color.dark_background));
+//			tvAddFavourite.setTextColor(isDarkTheme ? getColor(R.color.light_text) : getColor(R.color.dark_text));
+//			tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		}
+
+		public void fillData(Data item){
+			USD usd = item.getQuotes().getUSD();
 			tvRank.setText(String.valueOf(item.getRank()));
 			tvName.setText(item.getName());
 			tvSymbol.setText(item.getSymbol());
@@ -178,11 +214,6 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 				price = CommonUtil.formatCurrency(usd.getPrice(), rate, currency);
 			}
 			tvPrice.setText(price);
-//			imgStar.setVisibility(item.isFavourite() ? View.VISIBLE : View.GONE);
-//			tvAddFavourite.setText(itemView.getContext().getString(R.string.added_favourite, item.getName()));
-// 			layoutAddFavorite.setBackgroundColor(isDarkTheme ? getColor(R.color.light_background) : getColor(R.color.dark_background));
-//			tvAddFavourite.setTextColor(isDarkTheme ? getColor(R.color.light_text) : getColor(R.color.dark_text));
-//			tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		}
 
 		private int getColor(int color) {

@@ -63,4 +63,14 @@ public class Quotes implements Parcelable
 		return 0;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) return true;
+		return this.toString().equals(obj.toString());
+	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(getUSD().getPrice()) + "/" + String.valueOf(getBTC().getPrice());
+	}
 }

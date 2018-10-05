@@ -99,6 +99,7 @@ public class AddTransactionFragment extends BaseFragment {
 	private String symbol;
 	private Data data;
 	private boolean isBackRoot;
+	private double rate;
 
 	public static AddTransactionFragment newInstance(Data data, boolean isBackRoot) {
 		AddTransactionFragment fragment = new AddTransactionFragment();
@@ -136,10 +137,10 @@ public class AddTransactionFragment extends BaseFragment {
 		navitop.changeFontTitle(R.font.helvetica_neue);
 	}
 
-	private void changeSegmentColor(){
-		if(btnBuy.isChecked()){
+	private void changeSegmentColor() {
+		if (btnBuy.isChecked()) {
 			sgmGroup.setTintColor(getColor(R.color.green));
-		}else{
+		} else {
 			sgmGroup.setTintColor(getColor(R.color.red));
 		}
 	}
@@ -170,6 +171,7 @@ public class AddTransactionFragment extends BaseFragment {
 		btnBTC.setTextColor(colorStateList);
 		setTextColor(tvCurrency);
 		setTextColor(tvQuantity);
+		tvSave.setTextColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.white));
 		edtQuantity.setHintTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		edtQuantity.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 		edtPrice.setHintTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
@@ -254,10 +256,11 @@ public class AddTransactionFragment extends BaseFragment {
 
 	@OnClick(R.id.tvSave)
 	void saveTransaction() {
-		if(checkFillData()){
+		rate = data.getQuotes().getUSD().getPrice() / data.getQuotes().getBTC().getPrice();
+		if (checkFillData()) {
 			Portfolio portfolio = AppPreference.INSTANCE.getPortfolioById(portId);
 			ArrayList<Transaction> transactions = portfolio.getTransactions();
-			if(transactions == null){
+			if (transactions == null) {
 				transactions = new ArrayList<>();
 			}
 			Transaction transaction = new Transaction(
@@ -267,12 +270,13 @@ public class AddTransactionFragment extends BaseFragment {
 					tvTradeTime.getText().toString(),
 					Integer.valueOf(edtQuantity.getText().toString()),
 					btnBuy.isChecked());
-			if(btnUSD.isChecked()){
-				transaction.setPriceUSD(Double.valueOf(edtPrice.getText().toString()));
-				transaction.setPriceBTC(data.getQuotes().getBTC().getPrice());
-			}else{
-				transaction.setPriceBTC(Double.valueOf(edtPrice.getText().toString()));
-				transaction.setPriceUSD(data.getQuotes().getUSD().getPrice());
+			double price = Double.valueOf(edtPrice.getText().toString());
+			if (btnUSD.isChecked()) {
+				transaction.setPriceUSD(price);
+				transaction.setPriceBTC(price / rate);
+			} else {
+				transaction.setPriceBTC(price);
+				transaction.setPriceUSD(price * rate);
 			}
 			transactions.add(transaction);
 			portfolio.setId(portId);
@@ -280,10 +284,10 @@ public class AddTransactionFragment extends BaseFragment {
 			portfolio.setSymbol(data.getSymbol());
 			portfolio.setTransactions(transactions);
 			portfolio.setQuotes(data.getQuotes());
-			if(isBackRoot) {
+			if (isBackRoot) {
 				EventBus.getDefault().post(new EventBusListener.AddPortfolio(portfolio));
 				getActivity().finish();
-			}else{
+			} else {
 				EventBus.getDefault().post(new EventBusListener.AddTransaction(transaction));
 				goBack();
 			}
@@ -303,7 +307,7 @@ public class AddTransactionFragment extends BaseFragment {
 	}
 
 	@OnClick(R.id.tvTradeTime)
-	void selectTradeDate(){
+	void selectTradeDate() {
 		final Calendar c = Calendar.getInstance();
 		DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (datePicker, year, month, day) -> {
 			String result = (day / 10 == 0 ? "0" + day : day)

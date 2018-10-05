@@ -5,11 +5,11 @@
 	<color name="colorAccent">#3d5afe</color>
 	<color name="dark_background">#1f2936</color>
 	<color name="light_background">#ffffff</color>
-	<color name="dark_image">#3d5afe</color>
+	<color name="dark_image">#fabf2c </color>
 	<color name="light_image">#FF40AB67</color>
 	<color name="dark_text">#ffffff</color>
 	<color name="light_text">#000000</color>
-	<color name="dark_tab">#ffffff</color>
+	<color name="dark_tab">#fabf2c</color>
 	<color name="light_tab">#000000</color>
 	<color name="dark_gray">#a9a2a2</color>
 	<color name="light_gray">#929da9</color>
@@ -33,5 +33,5 @@
 	<color name="light_event">#2e7dd7</color>
 	<color name="dark_info">#505658</color>
 	<color name="light_info">#ffffff</color>
-	<color name="pink"></color>
+	<color name="yellow_text">#fabf2c</color>
 </resources>
