@@ -20,6 +20,7 @@
 		<TextView
 			android:id="@+id/tvName"
 			style="@style/DefaultTextView"
+			android:fontFamily="@font/roboto_light"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="Name"
@@ -30,6 +31,7 @@
 			style="@style/DefaultTextView"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:fontFamily="@font/roboto_light"
 			android:text="Symbol"/>
 
 	</LinearLayout>

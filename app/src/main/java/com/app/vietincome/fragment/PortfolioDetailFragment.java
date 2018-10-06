@@ -140,7 +140,7 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 		navitop.setTvTitle(portfolio.getName() + "(" + portfolio.getSymbol() + ")");
 		navitop.setImgLeft(R.drawable.back);
 		navitop.setImgRight(R.drawable.add);
-		navitop.changeFontTitle(R.font.helvetica_neue);
+		navitop.changeFontTitle(R.font.roboto_regular);
 	}
 
 	@Override
@@ -161,6 +161,9 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 		tvChangeCoin.setText(isUSD ? "USD" : "BTC");
 		setupCommonData();
 		transactionAdapter.changeCurrency();
+		transactionAdapter.setTotalPrice(getTotalPrice());
+		transactionAdapter.setCurrentPrice(getCurrentPrice());
+		transactionAdapter.notifyDataSetChanged();
 	}
 
 	@OnClick(R.id.tvAddCoin)
@@ -223,6 +226,11 @@ public class PortfolioDetailFragment extends BaseFragment implements ItemClickLi
 			@Override
 			public void onClickedOk() {
 				PortfolioDetailFragment.this.portfolio.getTransactions().remove(position);
+				if(PortfolioDetailFragment.this.portfolio.getTransactions().size() == 0){
+					EventBus.getDefault().post(new EventBusListener.RemoveCoin(PortfolioDetailFragment.this.portfolio));
+					goBack();
+					return;
+				}
 				AppPreference.INSTANCE.addPortfolio(portfolio);
 				transactionAdapter.notifyDataSetChanged();
 				setupCommonData();

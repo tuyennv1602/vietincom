@@ -17,7 +17,7 @@
 		android:layout_gravity="center_horizontal"
 		android:layout_margin="10dp"
 		android:orientation="horizontal"
-		segmentedgroup:sc_border_width="2dp"
+		segmentedgroup:sc_border_width="1.5dp"
 		segmentedgroup:sc_checked_text_color="@color/white"
 		segmentedgroup:sc_corner_radius="5dp"
 		segmentedgroup:sc_tint_color="@color/dark_image">
@@ -27,7 +27,7 @@
 			style="@style/RadioButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:fontFamily="@font/helvetica_neue_medium"
+			android:fontFamily="@font/roboto_medium"
 			android:text="SELL"/>
 
 		<RadioButton
@@ -36,7 +36,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:checked="true"
-			android:fontFamily="@font/helvetica_neue_medium"
+			android:fontFamily="@font/roboto_medium"
 			android:text="BUY"/>
 
 	</info.hoang8f.android.segmented.SegmentedGroup>
@@ -203,7 +203,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
-			android:fontFamily="@font/helvetica_neue_bold"
+			android:fontFamily="@font/roboto_bold"
 			android:padding="7dp"
 			android:text="Total (USD)"
 			android:textColor="@color/white"
@@ -217,7 +217,7 @@
 			android:layout_alignParentEnd="true"
 			android:layout_centerVertical="true"
 			android:drawablePadding="7dp"
-			android:fontFamily="@font/helvetica_neue_bold"
+			android:fontFamily="@font/roboto_bold"
 			android:padding="7dp"
 			android:text="0.0 $"
 			android:textColor="@color/white"

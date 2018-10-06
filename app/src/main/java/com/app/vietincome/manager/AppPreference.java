@@ -246,4 +246,14 @@ public enum AppPreference {
 		preferences.edit().putString(KEY_PORTFOLIO, mGson.toJson(portfolios)).apply();
 	}
 
+	public void removePortfolio(Portfolio portfolio){
+		for(int i = portfolios.size() - 1; i >= 0; i--){
+			if(portfolio.getId() == portfolios.get(i).getId()){
+				this.portfolios.remove(i);
+				break;
+			}
+		}
+		preferences.edit().putString(KEY_PORTFOLIO, mGson.toJson(portfolios)).apply();
+	}
+
 }

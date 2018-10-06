@@ -47,7 +47,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
 	public void changeCurrency() {
 		isUSD = !isUSD;
-		notifyDataSetChanged();
 	}
 
 	public void setTotalPrice(double totalPrice) {

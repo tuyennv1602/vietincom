@@ -64,7 +64,7 @@ public class SelectCoinFragment extends BaseFragment implements ItemClickListene
 		navitop.setTvTitle("Select coin");
 		navitop.showImgLeft(true);
 		navitop.setImgLeft(R.drawable.back);
-		navitop.changeFontTitle(R.font.helvetica_neue);
+		navitop.changeFontTitle(R.font.roboto_regular);
 	}
 
 	@Override

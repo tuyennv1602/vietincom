@@ -55,4 +55,12 @@ public class EventBusListener {
 			this.transaction = transaction;
 		}
 	}
+
+	public static class RemoveCoin{
+		public Portfolio portfolio;
+
+		public RemoveCoin(Portfolio portfolio){
+			this.portfolio = portfolio;
+		}
+	}
 }

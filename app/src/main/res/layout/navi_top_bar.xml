@@ -52,7 +52,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:ellipsize="end"
-				android:fontFamily="@font/helvetica_neue_bold"
+				android:fontFamily="@font/roboto_bold"
 				android:gravity="center"
 				android:letterSpacing="0.05"
 				android:maxLines="1"
@@ -67,7 +67,7 @@
 				android:layout_height="wrap_content"
 				android:textSize="17sp"
 				android:layout_marginTop="25dp"
-				android:fontFamily="@font/helvetica_neue_medium"
+				android:fontFamily="@font/roboto_medium"
 				android:gravity="center"
 				android:text="SUBTITLE"
 				android:visibility="gone"/>

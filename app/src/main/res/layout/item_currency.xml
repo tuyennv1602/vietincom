@@ -20,7 +20,7 @@
 		style="@style/DefaultTextView"
 		android:text="USD"
 		android:textSize="16sp"
-		android:fontFamily="@font/helvetica_neue_medium"
+		android:fontFamily="@font/roboto_medium"
 		android:layout_height="wrap_content"/>
 
 </LinearLayout>

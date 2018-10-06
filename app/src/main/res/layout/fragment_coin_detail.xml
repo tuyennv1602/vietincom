@@ -166,12 +166,13 @@
 				android:layout_width="match_parent"
 				android:layout_height="50dp"
 				android:elevation="1dp"
-				android:fontFamily="@font/helvetica_neue_medium"
+				android:fontFamily="@font/roboto_medium"
 				android:gravity="center"
 				android:text="Show all"
 				android:textSize="16sp"/>
 
 			<TextView
+				android:visibility="gone"
 				android:id="@+id/tvTopMarket"
 				style="@style/DefaultTextView"
 				android:layout_width="match_parent"
@@ -183,10 +184,12 @@
 				android:textSize="16sp"/>
 
 			<include
+				android:visibility="gone"
 				layout="@layout/item_top_topmarket"/>
 
 			<android.support.v7.widget.RecyclerView
 				android:id="@+id/rcvTopMarket"
+				android:visibility="gone"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"/>
 		</LinearLayout>

@@ -134,7 +134,7 @@ public class AddTransactionFragment extends BaseFragment {
 		navitop.showImgLeft(true);
 		navitop.setImgLeft(R.drawable.back);
 		navitop.showImgRight(false);
-		navitop.changeFontTitle(R.font.helvetica_neue);
+		navitop.changeFontTitle(R.font.roboto_regular);
 	}
 
 	private void changeSegmentColor() {

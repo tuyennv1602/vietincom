@@ -118,6 +118,17 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 		setupCommonData();
 	}
 
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onRemoveCoin(EventBusListener.RemoveCoin event){
+		AppPreference.INSTANCE.removePortfolio(event.portfolio);
+		portAdapter.notifyDataSetChanged();
+		setupCommonData();
+		if(portfolios.size() == 0){
+			layoutIntro.setVisibility(View.VISIBLE);
+			layoutPortfolio.setVisibility(View.GONE);
+		}
+	}
+
 	@Override
 	public int getLayoutId() {
 		return R.layout.fragment_portfolio;
