@@ -18,7 +18,7 @@ public class NewsResponse implements ObservableSource<NewsResponse> {
 	@Expose
 	private int count;
 
-	@SerializedName("pages")
+	@SerializedName("max_page")
 	@Expose
 	private int pages;
 

@@ -34,7 +34,7 @@ public class MyMarkerView extends MarkerView {
 	public void refreshContent(Entry e, Highlight highlight) {
 		DecimalFormat dfm = (DecimalFormat) DecimalFormat.getInstance(Locale.US);
 		dfm.applyPattern("###,###,###,###,###");
-		tvPrice.setText(AppPreference.INSTANCE.getCurrency().getSymbol() + dfm.format(e.getY()));
+		tvPrice.setText(new StringBuilder().append(AppPreference.INSTANCE.getCurrency().getSymbol()).append(dfm.format(e.getY())).toString());
 		tvTime.setText(xAxisValueFormatter.getFormattedValue(e.getX(), null));
 		super.refreshContent(e, highlight);
 	}

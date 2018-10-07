@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -63,11 +65,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (Build.VERSION.SDK_INT == 26) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		} else {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 		initStack();
 		setContentView(getLayoutId());
+		changeStatusBar();
 		ButterKnife.bind(this);
 		setTheme();
-		changeStatusBar();
 		onViewCreated(getWindow().getDecorView().getRootView());
 	}
 
@@ -381,9 +388,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 		Window window = this.getWindow();
 		int flags = this.getWindow().getDecorView().getSystemUiVisibility();
 		if (isDarkTheme) {
-			flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+				flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+			}
 		} else {
-			flags = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+				flags = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+			}
 		}
 		window.getDecorView().setSystemUiVisibility(flags);
 		window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

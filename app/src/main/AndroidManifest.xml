@@ -16,7 +16,6 @@
 		android:theme="@style/AppTheme"
 		tools:ignore="GoogleAppIndexingWarning">
 		<activity android:name=".activity.MainActivity"
-		          android:screenOrientation="portrait"
 		          android:launchMode="singleTask"
 		          android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
 			>
@@ -28,7 +27,6 @@
 		</activity>
 		<activity
 			android:name=".activity.ParentActivity"
-			android:screenOrientation="portrait"
 			android:launchMode="singleTask"
 			android:theme="@style/TransparentActivity"
 			/>

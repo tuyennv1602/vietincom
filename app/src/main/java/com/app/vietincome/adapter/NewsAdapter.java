@@ -99,10 +99,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 			tvTitleNews.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			imgRead.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 			imgNews.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
-			GlideImage.loadImage(new_.getAttachments().get(0).getUrl(), R.drawable.favicon, imgNews);
+			GlideImage.loadImage(new_.getThumbnail(), R.drawable.favicon, imgNews);
 			tvTitleNews.setText(new_.getTitle());
 			tvTimeNews.setText(TimeAgo.using(DateUtil.toTimestamp(new_.getDate()), new TimeAgoMessages.Builder().withLocale(Locale.forLanguageTag("us")).build()));
-			tvAuthor.setText(new_.getAuthor().getName());
+			tvAuthor.setText(new_.getAuthor().getDisplayName());
 			imgRead.setVisibility(new_.isRead() ? View.INVISIBLE : View.VISIBLE);
 		}
 

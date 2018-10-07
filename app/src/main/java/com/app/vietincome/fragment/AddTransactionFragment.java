@@ -28,7 +28,6 @@ import com.app.vietincome.view.NavigationTopBar;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -99,7 +98,6 @@ public class AddTransactionFragment extends BaseFragment {
 	private String symbol;
 	private Data data;
 	private boolean isBackRoot;
-	private double rate;
 
 	public static AddTransactionFragment newInstance(Data data, boolean isBackRoot) {
 		AddTransactionFragment fragment = new AddTransactionFragment();
@@ -256,7 +254,8 @@ public class AddTransactionFragment extends BaseFragment {
 
 	@OnClick(R.id.tvSave)
 	void saveTransaction() {
-		rate = data.getQuotes().getUSD().getPrice() / data.getQuotes().getBTC().getPrice();
+		if(data.getQuotes() == null) return;
+		double rate = data.getQuotes().getUSD().getPrice() / data.getQuotes().getBTC().getPrice();
 		if (checkFillData()) {
 			Portfolio portfolio = AppPreference.INSTANCE.getPortfolioById(portId);
 			ArrayList<Transaction> transactions = portfolio.getTransactions();

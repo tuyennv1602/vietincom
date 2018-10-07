@@ -19,10 +19,10 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-	@GET("api/get_recent_posts/")
+	@GET("apiv2/get_posts.php")
 	Call<NewsResponse> getNews();
 
-	@GET("api/get_recent_posts/")
+	@GET("apiv2/get_posts.php")
 	Observable<NewsResponse> getNewsInPage(@Query("page") int page);
 
 	@GET("ticker/?structure=array&limit=100&convert=BTC")

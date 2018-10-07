@@ -8,30 +8,21 @@ import com.google.gson.annotations.SerializedName;
 
 public class Author implements Parcelable {
 
-	@SerializedName("id")
+	@SerializedName("user_id")
 	@Expose
-	private Integer id;
-	@SerializedName("slug")
+	private String userId;
+	@SerializedName("user_login")
 	@Expose
-	private String slug;
-	@SerializedName("name")
+	private String userLogin;
+	@SerializedName("display_name")
 	@Expose
-	private String name;
-	@SerializedName("first_name")
+	private String displayName;
+	@SerializedName("user_email")
 	@Expose
-	private String firstName;
-	@SerializedName("last_name")
+	private String userEmail;
+	@SerializedName("user_nicename")
 	@Expose
-	private String lastName;
-	@SerializedName("nickname")
-	@Expose
-	private String nickname;
-	@SerializedName("url")
-	@Expose
-	private String url;
-	@SerializedName("description")
-	@Expose
-	private String description;
+	private String userNicename;
 	public final static Parcelable.Creator<Author> CREATOR = new Creator<Author>() {
 
 
@@ -49,92 +40,62 @@ public class Author implements Parcelable {
 	};
 
 	protected Author(Parcel in) {
-		this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
-		this.slug = ((String) in.readValue((String.class.getClassLoader())));
-		this.name = ((String) in.readValue((String.class.getClassLoader())));
-		this.firstName = ((String) in.readValue((String.class.getClassLoader())));
-		this.lastName = ((String) in.readValue((String.class.getClassLoader())));
-		this.nickname = ((String) in.readValue((String.class.getClassLoader())));
-		this.url = ((String) in.readValue((String.class.getClassLoader())));
-		this.description = ((String) in.readValue((String.class.getClassLoader())));
+		this.userId = ((String) in.readValue((String.class.getClassLoader())));
+		this.userLogin = ((String) in.readValue((String.class.getClassLoader())));
+		this.displayName = ((String) in.readValue((String.class.getClassLoader())));
+		this.userEmail = ((String) in.readValue((String.class.getClassLoader())));
+		this.userNicename = ((String) in.readValue((String.class.getClassLoader())));
 	}
 
 	public Author() {
 	}
 
-	public Integer getId() {
-		return id;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getSlug() {
-		return slug;
+	public String getUserLogin() {
+		return userLogin;
 	}
 
-	public void setSlug(String slug) {
-		this.slug = slug;
+	public void setUserLogin(String userLogin) {
+		this.userLogin = userLogin;
 	}
 
-	public String getName() {
-		return name;
+	public String getDisplayName() {
+		return displayName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getUserEmail() {
+		return userEmail;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getUserNicename() {
+		return userNicename;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setUserNicename(String userNicename) {
+		this.userNicename = userNicename;
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeValue(id);
-		dest.writeValue(slug);
-		dest.writeValue(name);
-		dest.writeValue(firstName);
-		dest.writeValue(lastName);
-		dest.writeValue(nickname);
-		dest.writeValue(url);
-		dest.writeValue(description);
+		dest.writeValue(userId);
+		dest.writeValue(userLogin);
+		dest.writeValue(displayName);
+		dest.writeValue(userEmail);
+		dest.writeValue(userNicename);
 	}
 
 	public int describeContents() {

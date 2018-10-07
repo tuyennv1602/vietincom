@@ -96,7 +96,7 @@ public class CoinNewsAdapter extends RecyclerView.Adapter<CoinNewsAdapter.CoinNe
 		public void onBind(News new_){
 			tvTitleNews.setText(new_.getTitle());
 			tvTimeNews.setText(TimeAgo.using(DateUtil.toTimestamp(new_.getDate()), new TimeAgoMessages.Builder().withLocale(Locale.forLanguageTag("us")).build()));
-			tvAuthor.setText(new_.getAuthor().getName());
+			tvAuthor.setText(new_.getAuthor().getDisplayName());
 			imgRead.setVisibility(new_.isRead() ? View.INVISIBLE : View.VISIBLE);
 		}
 

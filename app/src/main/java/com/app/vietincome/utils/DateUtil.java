@@ -47,7 +47,7 @@ public class DateUtil {
 
 	public static String getStrCurrentDate() {
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/YYYY", Locale.US);
+		SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 		return dfm.format(cal.getTime());
 	}
 
@@ -55,7 +55,7 @@ public class DateUtil {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 3);
-		SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/YYYY", Locale.US);
+		SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 		return dfm.format(cal.getTime());
 	}
 

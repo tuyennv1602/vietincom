@@ -15,40 +15,37 @@ import io.reactivex.Observer;
 
 public class News implements Parcelable, ObservableSource<News> {
 
-	@SerializedName("id")
+	@SerializedName("post_id")
 	@Expose
 	private Integer id;
-	@SerializedName("type")
+	@SerializedName("post_type")
 	@Expose
 	private String type;
 
-	@SerializedName("url")
+	@SerializedName("post_url")
 	@Expose
 	private String url;
-	@SerializedName("status")
+	@SerializedName("post_status")
 	@Expose
 	private String status;
-	@SerializedName("title")
+	@SerializedName("post_title")
 	@Expose
 	private String title;
 
-	@SerializedName("date")
+	@SerializedName("post_date")
 	@Expose
 	private String date;
-	@SerializedName("modified")
-	@Expose
-	private String modified;
 
-	@SerializedName("tags")
+	@SerializedName("post_tags")
 	@Expose
 	private ArrayList<Tag> tags = null;
-	@SerializedName("author")
+	@SerializedName("post_author")
 	@Expose
 	private Author author;
 
-	@SerializedName("attachments")
+	@SerializedName("post_thumbnail")
 	@Expose
-	private ArrayList<Attachment> attachments = null;
+	private String thumbnail;
 
 	public final static Parcelable.Creator<News> CREATOR = new Creator<News>() {
 
@@ -73,10 +70,9 @@ public class News implements Parcelable, ObservableSource<News> {
 		this.status = ((String) in.readValue((String.class.getClassLoader())));
 		this.title = ((String) in.readValue((String.class.getClassLoader())));
 		this.date = ((String) in.readValue((String.class.getClassLoader())));
-		this.modified = ((String) in.readValue((String.class.getClassLoader())));
 		in.readList(this.tags, (Tag.class.getClassLoader()));
 		this.author = ((Author) in.readValue((Author.class.getClassLoader())));
-		in.readList(this.attachments, (Attachment.class.getClassLoader()));
+		this.thumbnail = ((String) in.readValue(String.class.getClassLoader()));
 	}
 
 	public News() {
@@ -130,15 +126,6 @@ public class News implements Parcelable, ObservableSource<News> {
 		this.date = date;
 	}
 
-	public String getModified() {
-		return modified;
-	}
-
-	public void setModified(String modified) {
-		this.modified = modified;
-	}
-
-
 	public ArrayList<Tag> getTags() {
 		return tags;
 	}
@@ -155,15 +142,13 @@ public class News implements Parcelable, ObservableSource<News> {
 		this.author = author;
 	}
 
-
-	public ArrayList<Attachment> getAttachments() {
-		return attachments;
+	public String getThumbnail() {
+		return thumbnail;
 	}
 
-	public void setAttachments(ArrayList<Attachment> attachments) {
-		this.attachments = attachments;
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
-
 
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeValue(id);
@@ -172,10 +157,9 @@ public class News implements Parcelable, ObservableSource<News> {
 		dest.writeValue(status);
 		dest.writeValue(title);
 		dest.writeValue(date);
-		dest.writeValue(modified);
 		dest.writeList(tags);
 		dest.writeValue(author);
-		dest.writeList(attachments);
+		dest.writeValue(thumbnail);
 	}
 
 	public int describeContents() {

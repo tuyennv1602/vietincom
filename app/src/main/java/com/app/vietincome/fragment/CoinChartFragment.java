@@ -172,7 +172,7 @@ public class CoinChartFragment extends BaseFragment {
 
 		YAxis yRight = chart.getAxisRight();
 		yRight.setLabelCount(4, false);
-		yRight.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+		yRight.setTextColor(isDarkTheme ? Color.parseColor("#ffffff") : Color.parseColor("#000000"));
 		yRight.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
 		yRight.setDrawGridLines(AppPreference.INSTANCE.isVertical());
 		yRight.setTextSize(12);
@@ -190,7 +190,7 @@ public class CoinChartFragment extends BaseFragment {
 
 		XAxis x = chart.getXAxis();
 		x.setLabelCount(3, false);
-		x.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+		x.setTextColor(isDarkTheme ? Color.parseColor("#ffffff") : Color.parseColor("#000000"));
 		x.setTextSize(12);
 		x.setDrawGridLines(AppPreference.INSTANCE.isHorizontal());
 		x.setAxisLineColor(Color.GRAY);
@@ -239,10 +239,10 @@ public class CoinChartFragment extends BaseFragment {
 
 	@Override
 	public void onUpdatedTheme() {
-		tvForTime.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
-		tvLow.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
-		tvHigh.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
-		imgDot.setColorFilter(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+		tvForTime.setTextColor(isDarkTheme ? Color.parseColor("#a9a2a2") : Color.parseColor("#929da9"));
+		tvLow.setTextColor(isDarkTheme ? Color.parseColor("#a9a2a2") : Color.parseColor("#929da9"));
+		tvHigh.setTextColor(isDarkTheme ? Color.parseColor("#a9a2a2") : Color.parseColor("#929da9"));
+		imgDot.setColorFilter(isDarkTheme ? Color.parseColor("#a9a2a2") : Color.parseColor("#929da9"));
 	}
 
 	private void setData(ChartResponse chartResponse) {
@@ -269,10 +269,10 @@ public class CoinChartFragment extends BaseFragment {
 		String price = CommonUtil.formatCurrency(Math.abs(delta), rate, currency);
 		String strPercent = String.format(Locale.US, "%.2f", percent);
 		if (delta > 0) {
-			tvExchange.setTextColor(getColor(R.color.green));
+			tvExchange.setTextColor(Color.parseColor("#45d178"));
 			tvExchange.setText(new StringBuilder().append("+").append(price).append(" (+").append(strPercent).append("%)").toString());
 		} else {
-			tvExchange.setTextColor(getColor(R.color.red));
+			tvExchange.setTextColor(Color.parseColor("#FFEF2C1E"));
 			tvExchange.setText(new StringBuilder().append("-").append(price).append(" (").append(strPercent).append("%)").toString());
 		}
 	}
@@ -309,11 +309,11 @@ public class CoinChartFragment extends BaseFragment {
 				}
 				return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_DAY_OF_MONTH);
 			});
-
 		}
-		MyMarkerView mv = new MyMarkerView(getContext(), chart.getXAxis().getValueFormatter(), R.layout.custom_marker_view);
-		chart.setMarker(mv); // Set the marker to the chart
-		// create a data object with the datasets
+		if(chart.getXAxis().getValueFormatter() != null && getContext() != null) {
+			MyMarkerView mv = new MyMarkerView(getContext(), chart.getXAxis().getValueFormatter(), R.layout.custom_marker_view);
+			chart.setMarker(mv);
+		}
 		LineData data = new LineData(set1);
 		data.setDrawValues(false);
 		return data;
@@ -328,12 +328,13 @@ public class CoinChartFragment extends BaseFragment {
 			}
 		}
 		BarDataSet set = new BarDataSet(entries, "Bar 1");
-		set.setColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+		set.setColor(isDarkTheme ? Color.parseColor("#a9a2a2") : Color.parseColor("#929da9"));
 		set.setAxisDependency(YAxis.AxisDependency.LEFT);
 		BarData data = new BarData(set);
 		data.setDrawValues(false);
 		data.setBarWidth(2f);
 		return data;
 	}
+
 
 }

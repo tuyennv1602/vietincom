@@ -95,6 +95,7 @@ public class EditTransactionFragment extends BaseFragment {
 		fragment.position = position;
 		return fragment;
 	}
+
 	@Override
 	public int getLayoutId() {
 		return R.layout.fragment_add_transaction;
@@ -103,9 +104,9 @@ public class EditTransactionFragment extends BaseFragment {
 	@Override
 	public void onFragmentReady(View view) {
 		onUpdatedTheme();
-		if(item.isBuy()) {
+		if (item.isBuy()) {
 			btnBuy.setChecked(true);
-		}else{
+		} else {
 			btnSell.setChecked(true);
 		}
 		changeSegmentColor();
@@ -153,10 +154,10 @@ public class EditTransactionFragment extends BaseFragment {
 		navitop.changeFontTitle(R.font.roboto_regular);
 	}
 
-	private void changeSegmentColor(){
-		if(btnBuy.isChecked()){
+	private void changeSegmentColor() {
+		if (btnBuy.isChecked()) {
 			sgmGroup.setTintColor(getColor(R.color.green));
-		}else{
+		} else {
 			sgmGroup.setTintColor(getColor(R.color.red));
 		}
 	}
@@ -167,7 +168,7 @@ public class EditTransactionFragment extends BaseFragment {
 	}
 
 	@OnClick(R.id.tvTradeTime)
-	void selectTradeDate(){
+	void selectTradeDate() {
 		final Calendar c = Calendar.getInstance();
 		DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (datePicker, year, month, day) -> {
 			String result = (day / 10 == 0 ? "0" + day : day)
@@ -179,15 +180,17 @@ public class EditTransactionFragment extends BaseFragment {
 
 	@OnClick(R.id.tvSave)
 	void saveTransaction() {
-		if(checkFillData()){
+		double rate = item.getPriceUSD() / item.getPriceBTC();
+		if (checkFillData()) {
 			item.setBuy(btnBuy.isChecked());
 			item.setDateAdd(tvTradeTime.getText().toString());
-			if(btnUSD.isChecked()){
-				item.setPriceUSD(Double.valueOf(edtPrice.getText().toString()));
-				item.setPriceBTC(portfolio.getQuotes().getBTC().getPrice());
-			}else{
-				item.setPriceBTC(Double.valueOf(edtPrice.getText().toString()));
-				item.setPriceUSD(portfolio.getQuotes().getUSD().getPrice());
+			double price = Double.valueOf(edtPrice.getText().toString());
+			if (btnUSD.isChecked()) {
+				item.setPriceUSD(price);
+				item.setPriceBTC(price/rate);
+			} else {
+				item.setPriceBTC(price);
+				item.setPriceUSD(price * rate);
 			}
 			item.setQuantity(Integer.valueOf(edtQuantity.getText().toString()));
 			portfolio.getTransactions().set(position, item);
