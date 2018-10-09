@@ -86,20 +86,6 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 	}
 
 	@Override
-	public void onBindViewHolder(@NonNull AllCoinViewHolder holder, int position, @NonNull List<Object> payloads) {
-		if (payloads.isEmpty()) {
-			super.onBindViewHolder(holder, position, payloads);
-		} else {
-			Bundle o = (Bundle) payloads.get(0);
-			for (String key : o.keySet()) {
-				if(key.equals("quote")){
-					holder.fillData(data.get(position));
-				}
-			}
-		}
-	}
-
-	@Override
 	public int getItemCount() {
 		return data == null ? 0 : data.size();
 	}

@@ -14,10 +14,10 @@ public class USD implements Parcelable
 	public double price;
 	@SerializedName("volume_24h")
 	@Expose
-	public Double volume24h;
+	public double volume24h;
 	@SerializedName("market_cap")
 	@Expose
-	public Double marketCap;
+	public double marketCap;
 	@SerializedName("percent_change_1h")
 	@Expose
 	public double percentChange1h;
@@ -29,10 +29,10 @@ public class USD implements Parcelable
 	public double percentChange7d;
 	@SerializedName("total_market_cap")
 	@Expose
-	private Double totalMarketCap;
+	private double totalMarketCap;
 	@SerializedName("total_volume_24h")
 	@Expose
-	private Double totalVolume24h;
+	private double totalVolume24h;
 	public final static Parcelable.Creator<USD> CREATOR = new Creator<USD>() {
 
 
@@ -52,13 +52,13 @@ public class USD implements Parcelable
 
 	protected USD(Parcel in) {
 		this.price = ((double) in.readValue((double.class.getClassLoader())));
-		this.volume24h = ((Double) in.readValue((Double.class.getClassLoader())));
-		this.marketCap = ((Double) in.readValue((Double.class.getClassLoader())));
+		this.volume24h = ((double) in.readValue((double.class.getClassLoader())));
+		this.marketCap = ((double) in.readValue((double.class.getClassLoader())));
 		this.percentChange1h = ((double) in.readValue((double.class.getClassLoader())));
 		this.percentChange24h = ((double) in.readValue((double.class.getClassLoader())));
 		this.percentChange7d = ((double) in.readValue((double.class.getClassLoader())));
-		this.totalMarketCap = ((Double) in.readValue((Double.class.getClassLoader())));
-		this.totalVolume24h = ((Double) in.readValue((Double.class.getClassLoader())));
+		this.totalMarketCap = ((double) in.readValue((double.class.getClassLoader())));
+		this.totalVolume24h = ((double) in.readValue((double.class.getClassLoader())));
 	}
 
 	public USD() {
@@ -72,21 +72,19 @@ public class USD implements Parcelable
 		this.price = price;
 	}
 
-	public Double getVolume24h() {
+	public double getVolume24h() {
 		return volume24h;
 	}
 
-
-	public Double getMarketCap() {
+	public double getMarketCap() {
 		return marketCap;
 	}
 
-
-	public Double getTotalMarketCap() {
+	public double getTotalMarketCap() {
 		return totalMarketCap;
 	}
 
-	public Double getTotalVolume24h() {
+	public double getTotalVolume24h() {
 		return totalVolume24h;
 	}
 

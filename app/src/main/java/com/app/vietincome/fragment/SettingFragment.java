@@ -233,7 +233,7 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 	void shareApp(){
 		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 		sharingIntent.setType("text/plain");
-		String shareBody = "market://details?id=com.app.vietincome";
+		String shareBody = "Download Vietincome app here: https://play.google.com/store/apps/details?id=com.app.vietincome";
 		sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download Vietincome app now!");
 		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
 		startActivity(Intent.createChooser(sharingIntent, "Share Vietincome app"));

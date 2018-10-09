@@ -221,7 +221,6 @@ public class CoinChartFragment extends BaseFragment {
 				hideProgressDialog();
 				if (response.isSuccessful()) {
 					setData(response.body());
-					Log.d("__chart", "onResponse: " + response.body().getVolumes().size());
 				}
 			}
 

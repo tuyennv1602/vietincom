@@ -12,7 +12,7 @@ public class Data implements Parcelable
 
 	@SerializedName("id")
 	@Expose
-	private Integer id;
+	private int id;
 	@SerializedName("name")
 	@Expose
 	private String name;
@@ -24,22 +24,22 @@ public class Data implements Parcelable
 	private String websiteSlug;
 	@SerializedName("rank")
 	@Expose
-	private Integer rank;
+	private int rank;
 	@SerializedName("circulating_supply")
 	@Expose
-	private Double circulatingSupply;
+	private double circulatingSupply;
 	@SerializedName("total_supply")
 	@Expose
-	private Double totalSupply;
+	private double totalSupply;
 	@SerializedName("max_supply")
 	@Expose
-	private Double maxSupply;
+	private double maxSupply;
 	@SerializedName("quotes")
 	@Expose
 	private Quotes quotes;
 	@SerializedName("last_updated")
 	@Expose
-	private Integer lastUpdated;
+	private int lastUpdated;
 	public final static Parcelable.Creator<Data> CREATOR = new Creator<Data>() {
 
 
@@ -58,16 +58,16 @@ public class Data implements Parcelable
 	;
 
 	protected Data(Parcel in) {
-		this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
+		this.id = ((int) in.readValue((int.class.getClassLoader())));
 		this.name = ((String) in.readValue((String.class.getClassLoader())));
 		this.symbol = ((String) in.readValue((String.class.getClassLoader())));
 		this.websiteSlug = ((String) in.readValue((String.class.getClassLoader())));
-		this.rank = ((Integer) in.readValue((Integer.class.getClassLoader())));
-		this.circulatingSupply = ((Double) in.readValue((Double.class.getClassLoader())));
-		this.totalSupply = ((Double) in.readValue((Double.class.getClassLoader())));
-		this.maxSupply = ((Double) in.readValue((Double.class.getClassLoader())));
+		this.rank = ((int) in.readValue((int.class.getClassLoader())));
+		this.circulatingSupply = ((double) in.readValue((double.class.getClassLoader())));
+		this.totalSupply = ((double) in.readValue((double.class.getClassLoader())));
+		this.maxSupply = ((double) in.readValue((double.class.getClassLoader())));
 		this.quotes = ((Quotes) in.readValue((Quotes.class.getClassLoader())));
-		this.lastUpdated = ((Integer) in.readValue((Integer.class.getClassLoader())));
+		this.lastUpdated = ((int) in.readValue((int.class.getClassLoader())));
 	}
 
 	public Data(){
@@ -105,7 +105,7 @@ public class Data implements Parcelable
 		this.websiteSlug = websiteSlug;
 	}
 
-	public Integer getRank() {
+	public int getRank() {
 		return rank;
 	}
 
@@ -113,7 +113,7 @@ public class Data implements Parcelable
 		this.rank = rank;
 	}
 
-	public Double getCirculatingSupply() {
+	public double getCirculatingSupply() {
 		return circulatingSupply;
 	}
 
@@ -121,7 +121,7 @@ public class Data implements Parcelable
 		this.circulatingSupply = circulatingSupply;
 	}
 
-	public Double getTotalSupply() {
+	public double getTotalSupply() {
 		return totalSupply;
 	}
 
@@ -145,7 +145,7 @@ public class Data implements Parcelable
 		this.quotes = quotes;
 	}
 
-	public Integer getLastUpdated() {
+	public int getLastUpdated() {
 		return lastUpdated;
 	}
 

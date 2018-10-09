@@ -164,8 +164,8 @@ public class GlobalFragment extends BaseFragment {
 
 	private void initData() {
 		dfm.applyPattern("###,###,###,###");
-		tvMarketValue.setText("$" + dfm.format(global.getQuotes().getUSD().getTotalMarketCap().longValue()));
-		tvVolumeValue.setText("$" + dfm.format(global.getQuotes().getUSD().getTotalVolume24h().longValue()));
+		tvMarketValue.setText("$" + dfm.format(global.getQuotes().getUSD().getTotalMarketCap()));
+		tvVolumeValue.setText("$" + dfm.format(global.getQuotes().getUSD().getTotalVolume24h()));
 		if(topMarkets == null){
 			topMarkets = new ArrayList<>();
 		}

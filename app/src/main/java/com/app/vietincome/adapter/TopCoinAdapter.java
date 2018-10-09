@@ -117,7 +117,7 @@ public class TopCoinAdapter extends RecyclerView.Adapter<TopCoinAdapter.TopCoinV
 			tvRank.setText(String.valueOf(position));
 			tvName.setText(data.getName());
 			if (type == Constant.MARKET_CAP) {
-				tvValue.setText(new StringBuilder().append("$").append(withSuffix(data.getQuotes().getUSD().getMarketCap().longValue())).toString());
+				tvValue.setText(new StringBuilder().append("$").append(withSuffix(data.getQuotes().getUSD().getMarketCap())).toString());
 //				if(currency.getCode().equals("USD")) {
 //					tvValue.setText(currency.getSymbol() + withSuffix(data.getQuotes().getUSD().getMarketCap().longValue()));
 //				}else{
@@ -126,7 +126,7 @@ public class TopCoinAdapter extends RecyclerView.Adapter<TopCoinAdapter.TopCoinV
 				float percent = (float) ((data.getQuotes().getUSD().getMarketCap() / total) * 100);
 				tvPercent.setText(new StringBuilder().append(String.format(Locale.US, "%.2f", percent)).append("%").toString());
 			} else {
-				tvValue.setText(new StringBuilder().append("$").append(withSuffix(data.getQuotes().getUSD().getVolume24h().longValue())).toString());
+				tvValue.setText(new StringBuilder().append("$").append(withSuffix(data.getQuotes().getUSD().getVolume24h())).toString());
 //				if(currency.getCode().equals("USD")) {
 //					tvValue.setText(currency.getSymbol() + withSuffix(data.getQuotes().getUSD().getVolume24h().longValue()));
 //				}else{
@@ -137,7 +137,7 @@ public class TopCoinAdapter extends RecyclerView.Adapter<TopCoinAdapter.TopCoinV
 			}
 		}
 
-		public String withSuffix(long price) {
+		public String withSuffix(double price) {
 			if (price < 1000) return "" + price;
 			int exp = (int) (Math.log(price) / Math.log(1000));
 			return String.format(Locale.US, "%.1f%c",

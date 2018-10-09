@@ -98,7 +98,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	AppBarLayout appBarLayout;
 
 	public static ArrayList<Data> allCoins;
-	private ArrayList<Data> resultSearchCoin;
+	private ArrayList<Data> coinSearched = new ArrayList<>();
 	private AllCoinAdapter allCoinAdapter;
 	private int start = 1;
 	private int perPage = 100;
@@ -132,7 +132,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventExpand(EventBusListener.ExpanableView event) {
 		appBarLayout.setExpanded(true);
-//		rcvAllCoin.scrollToPosition(0);
+		if (disposable != null && !disposable.isDisposed()) {
+			disposable.dispose();
+		}
 	}
 
 	@Override
@@ -167,13 +169,8 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 	@OnClick(R.id.layoutReverse)
 	void onReverse() {
-		if (navigationTopBar.isSearch()) {
-			Collections.reverse(resultSearchCoin);
-			allCoinAdapter.setCoins(resultSearchCoin);
-		} else {
-			Collections.reverse(allCoins);
-			allCoinAdapter.setCoins(allCoins);
-		}
+		Collections.reverse(coinSearched);
+		allCoinAdapter.setCoins(coinSearched);
 		isSortUp = !isSortUp;
 		imgSortName.setImageResource(isSortUp ? R.drawable.sort_up : R.drawable.sort_down);
 	}
@@ -204,9 +201,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onCloseSearch() {
 		super.onCloseSearch();
 		hideKeyboard();
-		if (resultSearchCoin != null) {
-			resultSearchCoin.clear();
-		}
+		coinSearched = allCoins;
 		allCoinAdapter.setCoins(allCoins);
 	}
 
@@ -230,6 +225,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onResume() {
 		super.onResume();
 		if (!isFirstLoad) {
+			start = 1;
 			getCoins(allCoins.size() == 0);
 		}
 		isFirstLoad = false;
@@ -297,9 +293,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	}
 
 	public void getCoins(boolean showShimmer) {
-		if (disposable != null && !disposable.isDisposed()) {
-			disposable.dispose();
-		}
 		portfolios.addAll(AppPreference.INSTANCE.getPortfolios());
 		isLoading = true;
 		navigationTopBar.showProgressBar();
@@ -315,7 +308,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				if (response.isSuccessful()) {
 					if (response.body().getMetadata().isSuccess()) {
 						allCoins.clear();
+						coinSearched.clear();
 						allCoins.addAll(response.body().getData());
+						coinSearched.addAll(response.body().getData());
 						allCoinAdapter.setCoins(allCoins);
 						start += perPage;
 						if (response.body().getData().size() == perPage) {
@@ -346,9 +341,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				.filter(data -> data.getName().contains(key) || data.getSymbol().contains(key.toUpperCase()))
 				.toList()
 				.subscribe(data -> {
-					resultSearchCoin = (ArrayList<Data>) data;
-					allCoinAdapter.setCoins(resultSearchCoin);
-				});
+					coinSearched = (ArrayList<Data>) data;
+					allCoinAdapter.setCoins(coinSearched);
+				}, throwable -> showAlert("Failed", "Search coins: " + throwable.getMessage()));
 	}
 
 	@SuppressLint("CheckResult")
@@ -383,24 +378,28 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				})
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(coinResponse -> {
-//					processData(coinResponse.getData());
 					start += perPage;
 					allCoins.addAll(coinResponse.getData());
+					coinSearched.addAll(coinResponse.getData());
 					allCoinAdapter.notifyItemRangeChanged(coinResponse.getData().get(0).getRank() - 1, allCoins.size());
 					updatePortfolioId(coinResponse.getData());
 				}, throwable -> showAlert("Failed", "Get Coins: " + throwable.getMessage()));
 		disposable.add(subscribe);
 	}
 
+	private void updateCoin(ArrayList<Data> data) {
+		ArrayList<Data> newData = new ArrayList<>();
+		newData.addAll(allCoins);
+		newData.removeAll(newData.subList(start - 1, (start + perPage) - 2));
+		newData.addAll(start - 1, data);
+		allCoinAdapter.updateAllCoin(newData);
+	}
+
 	@Override
 	public void onItemClicked(int position) {
 		if (isLoading) return;
 		Intent parent = new Intent(getContext(), ParentActivity.class);
-		if (resultSearchCoin != null && resultSearchCoin.size() != 0) {
-			parent.putExtra("coin", resultSearchCoin.get(position));
-		} else {
-			parent.putExtra("coin", allCoins.get(position));
-		}
+		parent.putExtra("coin", coinSearched.get(position));
 		parent.putExtra(Constant.KEY_SCREEN, Constant.COIN_DETAIL);
 		parent.putExtra(Constant.KEY_RATE, rate);
 		startActivity(parent);
@@ -415,27 +414,11 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 //		AppPreference.INSTANCE.addFavourite(allCoins.get(position).getId());
 	}
 
-	private void processData(ArrayList<Data> newData){
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if(allCoins.size() < (start + perPage)){
-					allCoins.addAll(newData);
-					allCoinAdapter.notifyItemRangeChanged((start + perPage) - 1, allCoins.size());
-					Log.d("__home", "processData: add new");
-				}else{
-					for(int i = start - 1; i < (start + perPage - 2); i++){
-						if(!allCoins.get(i).equals(newData.get(i))){
-							allCoins.set(i, newData.get(i));
-							allCoinAdapter.notifyItemChanged(i);
-							Log.d("__home", "processData: update at " + i);
-						}
-					}
-				}
-			}
-		});
-
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (disposable != null && !disposable.isDisposed()) {
+			disposable.dispose();
+		}
 	}
-
-
 }

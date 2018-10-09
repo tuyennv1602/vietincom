@@ -39,16 +39,4 @@ public class CoinDiffCallBack extends DiffUtil.Callback {
 		final Data newItem = newData.get(i1);
 		return oldItem.equals(newItem);
 	}
-
-	@Nullable
-	@Override
-	public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-		final Data oldItem = oldData.get(oldItemPosition);
-		final Data newItem = newData.get(newItemPosition);
-		Bundle diff = new Bundle();
-		if (newItem.getQuotes().equals(oldItem.getQuotes())) {
-			diff.putParcelable("quote", newItem.getQuotes());
-		}
-		return diff;
-	}
 }
