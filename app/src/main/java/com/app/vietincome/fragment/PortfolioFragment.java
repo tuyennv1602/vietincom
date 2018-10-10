@@ -147,6 +147,7 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 		rcvPortfolio.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvPortfolio.setHasFixedSize(true);
 		rcvPortfolio.addItemDecoration(new CustomItemDecoration(1));
+		rcvPortfolio.setHasTransientState(true);
 		rcvPortfolio.setAdapter(portAdapter);
 		if (portfolios.size() == 0) {
 			layoutIntro.setVisibility(View.VISIBLE);

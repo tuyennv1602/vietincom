@@ -42,7 +42,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		this.totalPrice = totalPrice;
 		this.deleteItemListener = deleteItemListener;
 		this.currentPrice = currentPrice;
-		Log.d("__tran", "TransactionAdapter: " + currentPrice);
 	}
 
 	public void changeCurrency() {
@@ -136,7 +135,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		}
 
 		void onBind(Transaction transaction) {
-			tvHolding.setText(String.valueOf(transaction.getQuantity()));
+			tvHolding.setText(String.format(Locale.US, "%.4f", transaction.getQuantity()));
 			double price = isUSD ? transaction.getPriceUSD() : transaction.getPriceBTC();
 			tvPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(price, isUSD)).toString());
 			tvDate.setText(transaction.getDateAdd());

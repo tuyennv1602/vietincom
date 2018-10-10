@@ -78,8 +78,8 @@ public class Portfolio implements Parcelable {
 		this.transactions = transactions;
 	}
 
-	public int getNumHold(){
-		int total = 0;
+	public float getNumHold(){
+		float total = 0;
 		for(Transaction item : transactions){
 			total += item.getQuantity();
 		}

@@ -16,6 +16,7 @@ import com.app.vietincome.model.Portfolio;
 import com.app.vietincome.utils.CommonUtil;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +56,11 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 	@Override
 	public int getItemCount() {
 		return portfolios == null ? 0 : portfolios.size();
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return portfolios.get(position).getId();
 	}
 
 	class PortViewHolder extends RecyclerView.ViewHolder {
@@ -102,7 +108,7 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 			tvCost.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			tvName.setText(portfolio.getName());
 			tvSymbol.setText(portfolio.getSymbol());
-			int numHold = portfolio.getNumHold();
+			float numHold = portfolio.getNumHold();
 			double cost = 0;
 			for (Transaction i : portfolio.getTransactions()) {
 				if (!isUSD) {
@@ -114,7 +120,7 @@ public class PortAdapter extends RecyclerView.Adapter<PortAdapter.PortViewHolder
 			double price = isUSD ? portfolio.getQuotes().getUSD().getPrice() : portfolio.getQuotes().getBTC().getPrice();
 			double percent = isUSD ? portfolio.getQuotes().getUSD().percentChange24h : portfolio.getQuotes().getBTC().percentChange24h;
 			tvCost.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(cost, isUSD)).toString());
-			tvNumHolding.setText(String.valueOf(numHold));
+			tvNumHolding.setText(String.format(Locale.US, "%.4f", numHold));
 			tvPrice.setText(new StringBuilder().append(isUSD ? "$" : "฿").append(CommonUtil.formatCurrency(price, isUSD)).toString());
 			if (percent != 0) {
 				tvChange24h.setTextColor(isPlus(percent) ? getColor(R.color.green) : getColor(R.color.red));

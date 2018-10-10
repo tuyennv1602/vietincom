@@ -192,7 +192,7 @@ public class EditTransactionFragment extends BaseFragment {
 				item.setPriceBTC(price);
 				item.setPriceUSD(price * rate);
 			}
-			item.setQuantity(Integer.valueOf(edtQuantity.getText().toString()));
+			item.setQuantity(Float.valueOf(edtQuantity.getText().toString()));
 			portfolio.getTransactions().set(position, item);
 			EventBus.getDefault().post(new EventBusListener.AddTransaction(item));
 			goBack();

@@ -9,7 +9,7 @@ public class Transaction implements Parcelable {
 	private double priceUSD;
 	private double priceBTC;
 	private String dateAdd;
-	private int quantity;
+	private float quantity;
 	private boolean isBuy;
 
 	public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
@@ -25,15 +25,15 @@ public class Transaction implements Parcelable {
 	};
 
 	protected Transaction(Parcel in) {
-		this.id = ((Integer) in.readValue(Integer.class.getClassLoader()));
-		this.priceUSD = ((Double) in.readValue(Double.class.getClassLoader()));
-		this.priceBTC = ((Double) in.readValue(Double.class.getClassLoader()));
+		this.id = ((int) in.readValue(int.class.getClassLoader()));
+		this.priceUSD = ((double) in.readValue(double.class.getClassLoader()));
+		this.priceBTC = ((double) in.readValue(double.class.getClassLoader()));
 		this.dateAdd = ((String) in.readValue(String.class.getClassLoader()));
-		this.quantity = ((Integer) in.readValue(Integer.class.getClassLoader()));
-		this.isBuy = ((Boolean) in.readValue(Boolean.class.getClassLoader()));
+		this.quantity = ((float) in.readValue(float.class.getClassLoader()));
+		this.isBuy = ((boolean) in.readValue(boolean.class.getClassLoader()));
 	}
 
-	public Transaction(int id, double priceUSD, double priceBTC, String dateAdd, int quantity, boolean isBuy) {
+	public Transaction(int id, double priceUSD, double priceBTC, String dateAdd, float quantity, boolean isBuy) {
 		this.id = id;
 		this.priceUSD = priceUSD;
 		this.priceBTC = priceBTC;
@@ -58,11 +58,11 @@ public class Transaction implements Parcelable {
 		this.dateAdd = dateAdd;
 	}
 
-	public int getQuantity() {
+	public float getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(float quantity) {
 		this.quantity = quantity;
 	}
 

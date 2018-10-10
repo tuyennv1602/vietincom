@@ -267,7 +267,7 @@ public class AddTransactionFragment extends BaseFragment {
 					0,
 					0,
 					tvTradeTime.getText().toString(),
-					Integer.valueOf(edtQuantity.getText().toString()),
+					Float.valueOf(edtQuantity.getText().toString()),
 					btnBuy.isChecked());
 			double price = Double.valueOf(edtPrice.getText().toString());
 			if (btnUSD.isChecked()) {
