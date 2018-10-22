@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.News;
 import com.app.vietincome.model.Portfolio;
+import com.app.vietincome.model.Profile;
 import com.app.vietincome.model.responses.TokenResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +33,7 @@ public enum AppPreference {
 	private static final String KEY_TOKEN = "token";
 	private static final String KEY_EVENTS = "events";
 	private static final String KEY_PORTFOLIO = "portfolio";
+	private static final String KEY_PROFILE = "profile";
 
 	public boolean darkTheme;
 	private SharedPreferences preferences;
@@ -43,6 +45,7 @@ public enum AppPreference {
 	private ArrayList<News> news = new ArrayList<>();
 	private Currency currency;
 	private TokenResponse token;
+	private Profile profile;
 	private boolean isVolume;
 	private boolean isHorizontal;
 	private boolean isVertical;
@@ -61,6 +64,7 @@ public enum AppPreference {
 		numEvents = preferences.getInt(KEY_EVENTS, 0);
 		currency = mGson.fromJson(preferences.getString(KEY_CURRENCY, null), Currency.class);
 		token = mGson.fromJson(preferences.getString(KEY_TOKEN, null), TokenResponse.class);
+		profile = mGson.fromJson(preferences.getString(KEY_PROFILE, null), Profile.class);
 		isVolume = preferences.getBoolean(KEY_VOLUME, true);
 		isHorizontal = preferences.getBoolean(KEY_HORIZONTAL, true);
 		isVertical = preferences.getBoolean(KEY_VERTICAL, true);
@@ -256,4 +260,18 @@ public enum AppPreference {
 		preferences.edit().putString(KEY_PORTFOLIO, mGson.toJson(portfolios)).apply();
 	}
 
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile){
+		this.profile = profile;
+		preferences.edit().putString(KEY_PROFILE, mGson.toJson(profile)).apply();
+	}
+
+	public void updateProfile(Profile profile){
+		profile.setSessionId(this.profile.getSessionId());
+		this.profile = profile;
+		preferences.edit().putString(KEY_PROFILE, mGson.toJson(profile)).apply();
+	}
 }

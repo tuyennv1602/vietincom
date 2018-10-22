@@ -166,12 +166,12 @@ public class Data implements Parcelable
 		dest.writeValue(lastUpdated);
 	}
 
-//	public boolean isFavourite() {
-//		for (Integer integer : AppPreference.INSTANCE.getFavouriteCoin()) {
-//			if (integer == id) return true;
-//		}
-//		return false;
-//	}
+	public boolean isFavourite() {
+		for (Integer integer : AppPreference.INSTANCE.getFavouriteCoin()) {
+			if (integer == id) return true;
+		}
+		return false;
+	}
 
 	public int describeContents() {
 		return 0;

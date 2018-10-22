@@ -1,8 +1,10 @@
 package com.app.vietincome.adapter;
 
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.vietincome.R;
@@ -25,10 +28,14 @@ import com.app.vietincome.model.Data;
 import com.app.vietincome.model.USD;
 import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.view.HighLightRelativeLayout;
+import com.app.vietincome.view.HighLightTextView;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -116,17 +123,17 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 		@BindView(R.id.tv7D)
 		TextView tv7D;
 
-//		@BindView(R.id.imgStar)
-//		ImageView imgStar;
-//
-//		@BindView(R.id.layoutAddFavorite)
-//		RelativeLayout layoutAddFavorite;
-//
-//		@BindView(R.id.tvCancel)
-//		HighLightTextView tvCancel;
-//
-//		@BindView(R.id.tvAddFavourite)
-//		TextView tvAddFavourite;
+		@BindView(R.id.imgStar)
+		ImageView imgStar;
+
+		@BindView(R.id.layoutAddFavorite)
+		RelativeLayout layoutAddFavorite;
+
+		@BindView(R.id.tvCancel)
+		HighLightTextView tvCancel;
+
+		@BindView(R.id.tvAddFavourite)
+		TextView tvAddFavourite;
 
 		private AllCoinViewHolder(@NonNull View itemView) {
 			super(itemView);
@@ -137,17 +144,18 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 				}
 			});
 			itemView.setOnLongClickListener(view -> {
-				if (itemClickCancelListener != null) {
+				showFavouriteView(getAdapterPosition());
+				if(itemClickCancelListener != null){
 					itemClickCancelListener.onLongClicked(getAdapterPosition());
-//					showFavouriteView();
 				}
-				return false;
+				return true;
 			});
-//			tvCancel.setOnClickListener(view -> {
-//				if(itemClickCancelListener != null){
-//					itemClickCancelListener.onCancelClicked(getAdapterPosition());
-//				}
-//			});
+			tvCancel.setOnClickListener(view -> {
+				if (itemClickCancelListener != null) {
+					hideFavouriteView(getAdapterPosition());
+					itemClickCancelListener.onCancelClicked(getAdapterPosition());
+				}
+			});
 		}
 
 		@SuppressLint("DefaultLocale")
@@ -176,14 +184,9 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 				tv7D.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			}
 			fillData(item);
-//			imgStar.setVisibility(item.isFavourite() ? View.VISIBLE : View.GONE);
-//			tvAddFavourite.setText(itemView.getContext().getString(R.string.added_favourite, item.getName()));
-// 			layoutAddFavorite.setBackgroundColor(isDarkTheme ? getColor(R.color.light_background) : getColor(R.color.dark_background));
-//			tvAddFavourite.setTextColor(isDarkTheme ? getColor(R.color.light_text) : getColor(R.color.dark_text));
-//			tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		}
 
-		public void fillData(Data item){
+		void fillData(Data item) {
 			USD usd = item.getQuotes().getUSD();
 			tvRank.setText(String.valueOf(item.getRank()));
 			tvName.setText(item.getName());
@@ -194,50 +197,79 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			tvPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, isBTC ? 10 : 12);
 			String price;
 			if (isBTC) {
-				price = itemView.getContext().getString(R.string.bitcoin) + String.format("%.8f", (item.getQuotes().getBTC().getPrice()));
+				price = itemView.getContext().getString(R.string.bitcoin) + String.format(Locale.US, "%.8f", (item.getQuotes().getBTC().getPrice()));
 			} else {
 				Currency currency = AppPreference.INSTANCE.getCurrency();
 				price = CommonUtil.formatCurrency(usd.getPrice(), rate, currency);
 			}
 			tvPrice.setText(price);
+			imgStar.setVisibility(item.isFavourite() ? View.VISIBLE : View.GONE);
+			layoutAddFavorite.setBackgroundColor(isDarkTheme ? getColor(R.color.light_background) : getColor(R.color.dark_background));
+			tvAddFavourite.setTextColor(isDarkTheme ? getColor(R.color.light_text) : getColor(R.color.dark_text));
+			tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		}
 
 		private int getColor(int color) {
 			return ContextCompat.getColor(itemView.getContext(), color);
 		}
 
-//		private void showFavouriteView(){
-//			YoYo.with(Techniques.SlideInRight)
-//					.duration(200)
-//					.withListener(new Animator.AnimatorListener() {
-//						@Override
-//						public void onAnimationStart(Animator animator) {
-//							layoutAddFavorite.setVisibility(View.VISIBLE);
-//						}
-//
-//						@Override
-//						public void onAnimationEnd(Animator animator) {
-//
-//						}
-//
-//						@Override
-//						public void onAnimationCancel(Animator animator) {
-//
-//						}
-//
-//						@Override
-//						public void onAnimationRepeat(Animator animator) {
-//
-//						}
-//					})
-//					.playOn(layoutAddFavorite);
-//		}
-//     	public void hideFavouriteView(Animator.AnimatorListener listener){
-//		YoYo.with(Techniques.SlideOutRight)
-//				.duration(500)
-//				.withListener(listener)
-//				.playOn(layoutAddFavorite);
-//	}
+		private void showFavouriteView(int position) {
+			Data item = data.get(position);
+			YoYo.with(Techniques.SlideInRight)
+					.duration(300)
+					.withListener(new Animator.AnimatorListener() {
+						@Override
+						public void onAnimationStart(Animator animator) {
+							layoutAddFavorite.setVisibility(View.VISIBLE);
+							if(item.isFavourite()){
+								tvAddFavourite.setText(itemView.getContext().getString(R.string.remove_favorite, item.getName()));
+							}else{
+								tvAddFavourite.setText(itemView.getContext().getString(R.string.added_favourite, item.getName()));
+							}
+						}
+
+						@Override
+						public void onAnimationEnd(Animator animator) {
+						}
+
+						@Override
+						public void onAnimationCancel(Animator animator) {
+
+						}
+
+						@Override
+						public void onAnimationRepeat(Animator animator) {
+
+						}
+					})
+					.playOn(layoutAddFavorite);
+		}
+
+		void hideFavouriteView(int position) {
+			YoYo.with(Techniques.SlideOutRight)
+					.duration(200)
+					.withListener(new Animator.AnimatorListener() {
+						@Override
+						public void onAnimationStart(Animator animator) {
+
+						}
+
+						@Override
+						public void onAnimationEnd(Animator animator) {
+						}
+
+						@Override
+						public void onAnimationCancel(Animator animator) {
+
+						}
+
+						@Override
+						public void onAnimationRepeat(Animator animator) {
+
+						}
+					})
+					.playOn(layoutAddFavorite);
+		}
 	}
 
 }

@@ -3,6 +3,7 @@ package com.app.vietincome.fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -205,7 +206,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onCloseSearch() {
 		super.onCloseSearch();
 		hideKeyboard();
-		coinSearched = allCoins;
 		allCoinAdapter.setCoins(allCoins);
 	}
 
@@ -312,10 +312,10 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				if (response.isSuccessful()) {
 					if (response.body().getMetadata().isSuccess()) {
 						allCoins.clear();
-						coinSearched.clear();
 						allCoins.addAll(response.body().getData());
-						coinSearched.addAll(response.body().getData());
-						allCoinAdapter.setCoins(allCoins);
+						if(!navigationTopBar.isSearch()) {
+							allCoinAdapter.setCoins(allCoins);
+						}
 						start += perPage;
 						if (response.body().getData().size() == perPage) {
 							getNextPage(response.body().getMetadata().getNumCryptocurrencies());
@@ -339,10 +339,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		Observable.fromIterable(allCoins)
 				.observeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
-				.doOnError(throwable -> {
-					Log.d("__home", "searchCoin: error");
-				})
-				.filter(data -> data.getName().contains(key) || data.getSymbol().contains(key.toUpperCase()))
+				.filter(data -> data.getName().toLowerCase().contains(key.toLowerCase()) || data.getSymbol().toLowerCase().contains(key.toLowerCase()))
 				.toList()
 				.subscribe(data -> {
 					coinSearched = (ArrayList<Data>) data;
@@ -384,26 +381,19 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				.subscribe(coinResponse -> {
 					start += perPage;
 					allCoins.addAll(coinResponse.getData());
-					coinSearched.addAll(coinResponse.getData());
-					allCoinAdapter.notifyItemRangeChanged(coinResponse.getData().get(0).getRank() - 1, allCoins.size());
+					if(!navigationTopBar.isSearch()) {
+						allCoinAdapter.notifyItemRangeChanged(coinResponse.getData().get(0).getRank() - 1, allCoins.size());
+					}
 					updatePortfolioId(coinResponse.getData());
 				}, throwable -> showAlert("Failed", "Get Coins: " + throwable.getMessage()));
 		disposable.add(subscribe);
-	}
-
-	private void updateCoin(ArrayList<Data> data) {
-		ArrayList<Data> newData = new ArrayList<>();
-		newData.addAll(allCoins);
-		newData.removeAll(newData.subList(start - 1, (start + perPage) - 2));
-		newData.addAll(start - 1, data);
-		allCoinAdapter.updateAllCoin(newData);
 	}
 
 	@Override
 	public void onItemClicked(int position) {
 		if (isLoading) return;
 		Intent parent = new Intent(getContext(), ParentActivity.class);
-		parent.putExtra("coin", coinSearched.get(position));
+		parent.putExtra("coin", navigationTopBar.isSearch() ? coinSearched.get(position) : allCoins.get(position));
 		parent.putExtra(Constant.KEY_SCREEN, Constant.COIN_DETAIL);
 		parent.putExtra(Constant.KEY_RATE, rate);
 		startActivity(parent);
@@ -411,11 +401,12 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 	@Override
 	public void onCancelClicked(int position) {
+		AppPreference.INSTANCE.removeFavourite(allCoins.get(position).getId());
 	}
 
 	@Override
 	public void onLongClicked(int position) {
-//		AppPreference.INSTANCE.addFavourite(allCoins.get(position).getId());
+		AppPreference.INSTANCE.addFavourite(allCoins.get(position).getId());
 	}
 
 	@Override

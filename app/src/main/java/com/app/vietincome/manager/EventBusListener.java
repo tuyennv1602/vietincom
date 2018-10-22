@@ -63,4 +63,12 @@ public class EventBusListener {
 			this.portfolio = portfolio;
 		}
 	}
+
+	public static class SwitchChart{
+		public boolean isLineChart;
+
+		public SwitchChart(boolean isLineChart){
+			this.isLineChart = isLineChart;
+		}
+	}
 }

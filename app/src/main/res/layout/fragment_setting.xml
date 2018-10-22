@@ -94,6 +94,7 @@
 				android:textSize="20sp"/>
 
 			<com.app.vietincome.view.HighLightTextView
+				android:visibility="gone"
 				android:id="@+id/tvDonate"
 				style="@style/DefaultTextView"
 				android:layout_width="match_parent"
@@ -103,8 +104,6 @@
 				android:paddingRight="10dp"
 				android:text="Donate us"
 				android:textSize="16sp"/>
-
-			<include layout="@layout/view_line"/>
 
 			<com.app.vietincome.view.HighLightTextView
 				android:id="@+id/tvTelegramPremium"

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.Price;
 import com.app.vietincome.model.Volume;
@@ -27,10 +28,16 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CandleData;
+import com.github.mikephil.charting.data.CandleDataSet;
+import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -104,6 +111,11 @@ public class CoinChartFragment extends BaseFragment {
 			initData(this.time);
 		}
 		setData(new ChartResponse());
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onEventSwitchChart(EventBusListener.SwitchChart event){
+
 	}
 
 	@Override
@@ -335,5 +347,26 @@ public class CoinChartFragment extends BaseFragment {
 		return data;
 	}
 
+	protected CandleData generateCandleData(ArrayList<Price> prices) {
+		CandleData d = new CandleData();
+		ArrayList<CandleEntry> entries = new ArrayList<>();
+		if (prices != null && prices.size() > 0) {
+			for (int i = 0; i < prices.size(); i++) {
+				entries.add(new CandleEntry(i, prices.get(i).getPrice() + 8, prices.get(i).getPrice() - 8, prices.get(i).getPrice(), prices.get(i).getPrice()));
+			}
+		} else {
+			for (int i = 0; i <= 100; i++) {
+				entries.add(new CandleEntry(i, 0, 0,0, 0));
+			}
+		}
+		CandleDataSet set = new CandleDataSet(entries, "Candle DataSet");
+		set.setDecreasingColor(Color.rgb(142, 150, 175));
+		set.setShadowColor(Color.DKGRAY);
+		set.setBarSpace(0.3f);
+		set.setValueTextSize(10f);
+		set.setDrawValues(false);
+		d.addDataSet(set);
+		return d;
+	}
 
 }

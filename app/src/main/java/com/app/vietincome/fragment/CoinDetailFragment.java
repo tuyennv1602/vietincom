@@ -17,6 +17,7 @@ import com.app.vietincome.adapter.CoinNewsAdapter;
 import com.app.vietincome.adapter.TopMarketAdapter;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.CoinInfo;
 import com.app.vietincome.model.Currency;
@@ -28,6 +29,8 @@ import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 import com.app.vietincome.view.NoneSwipeViewpager;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -117,6 +120,7 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 	private CoinNewsAdapter coinNewsAdapter;
 	private ArrayList<Market> markets;
 	private TopMarketAdapter topMarketAdapter;
+	private boolean isLineChart = true;
 
 	public static CoinDetailFragment newInstance(Data data, double rate) {
 		CoinDetailFragment fragment = new CoinDetailFragment();
@@ -241,9 +245,18 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		navitop.showImgLeft(true);
 		navitop.showImgRight(false);
 		navitop.setImgLeft(R.drawable.close);
+		navitop.setImgRight(R.drawable.icn_linechart);
 		navitop.setSubTitle(data.getSymbol());
 		navitop.setTvTitle(data.getName());
 		navitop.changeLeftPadding(18);
+	}
+
+	@Override
+	public void onRightClicked() {
+		super.onRightClicked();
+		navigationTopBar.setImgRight(isLineChart ? R.drawable.icn_candlestick : R.drawable.icn_linechart);
+		EventBus.getDefault().post(new EventBusListener.SwitchChart(isLineChart));
+		isLineChart = !isLineChart;
 	}
 
 	@Override
