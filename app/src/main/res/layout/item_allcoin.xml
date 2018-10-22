@@ -148,6 +148,10 @@
 			android:id="@+id/tvCancel"
 			style="@style/DefaultTextView"
 			android:layout_alignParentRight="true"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:paddingStart="10dp"
+			android:paddingEnd="10dp"
 			android:layout_centerVertical="true"
 			android:text="CANCEL"/>
 
