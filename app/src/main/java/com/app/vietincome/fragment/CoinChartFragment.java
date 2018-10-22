@@ -312,6 +312,7 @@ public class CoinChartFragment extends BaseFragment {
 		set1.setDrawHorizontalHighlightIndicator(false);
 		if (prices != null && prices.size() > 0) {
 			chart.getXAxis().setValueFormatter((value, axis) -> {
+				if(value > prices.size()) return "";
 				if (time == Constant.HIS_24H) {
 					return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_HOURS);
 				}

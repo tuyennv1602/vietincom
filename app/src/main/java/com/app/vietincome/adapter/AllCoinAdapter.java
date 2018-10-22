@@ -14,6 +14,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.CoinDiffCallBack;
+import com.app.vietincome.manager.interfaces.AddFavoriteListener;
 import com.app.vietincome.manager.interfaces.ItemClickCancelListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Currency;
@@ -44,15 +47,15 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 
 	private ArrayList<Data> data;
 	private ItemClickListener itemClickListener;
-	private ItemClickCancelListener itemClickCancelListener;
+	private AddFavoriteListener addFavoriteListener;
 	private boolean isDarkTheme;
 	private boolean isBTC = false;
 	private double rate = 1;
 
-	public AllCoinAdapter(ArrayList<Data> data, ItemClickListener listener, ItemClickCancelListener i) {
+	public AllCoinAdapter(ArrayList<Data> data, ItemClickListener listener, AddFavoriteListener i) {
 		this.itemClickListener = listener;
 		this.data = data;
-		this.itemClickCancelListener = i;
+		this.addFavoriteListener = i;
 	}
 
 	public void setCoins(ArrayList<Data> data) {
@@ -135,6 +138,8 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 		@BindView(R.id.tvAddFavourite)
 		TextView tvAddFavourite;
 
+		private boolean isChangeStatus;
+
 		private AllCoinViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
@@ -144,17 +149,13 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 				}
 			});
 			itemView.setOnLongClickListener(view -> {
+				isChangeStatus = true;
 				showFavouriteView(getAdapterPosition());
-				if(itemClickCancelListener != null){
-					itemClickCancelListener.onLongClicked(getAdapterPosition());
-				}
 				return true;
 			});
 			tvCancel.setOnClickListener(view -> {
-				if (itemClickCancelListener != null) {
-					hideFavouriteView(getAdapterPosition());
-					itemClickCancelListener.onCancelClicked(getAdapterPosition());
-				}
+				isChangeStatus = false;
+				hideFavouriteView(getAdapterPosition());
 			});
 		}
 
@@ -214,22 +215,21 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 		}
 
 		private void showFavouriteView(int position) {
-			Data item = data.get(position);
 			YoYo.with(Techniques.SlideInRight)
 					.duration(300)
 					.withListener(new Animator.AnimatorListener() {
 						@Override
 						public void onAnimationStart(Animator animator) {
 							layoutAddFavorite.setVisibility(View.VISIBLE);
-							if(item.isFavourite()){
-								tvAddFavourite.setText(itemView.getContext().getString(R.string.remove_favorite, item.getName()));
-							}else{
-								tvAddFavourite.setText(itemView.getContext().getString(R.string.added_favourite, item.getName()));
-							}
+							tvAddFavourite.setText(itemView.getContext().getString(data.get(position).isFavourite() ? R.string.remove_favorite : R.string.added_favourite, data.get(position).getName()));
 						}
 
 						@Override
 						public void onAnimationEnd(Animator animator) {
+							new Handler().postDelayed(() -> {
+								if (!isChangeStatus) return;
+								hideFavouriteView(position);
+							}, 1000);
 						}
 
 						@Override
@@ -246,16 +246,24 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 		}
 
 		void hideFavouriteView(int position) {
-			YoYo.with(Techniques.SlideOutRight)
-					.duration(200)
+			YoYo.with(Techniques.SlideOutLeft)
+					.duration(300)
 					.withListener(new Animator.AnimatorListener() {
 						@Override
 						public void onAnimationStart(Animator animator) {
-
+							if (isChangeStatus) {
+								imgStar.setVisibility(data.get(position).isFavourite() ? View.GONE : View.VISIBLE);
+							}
 						}
 
 						@Override
 						public void onAnimationEnd(Animator animator) {
+							layoutAddFavorite.setVisibility(View.GONE);
+							if (isChangeStatus) {
+								if (addFavoriteListener != null) {
+									addFavoriteListener.onChangeFavorite(position);
+								}
+							}
 						}
 
 						@Override

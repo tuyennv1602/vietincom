@@ -167,8 +167,8 @@ public class Data implements Parcelable
 	}
 
 	public boolean isFavourite() {
-		for (Integer integer : AppPreference.INSTANCE.getFavouriteCoin()) {
-			if (integer == id) return true;
+		for (Data item : AppPreference.INSTANCE.getFavouriteCoin()) {
+			if (item.getId() == id) return true;
 		}
 		return false;
 	}

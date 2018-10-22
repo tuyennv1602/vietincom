@@ -20,6 +20,7 @@ import com.app.vietincome.adapter.AllCoinAdapter;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
+import com.app.vietincome.manager.interfaces.AddFavoriteListener;
 import com.app.vietincome.manager.interfaces.ItemClickCancelListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Currency;
@@ -58,7 +59,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends BaseFragment implements ItemClickListener, ItemClickCancelListener {
+public class HomeFragment extends BaseFragment implements ItemClickListener, AddFavoriteListener {
 
 	@BindView(R.id.tvSortName)
 	TextView tvSortName;
@@ -115,6 +116,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	private boolean isFirstLoad = true;
 	private CompositeDisposable disposable;
 	private ArrayList<Portfolio> portfolios = new ArrayList<>();
+	private ArrayList<Data> favoriteCoins = new ArrayList<>();
 
 	public static HomeFragment newInstance() {
 		HomeFragment fragment = new HomeFragment();
@@ -174,8 +176,8 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 	@OnClick(R.id.layoutReverse)
 	void onReverse() {
-		Collections.reverse(coinSearched);
-		allCoinAdapter.setCoins(coinSearched);
+		Collections.reverse(allCoins);
+		allCoinAdapter.setCoins(allCoins);
 		isSortUp = !isSortUp;
 		imgSortName.setImageResource(isSortUp ? R.drawable.sort_up : R.drawable.sort_down);
 	}
@@ -213,6 +215,17 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	public void onRightClicked() {
 		super.onRightClicked();
 		if (isLoading) return;
+		Intent parent = new Intent(getContext(), ParentActivity.class);
+		parent.putExtra(Constant.KEY_SCREEN, Constant.FAVOURITE_COIN);
+		parent.putExtra(Constant.KEY_RATE, rate);
+		parent.putExtra(Constant.LAST_RANK, allCoins.get(allCoins.size() - 1).getRank());
+		startActivity(parent);
+	}
+
+	@Override
+	public void onAdditionRightClicked() {
+		super.onAdditionRightClicked();
+		if (isLoading) return;
 		showKeyboard(navigationTopBar.getEdtSearch());
 		navigationTopBar.openSearch();
 	}
@@ -220,8 +233,9 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	@Override
 	public void onNavigationTopUpdate(NavigationTopBar navitop) {
 		navitop.setTvTitle(R.string.all_coin);
-		navitop.setImgRight(R.drawable.icn_search);
+		navitop.setImgRight(R.drawable.favourite);
 		navitop.setImgLeft(R.drawable.pie_chart);
+		navitop.showAdditionalRight(true);
 		navitop.playTitleAnimation();
 	}
 
@@ -298,6 +312,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 
 	public void getCoins(boolean showShimmer) {
 		portfolios.addAll(AppPreference.INSTANCE.getPortfolios());
+		favoriteCoins.addAll(AppPreference.INSTANCE.getFavouriteCoin());
 		isLoading = true;
 		navigationTopBar.showProgressBar();
 		if (showShimmer) {
@@ -313,7 +328,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 					if (response.body().getMetadata().isSuccess()) {
 						allCoins.clear();
 						allCoins.addAll(response.body().getData());
-						if(!navigationTopBar.isSearch()) {
+						if (!navigationTopBar.isSearch()) {
 							allCoinAdapter.setCoins(allCoins);
 						}
 						start += perPage;
@@ -321,6 +336,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 							getNextPage(response.body().getMetadata().getNumCryptocurrencies());
 						}
 						updatePortfolioId(response.body().getData());
+						updateFavorite(response.body().getData());
 					}
 				}
 			}
@@ -363,6 +379,19 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		}
 	}
 
+	private void updateFavorite(ArrayList<Data> coins){
+		if(favoriteCoins.size() == 0) return;
+		for(Data data : coins){
+			for (int i = favoriteCoins.size() - 1; i >= 0; i--) {
+				if (data.getId() == favoriteCoins.get(i).getId()) {
+					AppPreference.INSTANCE.updateFavorite(data);
+					favoriteCoins.remove(i);
+					break;
+				}
+			}
+		}
+	}
+
 	@SuppressLint("CheckResult")
 	private void getNextPage(int totalItem) {
 		totalItem = totalItem - perPage;
@@ -381,10 +410,11 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 				.subscribe(coinResponse -> {
 					start += perPage;
 					allCoins.addAll(coinResponse.getData());
-					if(!navigationTopBar.isSearch()) {
+					if (!navigationTopBar.isSearch()) {
 						allCoinAdapter.notifyItemRangeChanged(coinResponse.getData().get(0).getRank() - 1, allCoins.size());
 					}
 					updatePortfolioId(coinResponse.getData());
+					updateFavorite(coinResponse.getData());
 				}, throwable -> showAlert("Failed", "Get Coins: " + throwable.getMessage()));
 		disposable.add(subscribe);
 	}
@@ -400,16 +430,6 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 	}
 
 	@Override
-	public void onCancelClicked(int position) {
-		AppPreference.INSTANCE.removeFavourite(allCoins.get(position).getId());
-	}
-
-	@Override
-	public void onLongClicked(int position) {
-		AppPreference.INSTANCE.addFavourite(allCoins.get(position).getId());
-	}
-
-	@Override
 	public void onPause() {
 		super.onPause();
 		if (disposable != null && !disposable.isDisposed()) {
@@ -417,4 +437,12 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Ite
 		}
 	}
 
+	@Override
+	public void onChangeFavorite(int position) {
+		if (allCoins.get(position).isFavourite()) {
+			AppPreference.INSTANCE.removeFavourite(allCoins.get(position));
+		} else {
+			AppPreference.INSTANCE.addFavourite(allCoins.get(position));
+		}
+	}
 }

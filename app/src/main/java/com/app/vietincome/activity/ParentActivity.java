@@ -6,6 +6,7 @@ import android.view.View;
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseActivity;
 import com.app.vietincome.fragment.CoinDetailFragment;
+import com.app.vietincome.fragment.FavoriteFragment;
 import com.app.vietincome.fragment.GlobalFragment;
 import com.app.vietincome.fragment.PortfolioDetailFragment;
 import com.app.vietincome.fragment.SelectCoinFragment;
@@ -42,7 +43,7 @@ public class ParentActivity extends BaseActivity {
 	public void onViewCreated(View view) {
 		if (getIntent() != null && getIntent().getExtras() != null) {
 			int screen = getIntent().getIntExtra(Constant.KEY_SCREEN, -1);
-			if (screen == -1){
+			if (screen == -1) {
 				finish();
 			}
 			switch (screen) {
@@ -65,8 +66,13 @@ public class ParentActivity extends BaseActivity {
 				}
 				case Constant.PORTFOLIO_DETAIL:
 					int portId = getIntent().getIntExtra("portId", -1);
-					if(portId == -1) finish();
+					if (portId == -1) finish();
 					pushFragment(PortfolioDetailFragment.newInstance(portId), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+					break;
+				case Constant.FAVOURITE_COIN:
+					double rate = getIntent().getDoubleExtra(Constant.KEY_RATE, 1);
+					int lastRank = getIntent().getIntExtra(Constant.LAST_RANK, 0);
+					pushFragment(FavoriteFragment.newInstance(rate, lastRank), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 					break;
 			}
 		}

@@ -9,6 +9,7 @@ public class Constant {
 	public static final int TAB_SETTING = 4;
 	public static final String KEY_SCREEN = "key_screen";
 	public static final String KEY_RATE = "rate";
+	public static final String LAST_RANK = "last_rank";
 
 	public static final int TYPE_NEWS = 1;
 	public static final int TYPE_EVENT = 2;
@@ -18,6 +19,7 @@ public class Constant {
 	public static final int GLOBAL_MARKET = 2;
 	public static final int SELECT_COIN = 3;
 	public static final int PORTFOLIO_DETAIL = 4;
+	public static final int FAVOURITE_COIN = 5;
 
 	public static final int HIS_24H = 0;
 	public static final int HIS_7D = 1;

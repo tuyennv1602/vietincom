@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.app.vietincome.model.Currency;
+import com.app.vietincome.model.Data;
 import com.app.vietincome.model.News;
 import com.app.vietincome.model.Portfolio;
 import com.app.vietincome.model.Profile;
@@ -15,6 +16,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public enum AppPreference {
@@ -41,7 +44,7 @@ public enum AppPreference {
 	public int numNews;
 	public int numEvents;
 	private ArrayList<Integer> newsRead = new ArrayList<>();
-	private ArrayList<Integer> favouriteCoin = new ArrayList<>();
+	private ArrayList<Data> favouriteCoin = new ArrayList<>();
 	private ArrayList<News> news = new ArrayList<>();
 	private Currency currency;
 	private TokenResponse token;
@@ -76,7 +79,7 @@ public enum AppPreference {
 		}
 		String coinData = preferences.getString(KEY_FAVOURITE, null);
 		if (coinData != null) {
-			Type type = new TypeToken<ArrayList<Integer>>() {
+			Type type = new TypeToken<ArrayList<Data>>() {
 			}.getType();
 			favouriteCoin = mGson.fromJson(coinData, type);
 		}
@@ -168,14 +171,15 @@ public enum AppPreference {
 		preferences.edit().putInt(KEY_NUMNEWS, numNews).apply();
 	}
 
-	public void addFavourite(Integer coinId) {
-		favouriteCoin.add(coinId);
+	public void addFavourite(Data data) {
+		favouriteCoin.add(data);
+		Collections.sort(favouriteCoin, (i1, i2) -> i1.getRank() - i2.getRank());
 		preferences.edit().putString(KEY_FAVOURITE, mGson.toJson(favouriteCoin)).apply();
 	}
 
-	public void removeFavourite(Integer coinId) {
-		for (int i = favouriteCoin.size() - 1; i <= 0; i--) {
-			if (favouriteCoin.get(i) == coinId) {
+	public void removeFavourite(Data data) {
+		for (int i = favouriteCoin.size() - 1; i >= 0; i--) {
+			if (favouriteCoin.get(i).getId() == data.getId()) {
 				favouriteCoin.remove(i);
 				break;
 			}
@@ -183,7 +187,16 @@ public enum AppPreference {
 		preferences.edit().putString(KEY_FAVOURITE, mGson.toJson(favouriteCoin)).apply();
 	}
 
-	public ArrayList<Integer> getFavouriteCoin() {
+	public void updateFavorite(Data data){
+		for(int i = 0 ; i < favouriteCoin.size() ; i++){
+			if(favouriteCoin.get(i).getId() == data.getId()){
+				favouriteCoin.set(i, data);
+				break;
+			}
+		}
+	}
+
+	public ArrayList<Data> getFavouriteCoin() {
 		return favouriteCoin;
 	}
 
