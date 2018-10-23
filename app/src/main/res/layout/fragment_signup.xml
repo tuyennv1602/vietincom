@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/dark_background"
+	android:orientation="vertical">
+
+	<include layout="@layout/navi_top_bar"/>
+
+	<ImageView
+		android:layout_width="70dp"
+		android:layout_height="70dp"
+		android:layout_gravity="center_horizontal"
+		android:layout_margin="10dp"
+		android:src="@drawable/favicon"/>
+
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:scrollbars="none"
+		android:layout_height="match_parent"
+		android:padding="20dp">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+
+			<TextView
+				android:id="@+id/tvUsername"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="3dp"
+				android:text="Username"
+				android:textColor="@color/dark_text"
+				android:textSize="13sp"/>
+
+			<EditText
+				android:id="@+id/edtUsername"
+				style="@style/DefaultEditText"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:background="@drawable/bg_border_dark"
+				android:imeOptions="actionNext"
+				android:paddingStart="10dp"
+				android:paddingEnd="10dp"
+				android:textCursorDrawable="@null"/>
+
+
+			<TextView
+				android:id="@+id/tvEmail"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:layout_marginBottom="3dp"
+				android:text="Email"
+				android:textColor="@color/dark_text"
+				android:textSize="13sp"/>
+
+			<EditText
+				android:id="@+id/edtEmail"
+				style="@style/DefaultEditText"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:background="@drawable/bg_border_dark"
+				android:imeOptions="actionNext"
+				android:inputType="textEmailAddress"
+				android:paddingStart="10dp"
+				android:paddingEnd="10dp"
+				android:textCursorDrawable="@null"/>
+
+			<TextView
+				android:id="@+id/tvPassword"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:layout_marginBottom="3dp"
+				android:text="Password"
+				android:textColor="@color/dark_text"
+				android:textSize="13sp"/>
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="40dp">
+
+				<EditText
+					android:id="@+id/edtPassword"
+					style="@style/DefaultEditText"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:background="@drawable/bg_border_dark"
+					android:imeOptions="actionNext"
+					android:inputType="textPassword"
+					android:maxLength="32"
+					android:paddingStart="10dp"
+					android:paddingEnd="50dp"
+					android:textCursorDrawable="@null"/>
+
+				<com.app.vietincome.view.HighLightImageView
+					android:id="@+id/imgVision"
+					android:layout_width="40dp"
+					android:layout_height="match_parent"
+					android:layout_alignParentEnd="true"
+					android:padding="10dp"
+					android:src="@drawable/invision"/>
+			</RelativeLayout>
+
+			<TextView
+				android:id="@+id/tvCode"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:layout_marginBottom="3dp"
+				android:text="Invite code (Optional)"
+				android:textColor="@color/dark_text"
+				android:textSize="13sp"/>
+
+			<EditText
+				android:id="@+id/edtCode"
+				style="@style/DefaultEditText"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:background="@drawable/bg_border_dark"
+				android:imeOptions="actionDone"
+				android:paddingStart="10dp"
+				android:paddingEnd="10dp"
+				android:textCursorDrawable="@null"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:orientation="horizontal">
+
+				<CheckBox
+					android:id="@+id/checkBox"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"/>
+
+				<com.app.vietincome.view.HighLightTextView
+					android:id="@+id/tvTerm"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					style="@style/DefaultTextView"
+					android:layout_gravity="center_vertical"
+					android:text="@string/i_agree_to_vietincome_s_terms_of_use"/>
+			</LinearLayout>
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvSignUp"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_marginTop="20dp"
+				android:background="@drawable/bg_border_dark"
+				android:gravity="center"
+				android:text="Sign up"
+				android:textColor="@color/dark_image"
+				android:textSize="16sp"/>
+
+
+			<com.app.vietincome.view.HighLightTextView
+				android:id="@+id/tvLogin"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_margin="10dp"
+				android:clickable="true"
+				android:padding="5dp"
+				android:text="@string/already_sign_up_login"
+				android:textColor="@color/dark_text"/>
+		</LinearLayout>
+	</ScrollView>
+
+</LinearLayout>

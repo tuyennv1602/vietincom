@@ -120,7 +120,7 @@ public class FavoriteFragment extends BaseFragment implements ItemClickListener,
 		navitop.showImgLeft(true);
 		navitop.showImgRight(false);
 		navitop.setImgLeft(R.drawable.back);
-		navitop.setTvTitle("Favourites");
+		navitop.setTvTitle("Favorites");
 	}
 
 	@Override

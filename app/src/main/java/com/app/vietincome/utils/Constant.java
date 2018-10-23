@@ -20,6 +20,9 @@ public class Constant {
 	public static final int SELECT_COIN = 3;
 	public static final int PORTFOLIO_DETAIL = 4;
 	public static final int FAVOURITE_COIN = 5;
+	public static final int FORGOT_PASSWORD = 6;
+	public static final int SIGN_UP = 7;
+	public static final int SETTING = 8;
 
 	public static final int HIS_24H = 0;
 	public static final int HIS_7D = 1;

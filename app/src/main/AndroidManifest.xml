@@ -28,6 +28,7 @@
 		<activity
 			android:name=".activity.ParentActivity"
 			android:launchMode="singleTask"
+			android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
 			android:theme="@style/TransparentActivity"
 			/>
 	</application>

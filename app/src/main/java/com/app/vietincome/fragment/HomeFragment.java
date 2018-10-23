@@ -328,6 +328,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Add
 					if (response.body().getMetadata().isSuccess()) {
 						allCoins.clear();
 						allCoins.addAll(response.body().getData());
+						Log.d("__coin", "onResponse: " + response.body().getData().get(0).getRank());
 						if (!navigationTopBar.isSearch()) {
 							allCoinAdapter.setCoins(allCoins);
 						}
@@ -360,7 +361,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Add
 				.subscribe(data -> {
 					coinSearched = (ArrayList<Data>) data;
 					allCoinAdapter.setCoins(coinSearched);
-				}, throwable -> showAlert("Failed", "Search coins: " + throwable.getMessage()));
+				}, throwable ->{});
 	}
 
 	@SuppressLint("CheckResult")
@@ -415,6 +416,7 @@ public class HomeFragment extends BaseFragment implements ItemClickListener, Add
 					}
 					updatePortfolioId(coinResponse.getData());
 					updateFavorite(coinResponse.getData());
+					Log.d("__coin", "onResponse: " + coinResponse.getData().get(0).getRank());
 				}, throwable -> showAlert("Failed", "Get Coins: " + throwable.getMessage()));
 		disposable.add(subscribe);
 	}

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -26,6 +27,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSelectedCurrency {
+
+	@BindView(R.id.layoutRoot)
+	LinearLayout layoutRoot;
 
 	@BindView(R.id.imgSend)
 	ImageView imgSend;
@@ -148,12 +152,20 @@ public class SettingFragment extends BaseFragment implements CurrencyDialog.OnSe
 	@Override
 	public void onNavigationTopUpdate(NavigationTopBar navitop) {
 		navitop.setTvTitle(R.string.setting);
-		navitop.showImgLeft(false);
+		navitop.showImgLeft(true);
 		navitop.showImgRight(false);
+		navitop.setImgLeft(R.drawable.back);
+	}
+
+	@Override
+	public void onLeftClicked() {
+		super.onLeftClicked();
+		goBack();
 	}
 
 	@Override
 	public void onUpdatedTheme() {
+		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		imgSend.setColorFilter(getColor(R.color.blue));
 		setTextColor(tvRate);
 		setTextColor(tvSignal);

@@ -150,12 +150,12 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			});
 			itemView.setOnLongClickListener(view -> {
 				isChangeStatus = true;
-				showFavouriteView(getAdapterPosition());
+				showFavoriteView(getAdapterPosition());
 				return true;
 			});
 			tvCancel.setOnClickListener(view -> {
 				isChangeStatus = false;
-				hideFavouriteView(getAdapterPosition());
+				hideFavoriteView(getAdapterPosition());
 			});
 		}
 
@@ -214,7 +214,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			return ContextCompat.getColor(itemView.getContext(), color);
 		}
 
-		private void showFavouriteView(int position) {
+		private void showFavoriteView(int position) {
 			YoYo.with(Techniques.SlideInRight)
 					.duration(300)
 					.withListener(new Animator.AnimatorListener() {
@@ -228,7 +228,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 						public void onAnimationEnd(Animator animator) {
 							new Handler().postDelayed(() -> {
 								if (!isChangeStatus) return;
-								hideFavouriteView(position);
+								hideFavoriteView(position);
 							}, 1000);
 						}
 
@@ -245,7 +245,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 					.playOn(layoutAddFavorite);
 		}
 
-		void hideFavouriteView(int position) {
+		void hideFavoriteView(int position) {
 			YoYo.with(Techniques.SlideOutLeft)
 					.duration(300)
 					.withListener(new Animator.AnimatorListener() {

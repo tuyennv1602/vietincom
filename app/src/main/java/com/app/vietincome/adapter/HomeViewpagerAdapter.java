@@ -11,11 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.vietincome.R;
+import com.app.vietincome.fragment.LoginFragment;
 import com.app.vietincome.fragment.PortfolioFragment;
 import com.app.vietincome.fragment.EventFragment;
 import com.app.vietincome.fragment.HomeFragment;
 import com.app.vietincome.fragment.NewsFragment;
+import com.app.vietincome.fragment.ProfileFragment;
 import com.app.vietincome.fragment.SettingFragment;
+import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.utils.Constant;
 
 import java.util.ArrayList;
@@ -23,29 +26,24 @@ import java.util.ArrayList;
 public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 
 	private Context context;
-	private ArrayList<Fragment> fragments;
 
 	public HomeViewpagerAdapter(Context context, FragmentManager fm) {
 		super(fm);
 		this.context = context;
-		if (fragments == null) {
-			fragments = new ArrayList<>();
-			fragments.add(NewsFragment.newInstance());
-			fragments.add(EventFragment.newInstance());
-			fragments.add(HomeFragment.newInstance());
-			fragments.add(PortfolioFragment.newInstance());
-			fragments.add(SettingFragment.newInstance());
-		}
 	}
 
 	@Override
 	public Fragment getItem(int i) {
-		return fragments.get(i);
+		if(i == Constant.TAB_NEWS) return NewsFragment.newInstance();
+		else if(i == Constant.TAB_EVENT) return EventFragment.newInstance();
+		else if(i == Constant.TAB_ALL_COIN) return HomeFragment.newInstance();
+		else if(i == Constant.TAB_PORTFOLIO) return PortfolioFragment.newInstance();
+		return AppPreference.INSTANCE.getProfile() != null ? ProfileFragment.newInstance() : LoginFragment.newInstance();
 	}
 
 	@Override
 	public int getCount() {
-		return fragments == null ? 0 : fragments.size();
+		return 5;
 	}
 
 	@Override
@@ -54,7 +52,7 @@ public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 		else if (position == Constant.TAB_EVENT) return this.context.getString(R.string.event);
 		else if (position == Constant.TAB_ALL_COIN) return this.context.getString(R.string.all_coin);
 		else if (position == Constant.TAB_PORTFOLIO) return this.context.getString(R.string.portfolio);
-		else return this.context.getString(R.string.setting);
+		else return this.context.getString(R.string.profile);
 	}
 
 	public int getIcon(int position) {
@@ -62,7 +60,7 @@ public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 		else if (position == Constant.TAB_EVENT) return R.drawable.event;
 		else if (position == Constant.TAB_ALL_COIN) return R.drawable.analytic;
 		else if (position == Constant.TAB_PORTFOLIO) return R.drawable.notification;
-		else return R.drawable.settings;
+		else return R.drawable.user;
 	}
 
 	public View getTabView(int position, int selectedTab, boolean isDarkTheme) {

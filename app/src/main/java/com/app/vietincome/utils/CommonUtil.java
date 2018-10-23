@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -16,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommonUtil {
 
@@ -85,6 +88,15 @@ public class CommonUtil {
 			value = dFormat.format(price);
 		}
 		return value;
+	}
+
+	public static boolean validateEmail(String email) {
+		Matcher matcher = Patterns.EMAIL_ADDRESS.matcher(email);
+		return matcher.matches();
+	}
+
+	public static boolean validatePassword(String password) {
+		return password.length() > 5 && password.length() < 33;
 	}
 
 }

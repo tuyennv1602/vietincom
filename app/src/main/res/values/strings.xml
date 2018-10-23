@@ -8,9 +8,10 @@
 	<string name="home">Home</string>
 	<string name="portfolio">Portfolio</string>
 	<string name="setting">Settings</string>
+	<string name="profile">Profile</string>
 	<string name="all_coin">All Coins</string>
 	<string name="failed">Failed</string>
-	<string name="added_favourite">%s added to favourite</string>
+	<string name="added_favourite">%s added to favorite</string>
 	<string name="remove_favorite">removed %s from favorite</string>
 	<string name="bitcoin">฿</string>
 	<string name="no_alert">You have no %s alert yet</string>
@@ -19,4 +20,9 @@
 	<string name="credit_content">We are using CoinMarketCap API for the top coins list. Also we awesome CryptoCompare API service to get charts data and other features. We appreciate both of them.</string>
 	<string name="portfolio_intro">Add coin transactions here to track profit/loss and portfolio distributions. See an example of a standard portfolio below.</string>
 	<string name="version">Vietincome for Android v1.0.5</string>
+	<string name="favicoin_vietincome">Favicoin Vietincome</string>
+	<string name="don_t_have_an_account_yet_sign_up">Don\'t have an account yet? Sign up</string>
+	<string name="email_resetpass">You will be sent an email with instructions to reset your password.</string>
+	<string name="already_sign_up_login">Already Sign up? Login</string>
+	<string name="i_agree_to_vietincome_s_terms_of_use">I agree to Vietincome’s Terms of Use</string>
 </resources>
