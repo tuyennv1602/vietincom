@@ -11,17 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.vietincome.R;
+import com.app.vietincome.fragment.AllCoinFragment;
 import com.app.vietincome.fragment.LoginFragment;
 import com.app.vietincome.fragment.PortfolioFragment;
 import com.app.vietincome.fragment.EventFragment;
-import com.app.vietincome.fragment.HomeFragment;
+import com.app.vietincome.fragment.MarketCapFragment;
 import com.app.vietincome.fragment.NewsFragment;
 import com.app.vietincome.fragment.ProfileFragment;
-import com.app.vietincome.fragment.SettingFragment;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.utils.Constant;
-
-import java.util.ArrayList;
 
 public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 
@@ -36,7 +34,7 @@ public class HomeViewpagerAdapter extends FragmentStatePagerAdapter {
 	public Fragment getItem(int i) {
 		if(i == Constant.TAB_NEWS) return NewsFragment.newInstance();
 		else if(i == Constant.TAB_EVENT) return EventFragment.newInstance();
-		else if(i == Constant.TAB_ALL_COIN) return HomeFragment.newInstance();
+		else if(i == Constant.TAB_ALL_COIN) return new AllCoinFragment();
 		else if(i == Constant.TAB_PORTFOLIO) return PortfolioFragment.newInstance();
 		return AppPreference.INSTANCE.getProfile() != null ? ProfileFragment.newInstance() : LoginFragment.newInstance();
 	}

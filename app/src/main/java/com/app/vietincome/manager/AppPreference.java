@@ -37,6 +37,7 @@ public enum AppPreference {
 	private static final String KEY_EVENTS = "events";
 	private static final String KEY_PORTFOLIO = "portfolio";
 	private static final String KEY_PROFILE = "profile";
+	private static final String KEY_RATE = "rate";
 
 	public boolean darkTheme;
 	private SharedPreferences preferences;
@@ -49,6 +50,7 @@ public enum AppPreference {
 	private Currency currency;
 	private TokenResponse token;
 	private Profile profile;
+	private double rate;
 	private boolean isVolume;
 	private boolean isHorizontal;
 	private boolean isVertical;
@@ -68,6 +70,7 @@ public enum AppPreference {
 		currency = mGson.fromJson(preferences.getString(KEY_CURRENCY, null), Currency.class);
 		token = mGson.fromJson(preferences.getString(KEY_TOKEN, null), TokenResponse.class);
 		profile = mGson.fromJson(preferences.getString(KEY_PROFILE, null), Profile.class);
+		rate = preferences.getFloat(KEY_RATE, 0);
 		isVolume = preferences.getBoolean(KEY_VOLUME, true);
 		isHorizontal = preferences.getBoolean(KEY_HORIZONTAL, true);
 		isVertical = preferences.getBoolean(KEY_VERTICAL, true);
@@ -286,5 +289,14 @@ public enum AppPreference {
 		profile.setSessionId(this.profile.getSessionId());
 		this.profile = profile;
 		preferences.edit().putString(KEY_PROFILE, mGson.toJson(profile)).apply();
+	}
+
+	public double getRate() {
+		return rate;
+	}
+
+	public void setRate(double rate) {
+		this.rate = rate;
+		preferences.edit().putFloat(KEY_RATE, (float) rate).apply();
 	}
 }

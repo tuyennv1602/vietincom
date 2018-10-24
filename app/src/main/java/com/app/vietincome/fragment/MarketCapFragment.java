@@ -1,7 +1,7 @@
 package com.app.vietincome.fragment;
 
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -9,28 +9,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.vietincome.R;
+import com.app.vietincome.activity.ParentActivity;
 import com.app.vietincome.adapter.AllCoinAdapter;
 import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.AddFavoriteListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
+import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.Data;
-import com.app.vietincome.model.responses.CoinResponse;
-import com.app.vietincome.network.ApiClient;
+import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.NavigationTopBar;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class FavoriteFragment extends BaseFragment implements ItemClickListener, AddFavoriteListener {
+public class MarketCapFragment extends BaseFragment implements ItemClickListener, AddFavoriteListener {
 
 	@BindView(R.id.tvSortName)
 	TextView tvSortName;
@@ -71,61 +73,73 @@ public class FavoriteFragment extends BaseFragment implements ItemClickListener,
 	@BindView(R.id.rcvAllCoin)
 	ShimmerRecyclerView rcvAllCoin;
 
-	@BindView(R.id.appbarLayout)
-	AppBarLayout appBarLayout;
-
-	@BindView(R.id.layoutRoot)
-	CoordinatorLayout layoutRoot;
-
-	private double rate = 1;
 	public static ArrayList<Data> allCoins;
+	private ArrayList<Data> coinSearched = new ArrayList<>();
 	private AllCoinAdapter allCoinAdapter;
-	private boolean isSortUp = true;
 	private boolean isBTC = false;
-	private int lastRank;
+	private boolean isSortUp = true;
+	private boolean isLoading = true;
+	private boolean isSearch;
+	private Currency currency = AppPreference.INSTANCE.getCurrency();
 
-	public static FavoriteFragment newInstance( int lastRank) {
-		FavoriteFragment favoriteFragment = new FavoriteFragment();
-		favoriteFragment.rate = AppPreference.INSTANCE.getRate();
-		favoriteFragment.lastRank = lastRank;
-		return favoriteFragment;
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onUpdateCoin(EventBusListener.UpdateCoin event) {
+		if(event.isGainerTab) return;
+		isLoading = false;
+		allCoins.addAll(event.data);
+		if (!event.isSearch) {
+			if (event.data.get(0).getRank() == 1) {
+				rcvAllCoin.hideShimmerAdapter();
+				allCoinAdapter.notifyDataSetChanged();
+			} else {
+				allCoinAdapter.notifyItemRangeChanged(event.data.get(0).getRank() - 1, allCoins.size());
+			}
+		}
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onChangeCurrency(EventBusListener.ChangeCurrency event) {
+		currency = AppPreference.INSTANCE.getCurrency();
+		tvCurrency.setText(currency.getSymbol());
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onSearchedCoin(EventBusListener.SearchCoin event) {
+		if(event.tab != Constant.TAB_MARKET) return;
+		isSearch = !event.isClosed;
+		coinSearched = event.data;
+		allCoinAdapter.setCoins(event.isClosed ? allCoins : coinSearched);
 	}
 
 	@Override
 	public int getLayoutId() {
-		return R.layout.fragment_favorite;
+		return R.layout.fragment_coin;
 	}
 
+	@SuppressLint("CheckResult")
 	@Override
 	public void onFragmentReady(View view) {
-		onUpdatedTheme();
 		if (allCoins == null) {
-			allCoins = AppPreference.INSTANCE.getFavouriteCoin();
+			allCoins = new ArrayList<>();
 		}
 		if (allCoinAdapter == null) {
-			allCoinAdapter = new AllCoinAdapter(allCoins, true,this, this);
-			allCoinAdapter.setDarkTheme(isDarkTheme);
-			allCoinAdapter.setRate(rate);
+			allCoinAdapter = new AllCoinAdapter(allCoins, true, this, this);
 		}
+		onUpdatedTheme();
 		rcvAllCoin.setLayoutManager(new LinearLayoutManager(getContext()));
 		rcvAllCoin.addItemDecoration(new CustomItemDecoration(2));
-		rcvAllCoin.hideShimmerAdapter();
+		rcvAllCoin.setDemoShimmerDuration(1000000);
 		rcvAllCoin.setAdapter(allCoinAdapter);
-		checkUpdateData();
+		rcvAllCoin.showShimmerAdapter();
+		tvCurrency.setText(currency.getSymbol());
+		setupUI(view);
 	}
 
-	@Override
-	public void onNavigationTopUpdate(NavigationTopBar navitop) {
-		navitop.showImgLeft(true);
-		navitop.showImgRight(false);
-		navitop.setImgLeft(R.drawable.back);
-		navitop.setTvTitle("Favorites");
-	}
-
-	@Override
-	public void onLeftClicked() {
-		super.onLeftClicked();
-		goBack();
+	@OnClick(R.id.layoutPrice)
+	void onChangeCurrency() {
+		allCoinAdapter.changeCurrency();
+		isBTC = !isBTC;
+		tvCurrency.setText(isBTC ? getString(R.string.bitcoin) : AppPreference.INSTANCE.getCurrency().getSymbol());
 	}
 
 	@OnClick(R.id.layoutReverse)
@@ -136,16 +150,12 @@ public class FavoriteFragment extends BaseFragment implements ItemClickListener,
 		imgSortName.setImageResource(isSortUp ? R.drawable.sort_up : R.drawable.sort_down);
 	}
 
-	@OnClick(R.id.layoutPrice)
-	void onChangeCurrency() {
-		allCoinAdapter.changeCurrency();
-		isBTC = !isBTC;
-		tvCurrency.setText(isBTC ? getString(R.string.bitcoin) : AppPreference.INSTANCE.getCurrency().getSymbol());
+	@Override
+	public void onNavigationTopUpdate(NavigationTopBar navitop) {
 	}
 
 	@Override
 	public void onUpdatedTheme() {
-		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		rcvAllCoin.setBackgroundColor(isDarkTheme ? getColor(R.color.black) : getColor(R.color.color_line));
 		imgSortName.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		tvCurrency.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
@@ -159,55 +169,27 @@ public class FavoriteFragment extends BaseFragment implements ItemClickListener,
 		tv1H.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		tv24H.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		tv7D.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
+		rcvAllCoin.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_coin_dark : R.layout.layout_demo_coin_light);
+		allCoinAdapter.setDarkTheme(isDarkTheme);
+		allCoinAdapter.notifyDataSetChanged();
 	}
+
 
 	@Override
 	public void onItemClicked(int position) {
-		pushFragment(CoinDetailFragment.newInstance(allCoins.get(position)), R.anim.zoom_in, R.anim.zoom_out);
+		if (isLoading) return;
+		Intent parent = new Intent(getContext(), ParentActivity.class);
+		parent.putExtra("coin", isSearch ? coinSearched.get(position) : allCoins.get(position));
+		parent.putExtra(Constant.KEY_SCREEN, Constant.COIN_DETAIL);
+		startActivity(parent);
 	}
 
 	@Override
 	public void onChangeFavorite(int position) {
-		AppPreference.INSTANCE.removeFavourite(allCoins.get(position));
-		allCoinAdapter.notifyItemRemoved(position);
-	}
-
-	private void checkUpdateData() {
-		if (allCoins.get(allCoins.size() - 1).getRank() < lastRank) {
-			Log.d("__favourite", "checkUpdateData: UPDATED");
-			return;
-		}
-		for (int i = allCoins.size() - 1; i >= 0; i--) {
-			if(allCoins.get(i).getRank() > lastRank){
-				// call api
-				getCoinDetail(allCoins.get(i).getId(), i);
-				Log.d("__favourite", "checkUpdateData: REQUEST" + allCoins.get(i).getId());
-			}else{
-				break;
-			}
+		if (allCoins.get(position).isFavourite()) {
+			AppPreference.INSTANCE.removeFavourite(allCoins.get(position));
+		} else {
+			AppPreference.INSTANCE.addFavourite(allCoins.get(position));
 		}
 	}
-
-	private void getCoinDetail(int coinId, int position) {
-		navigationTopBar.showProgressBar();
-		ApiClient.getAllCoinService().getCoinDetail(coinId).enqueue(new Callback<CoinResponse>() {
-			@Override
-			public void onResponse(Call<CoinResponse> call, Response<CoinResponse> response) {
-				navigationTopBar.hideProgressBar();
-				if (response.isSuccessful()) {
-					if (response.body().getMetadata().isSuccess()) {
-						AppPreference.INSTANCE.updateFavorite(response.body().getData().get(0));
-						allCoinAdapter.notifyItemChanged(position);
-					}
-				}
-			}
-
-			@Override
-			public void onFailure(Call<CoinResponse> call, Throwable t) {
-				navigationTopBar.hideProgressBar();
-				showAlert("Failure", t.getMessage());
-			}
-		});
-	}
-
 }

@@ -60,8 +60,10 @@ public class CommonUtil {
 
 	public static String formatCurrency(double value, double rate, Currency currency) {
 		StringBuilder price = new StringBuilder();
-		price.append(currency.getSymbol());
-		double priceValue = currency.getCode().equals("USD") ? value : value * rate;
+		if(currency != null) {
+			price.append(currency.getSymbol());
+		}
+		double priceValue = (currency != null && currency.getCode().equals("USD")) ? value : value * rate;
 		if (value < 1.0) {
 			price.append(String.format(Locale.US, "%.4f", priceValue));
 		} else if (value < 1000) {

@@ -76,13 +76,11 @@ public class ParentActivity extends BaseActivity {
 			switch (screen) {
 				case Constant.COIN_DETAIL: {
 					Data data = getIntent().getParcelableExtra("coin");
-					double rate = getIntent().getDoubleExtra(Constant.KEY_RATE, 1);
-					pushFragment(CoinDetailFragment.newInstance(data, rate), R.anim.zoom_in, R.anim.zoom_out);
+					pushFragment(CoinDetailFragment.newInstance(data), R.anim.zoom_in, R.anim.zoom_out);
 					break;
 				}
 				case Constant.GLOBAL_MARKET: {
-					double rate = getIntent().getDoubleExtra(Constant.KEY_RATE, 1);
-					pushFragment(GlobalFragment.newInstance(rate)
+					pushFragment(GlobalFragment.newInstance()
 							, R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 					break;
 				}
@@ -97,9 +95,8 @@ public class ParentActivity extends BaseActivity {
 					pushFragment(PortfolioDetailFragment.newInstance(portId), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 					break;
 				case Constant.FAVOURITE_COIN:
-					double rate = getIntent().getDoubleExtra(Constant.KEY_RATE, 1);
 					int lastRank = getIntent().getIntExtra(Constant.LAST_RANK, 0);
-					pushFragment(FavoriteFragment.newInstance(rate, lastRank), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+					pushFragment(FavoriteFragment.newInstance(lastRank), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 					break;
 				case Constant.FORGOT_PASSWORD:
 					pushFragment(new ForgotPasswordFragment(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);

@@ -122,10 +122,10 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 	private TopMarketAdapter topMarketAdapter;
 	private boolean isLineChart = true;
 
-	public static CoinDetailFragment newInstance(Data data, double rate) {
+	public static CoinDetailFragment newInstance(Data data) {
 		CoinDetailFragment fragment = new CoinDetailFragment();
 		fragment.data = data;
-		fragment.rate = rate;
+		fragment.rate = AppPreference.INSTANCE.getRate();
 		return fragment;
 	}
 

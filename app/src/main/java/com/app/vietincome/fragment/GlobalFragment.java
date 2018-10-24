@@ -137,9 +137,9 @@ public class GlobalFragment extends BaseFragment {
 	private boolean showMarketCap = false;
 	private boolean showVolume = false;
 
-	public static GlobalFragment newInstance(double rate) {
+	public static GlobalFragment newInstance() {
 		GlobalFragment fragment = new GlobalFragment();
-		fragment.rate = rate;
+		fragment.rate = AppPreference.INSTANCE.getRate();
 		return fragment;
 	}
 

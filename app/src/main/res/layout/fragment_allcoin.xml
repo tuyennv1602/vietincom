@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/appbarLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:elevation="0dp">
+
+		<android.support.design.widget.CollapsingToolbarLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				app:layout_collapseMode="parallax">
+
+				<include
+					layout="@layout/navi_top_bar"/>
+
+				<android.support.design.widget.TabLayout
+					android:id="@+id/tabLayoutTop"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					app:tabGravity="fill"
+					app:tabIndicatorHeight="1dp"
+					app:tabMode="fixed"
+					app:tabPaddingBottom="0dp"
+					app:tabPaddingEnd="0dp"
+					app:tabPaddingStart="0dp"
+					app:tabPaddingTop="0dp"/>
+
+			</LinearLayout>
+
+		</android.support.design.widget.CollapsingToolbarLayout>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+		<com.app.vietincome.view.NoneSwipeViewpager
+			android:id="@+id/viewPagerTop"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+	</LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

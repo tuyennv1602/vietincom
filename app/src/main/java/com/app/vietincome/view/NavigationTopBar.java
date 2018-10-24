@@ -141,10 +141,10 @@ public class NavigationTopBar {
 	@OnClick(R.id.imgLeft)
 	void onLeftClick() {
 		if (isSearch) {
+			closeSearch();
 			if (topBarListener != null) {
 				topBarListener.onCloseSearch();
 			}
-			closeSearch();
 		} else if (topBarListener != null) {
 			topBarListener.onLeftClicked();
 		}
@@ -189,6 +189,7 @@ public class NavigationTopBar {
 					@Override
 					public void onAnimationStart(Animator animator) {
 						isSearch = true;
+						edtSearch.setText("");
 					}
 
 					@Override
@@ -226,7 +227,6 @@ public class NavigationTopBar {
 						imgLeft.setImageResource(currentLeft);
 						imgLeft.setVisibility(isShowLeft ? View.VISIBLE : View.INVISIBLE);
 						layoutSearch.setVisibility(View.GONE);
-						edtSearch.setText("");
 					}
 
 					@Override

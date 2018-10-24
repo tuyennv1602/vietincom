@@ -27,6 +27,7 @@ public class NewsResponse implements ObservableSource<NewsResponse> {
 	private ArrayList<News> news;
 
 	public boolean isSuccess() {
+		if(status == null) return false;
 		return status.equals("ok");
 	}
 

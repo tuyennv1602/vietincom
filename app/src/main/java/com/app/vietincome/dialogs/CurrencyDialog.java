@@ -15,11 +15,14 @@ import com.app.vietincome.R;
 import com.app.vietincome.adapter.CurrencyAdapter;
 import com.app.vietincome.bases.BaseDialogFragment;
 import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.view.HighLightTextView;
 import com.google.gson.reflect.TypeToken;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -108,6 +111,7 @@ public class CurrencyDialog extends BaseDialogFragment implements ItemClickListe
 	void onSelected(){
 		AppPreference.INSTANCE.setCurrency(currency);
 		if(onSelectedCurrency != null){
+			EventBus.getDefault().post(new EventBusListener.ChangeCurrency());
 			onSelectedCurrency.onCurrencyValue(currency.getCode());
 			getDialog().dismiss();
 		}

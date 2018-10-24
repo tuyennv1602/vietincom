@@ -7,6 +7,9 @@ public class Constant {
 	public static final int TAB_ALL_COIN = 2;
 	public static final int TAB_PORTFOLIO = 3;
 	public static final int TAB_SETTING = 4;
+	public static final int TAB_MARKET = 0;
+	public static final int TAB_VOLUME = 1;
+	public static final int TAB_GAINER = 2;
 	public static final String KEY_SCREEN = "key_screen";
 	public static final String KEY_RATE = "rate";
 	public static final String LAST_RANK = "last_rank";

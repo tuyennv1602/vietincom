@@ -28,6 +28,9 @@ public interface ApiInterface {
 	@GET("ticker/?structure=array&limit=100&convert=BTC")
 	Observable<CoinResponse> getCoinInPage(@Query("start") int start);
 
+	@GET("ticker/?limit=30&sort=percent_change_24h&structure=array&convert=BTC")
+	Call<CoinResponse> getGainerChange();
+
 	@GET("ticker/?structure=array&limit=100&convert=BTC")
 	Call<CoinResponse> getCoinFirstPage();
 

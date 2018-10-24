@@ -84,11 +84,10 @@
 			<EditText
 				android:id="@+id/edtSearch"
 				style="@style/DefaultEditText"
-				android:layout_marginRight="10dp"
+				android:layout_marginRight="50dp"
 				android:hint="Search"
 				android:maxLines="1"
 				android:imeOptions="actionSearch"
-				android:paddingRight="40dp"
 				android:textCursorDrawable="@null"
 				/>
 
