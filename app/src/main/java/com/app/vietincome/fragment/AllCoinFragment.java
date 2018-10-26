@@ -84,6 +84,7 @@ public class AllCoinFragment extends BaseFragment {
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventExpand(EventBusListener.ExpanableView event) {
+		Log.d("Main", "onEventExpand: ");
 		if (disposable != null && !disposable.isDisposed()) {
 			disposable.dispose();
 		}

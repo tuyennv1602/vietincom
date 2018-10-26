@@ -99,4 +99,8 @@ public class EventBusListener {
 	public static class ChangeCurrency{
 
 	}
+
+	public static class ProfileListener{
+
+	}
 }

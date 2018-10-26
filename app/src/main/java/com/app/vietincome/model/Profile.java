@@ -23,7 +23,7 @@ public class Profile implements Parcelable
 	private String bio;
 	@SerializedName("vic")
 	@Expose
-	private int vic;
+	private String vic;
 	@SerializedName("vip")
 	@Expose
 	private int vip;
@@ -55,7 +55,7 @@ public class Profile implements Parcelable
 		this.name = ((String) in.readValue((String.class.getClassLoader())));
 		this.avatar = ((String) in.readValue((String.class.getClassLoader())));
 		this.bio = ((String) in.readValue((String.class.getClassLoader())));
-		this.vic = ((int) in.readValue((int.class.getClassLoader())));
+		this.vic = ((String) in.readValue((String.class.getClassLoader())));
 		this.vip = ((int) in.readValue((int.class.getClassLoader())));
 		this.expired = ((String) in.readValue((String.class.getClassLoader())));
 		this.inviteCode = ((String) in.readValue((String.class.getClassLoader())));
@@ -97,16 +97,16 @@ public class Profile implements Parcelable
 		this.bio = bio;
 	}
 
-	public int getVic() {
-		return vic;
+	public String getVic() {
+		if(vic == null) return "0 VIC";
+		return vic + " VIC";
 	}
 
-	public void setVic(int vic) {
-		this.vic = vic;
-	}
-
-	public int getVip() {
-		return vip;
+	public String getVip() {
+		if(vip == 1) return "VIP1";
+		if(vip == 2) return "VIP2";
+		if(vip == 3) return "VIP3";
+		return "Free";
 	}
 
 	public void setVip(int vip) {

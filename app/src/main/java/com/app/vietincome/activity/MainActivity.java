@@ -123,6 +123,7 @@ public class MainActivity extends BaseActivity {
 				EventBus.getDefault().post(new EventBusListener.RefreshData(selectedTab));
 				if (selectedTab != Constant.TAB_ALL_COIN) {
 					EventBus.getDefault().post(new EventBusListener.ExpanableView());
+					Log.d(TAG, "onPageSelected: expan" );
 				}
 			}
 

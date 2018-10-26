@@ -1,5 +1,6 @@
 package com.app.vietincome.network;
 
+import com.app.vietincome.manager.AppPreference;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
@@ -13,10 +14,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
+	private static final String AUTHENTICATION = "session_id";
+
 	private static Retrofit getClient(String url) {
 		return new Retrofit.Builder()
 				.baseUrl(url)
-				.client(httpClient(createLogging()))
+				.client(httpClient(createLogging(), false))
 				.addConverterFactory(GsonConverterFactory.create())
 				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 				.build();
@@ -26,26 +29,51 @@ public class ApiClient {
 		return getClient(url).create(ApiInterface.class);
 	}
 
+	private static ApiV2Interface getService(){
+		return getClient().create(ApiV2Interface.class);
+	}
+
 	private static HttpLoggingInterceptor createLogging() {
 		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+		logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 		logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 		return logging;
 	}
 
-	private static OkHttpClient httpClient(HttpLoggingInterceptor logging) {
+	public static Retrofit getClient() {
+		return new Retrofit.Builder()
+				.baseUrl(AppConfig.API_V2)
+				.client(httpClient(createLogging(), true))
+				.addConverterFactory(GsonConverterFactory.create())
+				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+				.build();
+	}
+
+	private static OkHttpClient httpClient(HttpLoggingInterceptor logging, boolean checkToken) {
 		OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 		httpClient.addInterceptor(chain -> {
-			Request original = getOriginalRequest(chain);
-			return chain.proceed(original);
+			Request original = chain.request();
+			Request request = (checkToken && AppPreference.INSTANCE.getProfile() != null)
+					? getRequestToken(original)
+					: getRequest(original);
+			return chain.proceed(request);
 		});
 		httpClient.addInterceptor(logging);
 		httpClient.connectTimeout(90, TimeUnit.SECONDS);
 		return httpClient.build();
 	}
 
+	private static Request getRequestToken(Request original) {
+		return original.newBuilder()
+				.header(AUTHENTICATION, AppPreference.INSTANCE.getProfile().getSessionId())
+				.method(original.method(), original.body())
+				.build();
+	}
 
-	private static Request getOriginalRequest(Interceptor.Chain chain) {
-		return chain.request();
+	private static Request getRequest(Request original) {
+		return original.newBuilder()
+				.method(original.method(), original.body())
+				.build();
 	}
 
 	public static ApiInterface getNewsService() {
@@ -64,7 +92,11 @@ public class ApiClient {
 		return getService(AppConfig.CHART_COIN);
 	}
 
-	public static ApiInterface getEventService(){
+	public static ApiInterface getEventService() {
 		return getService(AppConfig.EVENTS);
+	}
+
+	public static ApiV2Interface getApiV2Service(){
+		return getService();
 	}
 }

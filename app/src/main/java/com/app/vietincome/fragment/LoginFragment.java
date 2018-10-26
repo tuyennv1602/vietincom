@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,15 +19,26 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.activity.ParentActivity;
 import com.app.vietincome.bases.BaseFragment;
+import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
+import com.app.vietincome.model.responses.UserResponse;
+import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.HighLightImageView;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginFragment extends BaseFragment {
 
@@ -131,6 +143,38 @@ public class LoginFragment extends BaseFragment {
 	@OnClick(R.id.tvForgotPassword)
 	void forgotPassword() {
 		openScreen(Constant.FORGOT_PASSWORD);
+	}
+
+	@OnClick(R.id.tvLogin)
+	void onLogin() {
+		if (isFilledData()) {
+			hideKeyboard();
+			showProgressDialog();
+			RequestBody requestBody = new MultipartBody.Builder()
+					.setType(MultipartBody.FORM)
+					.addFormDataPart("email", email)
+					.addFormDataPart("password", password)
+					.build();
+			ApiClient.getApiV2Service().login(requestBody).enqueue(new Callback<UserResponse>() {
+				@Override
+				public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+					hideProgressDialog();
+					if (response.isSuccessful()) {
+						if (response.body().isSuccess()) {
+							AppPreference.INSTANCE.setProfile(response.body().getProfile());
+							EventBus.getDefault().post(new EventBusListener.ProfileListener());
+						} else {
+							showAlert("Failed", response.body().getMessage());
+						}
+					}
+				}
+
+				@Override
+				public void onFailure(Call<UserResponse> call, Throwable t) {
+					hideProgressDialog();
+				}
+			});
+		}
 	}
 
 	private void openScreen(int screen) {

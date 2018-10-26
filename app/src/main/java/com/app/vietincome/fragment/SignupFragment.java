@@ -19,16 +19,27 @@ import android.widget.TextView;
 
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
+import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
+import com.app.vietincome.model.responses.UserResponse;
+import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.HighLightImageView;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignupFragment extends BaseFragment {
 
@@ -175,6 +186,42 @@ public class SignupFragment extends BaseFragment {
 	@OnCheckedChanged(R.id.checkBox)
 	void changeChecked(CompoundButton button, boolean checked){
 		changeBtnSignUp();
+	}
+
+	@OnClick(R.id.tvSignUp)
+	void onSignup(){
+		if(isFilledData()){
+			hideKeyboard();
+			showProgressDialog();
+			RequestBody requestBody = new MultipartBody.Builder()
+					.setType(MultipartBody.FORM)
+					.addFormDataPart("email", email)
+					.addFormDataPart("username", username)
+					.addFormDataPart("password", password)
+					.addFormDataPart("code", code)
+					.build();
+			ApiClient.getApiV2Service().signUp(requestBody).enqueue(new Callback<UserResponse>() {
+				@Override
+				public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+					hideProgressDialog();
+					if(response.isSuccessful()){
+						if(response.body().isSuccess()){
+							AppPreference.INSTANCE.setProfile(response.body().getProfile());
+							EventBus.getDefault().post(new EventBusListener.ProfileListener());
+							goBack();
+						}else{
+							showAlert("Failed", response.body().getMessage());
+						}
+					}
+				}
+
+				@Override
+				public void onFailure(Call<UserResponse> call, Throwable t) {
+					hideProgressDialog();
+					showAlert("Failed", t.getMessage());
+				}
+			});
+		}
 	}
 
 	private boolean isFilledData(){

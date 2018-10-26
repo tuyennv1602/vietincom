@@ -8,4 +8,5 @@ public interface AppConfig {
 	String CLIENT_ID = "1182_19y7hrozs2ck44kg48woo8so8go044c0w8w0080wgw8oswggss";
 	String CLIENT_SECRET = "2xl8mv73mlc0ssw8ckgkocgccoc8kg44skgowcc0kksgssg0o8";
 	String EVENTS = "https://api.coinmarketcal.com/";
+	String API_V2 = "https://vietincome.com/apiv2/user/";
 }

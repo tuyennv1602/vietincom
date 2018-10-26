@@ -12,13 +12,24 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.activity.ParentActivity;
 import com.app.vietincome.bases.BaseFragment;
+import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
+import com.app.vietincome.model.Profile;
+import com.app.vietincome.model.responses.BaseResponse;
+import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.utils.Constant;
+import com.app.vietincome.utils.GlideImage;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 import com.github.siyamed.shapeimageview.CircularImageView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileFragment extends BaseFragment {
 
@@ -80,6 +91,7 @@ public class ProfileFragment extends BaseFragment {
 	@Override
 	public void onFragmentReady(View view) {
 		onUpdatedTheme();
+		initData();
 	}
 
 	@Override
@@ -107,7 +119,7 @@ public class ProfileFragment extends BaseFragment {
 		setTextColor(tvSignal);
 		setTextColor(tvChangePassword);
 		setTextColor(tvLogout);
-		imgNext.setColorFilter(isDarkTheme? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		imgNext.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		view1.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
 		view2.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
 		view3.setBackgroundColor(isDarkTheme ? getColor(R.color.black_background) : getColor(R.color.gray_background));
@@ -117,30 +129,64 @@ public class ProfileFragment extends BaseFragment {
 		setTextViewDrawableColor(tvChangePassword);
 	}
 
+	private void initData() {
+		Profile profile = AppPreference.INSTANCE.getProfile();
+		if (profile == null) return;
+		GlideImage.loadImage(profile.getAvatar() != null ? profile.getAvatar() : "", R.drawable.favicon, imgAvatar);
+		tvUsername.setText(profile.getName());
+		tvWalletValue.setText(profile.getVic());
+		tvAccountType.setText(profile.getVip());
+	}
+
 	@OnClick({R.id.layoutProfile})
-	void onEditProfile(){
+	void onEditProfile() {
 		openScreen(Constant.EDIT_PROFILE);
 	}
 
 	@OnClick(R.id.tvChangePass)
-	void onChangePassword(){
+	void onChangePassword() {
 		openScreen(Constant.CHANGE_PASSWORD);
 	}
 
 	@OnClick(R.id.tvInviteFriend)
-	void onInviteFriend(){
+	void onInviteFriend() {
 		openScreen(Constant.INVITE_FRIEND);
 	}
 
 	@OnClick(R.id.tvBecomeVip)
-	void onBecomeVip(){
+	void onBecomeVip() {
 		openScreen(Constant.BECOME_VIP);
+	}
+
+	@OnClick(R.id.tvLogout)
+	void onLogout() {
+		showProgressDialog();
+		ApiClient.getApiV2Service().logout().enqueue(new Callback<BaseResponse>() {
+			@Override
+			public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+				hideProgressDialog();
+				if (response.isSuccessful()) {
+					if (response.body().isSuccess()) {
+						AppPreference.INSTANCE.setProfile(null);
+						EventBus.getDefault().post(new EventBusListener.ProfileListener());
+					} else {
+						showAlert("Failed", response.body().getMessage());
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(Call<BaseResponse> call, Throwable t) {
+				hideProgressDialog();
+				showAlert("Failed", t.getMessage());
+			}
+		});
 	}
 
 	private void setTextViewDrawableColor(HighLightTextView textView) {
 		Drawable right = ContextCompat.getDrawable(getContext(), R.drawable.next);
 		right = DrawableCompat.wrap(right);
-		DrawableCompat.setTint(right.mutate(),isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		DrawableCompat.setTint(right.mutate(), isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		right.setBounds(0, 0, right.getIntrinsicWidth(), right.getIntrinsicHeight());
 		textView.setCompoundDrawables(null, null, right, null);
 	}
