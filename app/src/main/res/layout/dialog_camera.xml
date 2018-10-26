@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:padding="20dp">
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvCamera"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:fontFamily="@font/roboto_medium"
+		android:gravity="center"
+		android:padding="15dp"
+		android:text="From camera"
+		android:textSize="18sp"/>
+
+	<include layout="@layout/view_line"/>
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvGallery"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:fontFamily="@font/roboto_medium"
+		android:gravity="center"
+		android:padding="15dp"
+		android:text="From gallery"
+		android:textSize="18sp"/>
+
+</LinearLayout>

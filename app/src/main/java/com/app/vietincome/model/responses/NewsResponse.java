@@ -20,7 +20,11 @@ public class NewsResponse implements ObservableSource<NewsResponse> {
 
 	@SerializedName("max_page")
 	@Expose
-	private int pages;
+	private int maxPages;
+
+	@SerializedName("current_page")
+	@Expose
+	private int currentPage;
 
 	@SerializedName("posts")
 	@Expose
@@ -51,12 +55,20 @@ public class NewsResponse implements ObservableSource<NewsResponse> {
 		this.count = count;
 	}
 
-	public int getPages() {
-		return pages;
+	public int getMaxPages() {
+		return maxPages;
 	}
 
-	public void setPages(int pages) {
-		this.pages = pages;
+	public int getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+
+	public void setMaxPages(int maxPages) {
+		this.maxPages = maxPages;
 	}
 
 	public void setNews(ArrayList<News> news) {

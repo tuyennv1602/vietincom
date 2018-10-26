@@ -171,7 +171,6 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 		tv7D.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		rcvAllCoin.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_coin_dark : R.layout.layout_demo_coin_light);
 		allCoinAdapter.setDarkTheme(isDarkTheme);
-		allCoinAdapter.notifyDataSetChanged();
 	}
 
 

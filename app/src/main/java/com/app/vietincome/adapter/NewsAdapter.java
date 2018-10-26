@@ -3,6 +3,7 @@ package com.app.vietincome.adapter;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.app.vietincome.R;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.News;
+import com.app.vietincome.utils.Constant;
 import com.app.vietincome.utils.DateUtil;
 import com.app.vietincome.utils.GlideImage;
 import com.app.vietincome.view.HighLightRelativeLayout;
@@ -33,7 +35,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 	private boolean isDarkTheme;
 	private ItemClickListener listener;
 
-	public NewsAdapter(ArrayList<News> news, ItemClickListener listener){
+	public NewsAdapter(ArrayList<News> news, ItemClickListener listener) {
 		this.news = news;
 		this.listener = listener;
 	}
@@ -44,7 +46,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
 	@NonNull
 	@Override
-	public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+	public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 		return new NewsViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_news, viewGroup, false));
 	}
 
@@ -58,7 +60,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 		return news == null ? 0 : news.size();
 	}
 
-	class NewsViewHolder extends RecyclerView.ViewHolder{
+	class NewsViewHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R.id.imgNews)
 		RoundedImageView imgNews;
@@ -85,13 +87,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 			itemView.setOnClickListener(view -> {
-				if(listener != null){
+				if (listener != null) {
 					listener.onItemClicked(getAdapterPosition());
 				}
 			});
 		}
 
-		public void onBind(News new_){
+		public void onBind(News new_) {
 			rootLayout.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 			tvTimeNews.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 			tvAuthor.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
@@ -106,8 +108,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 			imgRead.setVisibility(new_.isRead() ? View.INVISIBLE : View.VISIBLE);
 		}
 
-		private int getColor(int color){
+		private int getColor(int color) {
 			return ContextCompat.getColor(itemView.getContext(), color);
 		}
 	}
+
 }

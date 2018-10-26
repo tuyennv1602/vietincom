@@ -49,7 +49,6 @@ public class News implements Parcelable, ObservableSource<News> {
 
 	public final static Parcelable.Creator<News> CREATOR = new Creator<News>() {
 
-
 		@SuppressWarnings({
 				"unchecked"
 		})

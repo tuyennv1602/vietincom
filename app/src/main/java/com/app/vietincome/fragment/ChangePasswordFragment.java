@@ -14,28 +14,32 @@ import com.app.vietincome.view.NavigationTopBar;
 import butterknife.BindView;
 import butterknife.OnTextChanged;
 
-public class ForgotPasswordFragment extends BaseFragment {
+public class ChangePasswordFragment extends BaseFragment {
 
 	@BindView(R.id.layoutRoot)
 	LinearLayout layoutRoot;
 
-	@BindView(R.id.tvInstruction)
-	TextView tvInstruction;
+	@BindView(R.id.tvOldPassword)
+	TextView tvOldPassword;
 
-	@BindView(R.id.tvEmail)
-	TextView tvEmail;
+	@BindView(R.id.edtOldPassword)
+	EditText edtOldPassword;
 
-	@BindView(R.id.edtEmail)
-	EditText edtEmail;
+	@BindView(R.id.tvNewPassword)
+	TextView tvNewPassword;
+
+	@BindView(R.id.edtNewPassword)
+	EditText edtNewPassword;
 
 	@BindView(R.id.tvSubmit)
 	HighLightTextView tvSubmit;
 
-	private String email = "";
+	private String oldPass = "";
+	private String newPass = "";
 
 	@Override
 	public int getLayoutId() {
-		return R.layout.fragment_forgot_password;
+		return R.layout.fragment_change_password;
 	}
 
 	@Override
@@ -45,10 +49,9 @@ public class ForgotPasswordFragment extends BaseFragment {
 
 	@Override
 	public void onNavigationTopUpdate(NavigationTopBar navitop) {
-		navitop.showImgLeft(true);
 		navitop.showImgRight(false);
 		navitop.setImgLeft(R.drawable.back);
-		navitop.setTvTitle("Reset Password");
+		navitop.setTvTitle(R.string.change_password);
 	}
 
 	@Override
@@ -60,21 +63,32 @@ public class ForgotPasswordFragment extends BaseFragment {
 	@Override
 	public void onUpdatedTheme() {
 		layoutRoot.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
-		setTextColor(tvInstruction);
-		setTextColor(tvEmail);
-		edtEmail.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-		edtEmail.setBackgroundResource(isDarkTheme ? R.drawable.bg_border_dark : R.drawable.bg_border_light);
+		setTextColor(tvOldPassword);
+		setTextColor(tvNewPassword);
+		edtOldPassword.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+		edtOldPassword.setBackgroundResource(isDarkTheme ? R.drawable.bg_border_dark : R.drawable.bg_border_light);
+		edtNewPassword.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+		edtNewPassword.setBackgroundResource(isDarkTheme ? R.drawable.bg_border_dark : R.drawable.bg_border_light);
 		changeBtnSubmit();
 	}
 
-	@OnTextChanged(R.id.edtEmail)
-	void changeEmail(CharSequence text){
-		this.email = String.valueOf(text);
+	@OnTextChanged(R.id.edtOldPassword)
+	void changeOldPass(CharSequence text){
+		this.oldPass = String.valueOf(text);
+		changeBtnSubmit();
+	}
+
+	@OnTextChanged(R.id.edtNewPassword)
+	void changeNewPass(CharSequence text){
+		this.newPass = String.valueOf(text);
 		changeBtnSubmit();
 	}
 
 	private boolean isFilledData() {
-		return !email.trim().isEmpty() && CommonUtil.validateEmail(email);
+		return !oldPass.trim().isEmpty()
+				&& CommonUtil.validatePassword(oldPass)
+				&& !newPass.trim().isEmpty()
+				&& CommonUtil.validatePassword(newPass);
 	}
 
 	private void changeBtnSubmit() {

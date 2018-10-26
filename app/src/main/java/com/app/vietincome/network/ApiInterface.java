@@ -20,10 +20,7 @@ import retrofit2.http.Query;
 public interface ApiInterface {
 
 	@GET("apiv2/get_posts.php")
-	Call<NewsResponse> getNews();
-
-	@GET("apiv2/get_posts.php")
-	Observable<NewsResponse> getNewsInPage(@Query("page") int page);
+	Call<NewsResponse> getNews(@Query("page") int page);
 
 	@GET("ticker/?structure=array&limit=100&convert=BTC")
 	Observable<CoinResponse> getCoinInPage(@Query("start") int start);
@@ -53,14 +50,8 @@ public interface ApiInterface {
 	@GET("ticker/?limit=10&sort=volume_24h&structure=array&convert=BTC")
 	Call<CoinResponse> getTopVolume();
 
-	@GET("v1/events?max=150&showMetadata=true&page=1")
-	Call<EventResponse> getEvent(@Query("access_token") String accessToken,
-	                             @Query("dateRangeStart") String dateStart,
-	                             @Query("dateRangeEnd") String dateEnd,
-	                             @Query("coins") String coins);
-
 	@GET("v1/events?max=150&showMetadata=true")
-	Observable<EventResponse> getEventInPage(@Query("access_token") String accessToken,
+	Call<EventResponse> getEventInPage(@Query("access_token") String accessToken,
 	                             @Query("dateRangeStart") String dateStart,
 	                             @Query("dateRangeEnd") String dateEnd,
 	                             @Query("page") int page,

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layoutRoot"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/light_background"
+	android:orientation="vertical">
+
+	<include layout="@layout/navi_top_bar"/>
+
+	<android.support.v4.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:scrollbars="none">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="15dp">
+
+			<com.app.vietincome.view.HighLightLinearLayout
+				android:id="@+id/layoutActive1"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/bg_border_dark"
+				android:orientation="vertical"
+				android:padding="15dp">
+
+				<TextView
+					android:id="@+id/tvVip1"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:fontFamily="@font/roboto_bold"
+					android:text="VIP1 (1 month)"
+					android:textSize="18sp"/>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+					<TextView
+						android:id="@+id/tvPrice1"
+						style="@style/DefaultTextView"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_vertical"
+						android:layout_weight="1"
+						android:text="Price: 2,000 VIC"/>
+
+					<com.app.vietincome.view.HighLightTextView
+						android:id="@+id/tvActive1"
+						style="@style/DefaultTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="32dp"
+						android:layout_gravity="center_vertical"
+						android:background="@drawable/bg_circle_dark"
+						android:gravity="center"
+						android:paddingStart="18dp"
+						android:paddingEnd="18dp"
+						android:text="@string/active_now"/>
+				</LinearLayout>
+
+			</com.app.vietincome.view.HighLightLinearLayout>
+
+			<com.app.vietincome.view.HighLightLinearLayout
+				android:id="@+id/layoutActive2"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:background="@drawable/bg_border_dark"
+				android:orientation="vertical"
+				android:padding="15dp">
+
+				<TextView
+					android:id="@+id/tvVip2"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:fontFamily="@font/roboto_bold"
+					android:text="VIP2 (6 months)"
+					android:textSize="18sp"/>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+					<TextView
+						android:id="@+id/tvPrice2"
+						style="@style/DefaultTextView"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_vertical"
+						android:layout_weight="1"
+						android:text="Price: 10,000 VIC"/>
+
+					<com.app.vietincome.view.HighLightTextView
+						android:id="@+id/tvActive2"
+						style="@style/DefaultTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="32dp"
+						android:layout_gravity="center_vertical"
+						android:background="@drawable/bg_circle_dark"
+						android:gravity="center"
+						android:paddingStart="18dp"
+						android:paddingEnd="18dp"
+						android:text="@string/active_now"/>
+				</LinearLayout>
+
+			</com.app.vietincome.view.HighLightLinearLayout>
+
+			<com.app.vietincome.view.HighLightLinearLayout
+				android:id="@+id/layoutActive3"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:background="@drawable/bg_border_dark"
+				android:orientation="vertical"
+				android:padding="15dp">
+
+				<TextView
+					android:id="@+id/tvVip3"
+					style="@style/DefaultTextView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:fontFamily="@font/roboto_bold"
+					android:text="VIP3 (1 year)"
+					android:textSize="18sp"/>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+					<TextView
+						android:id="@+id/tvPrice3"
+						style="@style/DefaultTextView"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_vertical"
+						android:layout_weight="1"
+						android:text="Price: 18,000 VIC"/>
+
+					<com.app.vietincome.view.HighLightTextView
+						android:id="@+id/tvActive3"
+						style="@style/DefaultTextView"
+						android:layout_width="wrap_content"
+						android:layout_height="32dp"
+						android:layout_gravity="center_vertical"
+						android:background="@drawable/bg_circle_dark"
+						android:gravity="center"
+						android:paddingStart="18dp"
+						android:paddingEnd="18dp"
+						android:text="@string/active_now"/>
+				</LinearLayout>
+
+			</com.app.vietincome.view.HighLightLinearLayout>
+
+			<TextView
+				android:id="@+id/tvNote"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:fontFamily="@font/roboto_bold"
+				android:paddingTop="10dp"
+				android:paddingBottom="10dp"
+				android:text="Note"
+				android:textSize="18sp"/>
+
+			<TextView
+				android:id="@+id/tvNoteContent"
+				style="@style/DefaultTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/note"/>
+
+		</LinearLayout>
+
+	</android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

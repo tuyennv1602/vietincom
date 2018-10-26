@@ -3,6 +3,7 @@ package com.app.vietincome.fragment;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -82,6 +83,9 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 	private String dateEnd = DateUtil.getFirstDay3Years();
 	private int page = 1;
 	private boolean isCompleted = true;
+	private boolean canLoadMore;
+	private boolean isLoading;
+	private LinearLayoutManager layoutEvent;
 
 	public static EventFragment newInstance() {
 		EventFragment fragment = new EventFragment();
@@ -95,7 +99,6 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 			getEvents(true, false);
 		}
 	}
-
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventUpdateEvents(EventBusListener.UpdateEvent event) {
@@ -117,12 +120,21 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 			eventAdapter = new EventAdapter(events, this);
 		}
 		onUpdatedTheme();
-		rcvEvent.setLayoutManager(new LinearLayoutManager(getContext()));
+		layoutEvent = new LinearLayoutManager(getContext());
+		rcvEvent.setLayoutManager(layoutEvent);
 		rcvEvent.addItemDecoration(new CustomItemDecoration(30));
 		rcvEvent.setDemoShimmerDuration(1000000);
-		rcvEvent.setNestedScrollingEnabled(false);
 		rcvEvent.setAdapter(eventAdapter);
 		checkToken();
+		rcvEvent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				int last = layoutEvent.findLastVisibleItemPosition();
+				if (last >= eventAdapter.getItemCount() - 1 && canLoadMore && !isLoading)
+					loadMoreEvent();
+			}
+		});
 		try {
 			setTextPeriod();
 		} catch (ParseException e) {
@@ -138,7 +150,6 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 			getToken();
 			return;
 		}
-		Log.d("__event", "checkToken: " + DateUtil.getDiffMinutes(DateUtil.getCurrentDate(), AppPreference.INSTANCE.getToken().getExpireAt()));
 		getEvents(true, true);
 	}
 
@@ -174,24 +185,26 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 		if (showShimmer) {
 			rcvEvent.showShimmerAdapter();
 		}
-		ApiClient.getEventService().getEvent(
+		isLoading = true;
+		ApiClient.getEventService().getEventInPage(
 				AppPreference.INSTANCE.getToken().getAccessToken(),
 				dateStart,
 				dateEnd,
+				page,
 				coin
 		).enqueue(new Callback<EventResponse>() {
 			@Override
 			public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
 				navigationTopBar.hideProgressBar();
 				rcvEvent.hideShimmerAdapter();
+				isLoading = false;
 				if (response.isSuccessful()) {
 					if (response.body() != null) {
 						events.clear();
 						events.addAll(response.body().getEvents());
 						eventAdapter.notifyDataSetChanged();
-						if (response.body().getMetadata().getPageCount() > 1) {
-							getNextPage(response.body().getMetadata().getPageCount());
-						}
+						canLoadMore = response.body().getMetadata().getPage() != response.body().getMetadata().getPageCount();
+						page++;
 					}
 				}
 			}
@@ -200,48 +213,43 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 			public void onFailure(Call<EventResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvEvent.hideShimmerAdapter();
+				isLoading = false;
 				showAlert("Failed", "Get Events: " + t.getMessage());
 			}
 		});
 	}
 
-	@SuppressLint("CheckResult")
-	public void getNextPage(int totalPage) {
-		Observable.range(2, totalPage - 1)
-				.subscribeOn(Schedulers.io())
-				.concatMap((Function<Integer, ObservableSource<EventResponse>>) integer -> ApiClient.getEventService().getEventInPage(
-						AppPreference.INSTANCE.getToken().getAccessToken(),
-						dateStart,
-						dateEnd,
-						integer,
-						coin))
-				.doOnError(throwable -> {
-					Log.d("__event", "getNextPage: error");
-				})
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribeWith(new Observer<EventResponse>() {
-					@Override
-					public void onSubscribe(Disposable d) {
-
-					}
-
-					@Override
-					public void onNext(EventResponse eventResponse) {
-						page++;
-						events.addAll(eventResponse.getEvents());
+	private void loadMoreEvent() {
+		isLoading = true;
+		showBottomDialog();
+		ApiClient.getEventService().getEventInPage(
+				AppPreference.INSTANCE.getToken().getAccessToken(),
+				dateStart,
+				dateEnd,
+				page,
+				coin
+		).enqueue(new Callback<EventResponse>() {
+			@Override
+			public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+				isLoading = false;
+				hideProgressDialog();
+				if (response.isSuccessful()) {
+					if (response.body() != null) {
+						events.addAll(response.body().getEvents());
 						eventAdapter.notifyItemRangeChanged((page - 1) * 150, events.size());
+						canLoadMore = response.body().getMetadata().getPage() != response.body().getMetadata().getPageCount();
+						page++;
 					}
+				}
+			}
 
-					@Override
-					public void onError(Throwable e) {
-						showAlert("Failed", "Get Events: " + e.getMessage());
-					}
-
-					@Override
-					public void onComplete() {
-
-					}
-				});
+			@Override
+			public void onFailure(Call<EventResponse> call, Throwable t) {
+				hideProgressDialog();
+				isLoading = false;
+				showAlert("Failed", "Get Events: " + t.getMessage());
+			}
+		});
 	}
 
 	private void getListCoins() {
@@ -288,7 +296,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 		eventAdapter.notifyDataSetChanged();
 	}
 
-	public void setTextColor(TextView textView){
+	public void setTextColor(TextView textView) {
 		textView.setTextColor(isDarkTheme ? getColor(R.color.yellow_text) : getColor(R.color.light_image));
 	}
 

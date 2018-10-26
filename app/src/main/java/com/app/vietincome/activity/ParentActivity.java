@@ -6,10 +6,14 @@ import android.view.View;
 
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseActivity;
+import com.app.vietincome.fragment.BecomeVipFragment;
+import com.app.vietincome.fragment.ChangePasswordFragment;
 import com.app.vietincome.fragment.CoinDetailFragment;
+import com.app.vietincome.fragment.EditProfileFragment;
 import com.app.vietincome.fragment.FavoriteFragment;
 import com.app.vietincome.fragment.ForgotPasswordFragment;
 import com.app.vietincome.fragment.GlobalFragment;
+import com.app.vietincome.fragment.InviteFriendFragment;
 import com.app.vietincome.fragment.PortfolioDetailFragment;
 import com.app.vietincome.fragment.SelectCoinFragment;
 import com.app.vietincome.fragment.SettingFragment;
@@ -80,8 +84,7 @@ public class ParentActivity extends BaseActivity {
 					break;
 				}
 				case Constant.GLOBAL_MARKET: {
-					pushFragment(GlobalFragment.newInstance()
-							, R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+					pushFragment(GlobalFragment.newInstance(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 					break;
 				}
 				case Constant.SELECT_COIN: {
@@ -106,6 +109,18 @@ public class ParentActivity extends BaseActivity {
 					break;
 				case Constant.SETTING:
 					pushFragment(SettingFragment.newInstance(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+					break;
+				case Constant.EDIT_PROFILE:
+					pushFragment(new EditProfileFragment(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+					break;
+				case Constant.CHANGE_PASSWORD:
+					pushFragment(new ChangePasswordFragment(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+					break;
+				case Constant.INVITE_FRIEND:
+					pushFragment(new InviteFriendFragment(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
+					break;
+				case Constant.BECOME_VIP:
+					pushFragment(new BecomeVipFragment(), R.anim.slide_from_left_to_right_in, R.anim.slide_from_right_out);
 					break;
 			}
 		}

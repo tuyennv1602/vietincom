@@ -13,6 +13,7 @@
 		android:id="@+id/rcv_news"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:nestedScrollingEnabled="false"
 		android:background="@color/color_line"
 		app:shimmer_demo_child_count="10"
 		app:shimmer_demo_layout="@layout/layout_demo_news_dark"

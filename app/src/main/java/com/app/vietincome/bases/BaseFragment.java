@@ -53,7 +53,7 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventUpdatedTheme(EventBusListener.UpdatedTheme event) {
 		isDarkTheme = AppPreference.INSTANCE.isDarkTheme();
-		navigationTopBar.initTheme(isDarkTheme);
+		if(navigationTopBar != null) navigationTopBar.initTheme(isDarkTheme);
 		onUpdatedTheme();
 	}
 
@@ -136,22 +136,26 @@ public abstract class BaseFragment extends Fragment implements NavigationTopList
 		}
 	}
 
-	public void showProgressDialog(Activity activity) {
+	public void showProgressDialog(Activity activity, boolean isBottom) {
 		try {
 			hideProgressDialog();
 			dialog = new ProgressDialog(activity);
 			dialog.setCancelable(false);
 			Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-			dialog.getWindow().setDimAmount(0.5f);
+			dialog.getWindow().setDimAmount(isBottom ? 0f : 0.5f);
 			dialog.show();
-			dialog.setContentView(R.layout.processing);
+			dialog.setContentView(isBottom ? R.layout.processing : R.layout.progress_center);
 		} catch (Exception e) {
 			Log.d(TAG, "showProgressDialog: " + e.getMessage());
 		}
 	}
 
+	public void showBottomDialog(){
+		showProgressDialog(getActivity(), true);
+	}
+
 	public void showProgressDialog() {
-		showProgressDialog(getActivity());
+		showProgressDialog(getActivity(), false);
 	}
 
 	public void hideProgressDialog() {

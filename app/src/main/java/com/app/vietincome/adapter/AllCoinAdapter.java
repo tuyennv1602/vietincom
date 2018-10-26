@@ -67,6 +67,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 
 	public void setDarkTheme(boolean darkTheme) {
 		isDarkTheme = darkTheme;
+		notifyDataSetChanged();
 	}
 
 	@NonNull
@@ -169,15 +170,9 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 			} else {
 				tv7D.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 			}
-			if(tv1H.getText().toString().length() > 7){
-				tv1H.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-			}
-			if(tv24H.getText().toString().length() > 7){
-				tv24H.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-			}
-			if(tv7D.getText().toString().length() > 7){
-				tv7D.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-			}
+			layoutAddFavorite.setBackgroundColor(isDarkTheme ? getColor(R.color.light_background) : getColor(R.color.dark_background));
+			tvAddFavourite.setTextColor(isDarkTheme ? getColor(R.color.light_text) : getColor(R.color.dark_text));
+			tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 			fillData(item);
 		}
 
@@ -206,10 +201,16 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 						.append(withSuffix(isBTC ? item.getQuotes().getBTC().getVolume24h() : item.getQuotes().getUSD().getVolume24h()))
 						.toString());
 			}
+			if(tv1H.getText().toString().length() > 7){
+				tv1H.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+			}
+			if(tv24H.getText().toString().length() > 7){
+				tv24H.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+			}
+			if(tv7D.getText().toString().length() > 7){
+				tv7D.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+			}
 			imgStar.setVisibility(item.isFavourite() ? View.VISIBLE : View.GONE);
-			layoutAddFavorite.setBackgroundColor(isDarkTheme ? getColor(R.color.light_background) : getColor(R.color.dark_background));
-			tvAddFavourite.setTextColor(isDarkTheme ? getColor(R.color.light_text) : getColor(R.color.dark_text));
-			tvCancel.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		}
 
 		private int getColor(int color) {

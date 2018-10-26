@@ -89,6 +89,7 @@ public class Profile implements Parcelable
 	}
 
 	public String getBio() {
+		if(bio == null) return "";
 		return bio;
 	}
 

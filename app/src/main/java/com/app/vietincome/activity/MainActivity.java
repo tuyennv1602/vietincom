@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity {
 	RelativeLayout mainLayout;
 
 	private HomeViewpagerAdapter homeViewPagerAdapter;
-	private int selectedTab = 2;
+	private int selectedTab = Constant.TAB_SETTING;
 	private Stack<Fragment> backStack = new Stack<>();
 	private int numNews = AppPreference.INSTANCE.getNumNews();
 	private int numEvents = AppPreference.INSTANCE.getNumEvents();
@@ -56,13 +56,13 @@ public class MainActivity extends BaseActivity {
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventUpdateNews(EventBusListener.UpdateNews event) {
-		numNews ++;
+		numNews++;
 		setBadge(Constant.TAB_NEWS, numNews);
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onEventUpdateEvents(EventBusListener.UpdateEvent event){
-		numEvents ++ ;
+	public void onEventUpdateEvents(EventBusListener.UpdateEvent event) {
+		numEvents++;
 		setBadge(Constant.TAB_EVENT, numEvents);
 	}
 
@@ -120,12 +120,8 @@ public class MainActivity extends BaseActivity {
 			public void onPageSelected(int position) {
 				if (position == selectedTab) return;
 				selectedTab = position;
-				if(selectedTab == Constant.TAB_ALL_COIN){
-					EventBus.getDefault().post(new EventBusListener.RefreshData(Constant.TAB_ALL_COIN));
-				}else if(selectedTab  == Constant.TAB_EVENT) {
-					EventBus.getDefault().post(new EventBusListener.RefreshData(Constant.TAB_EVENT));
-					EventBus.getDefault().post(new EventBusListener.ExpanableView());
-				}else{
+				EventBus.getDefault().post(new EventBusListener.RefreshData(selectedTab));
+				if (selectedTab != Constant.TAB_ALL_COIN) {
 					EventBus.getDefault().post(new EventBusListener.ExpanableView());
 				}
 			}
@@ -160,17 +156,17 @@ public class MainActivity extends BaseActivity {
 
 	private void changeHighLightTab(TabLayout.Tab tab, boolean isSelected) {
 		RelativeLayout layout = (RelativeLayout) tab.getCustomView();
-		if(isSelected){
+		if (isSelected) {
 			((TextView) layout.getChildAt(0)).setTextColor(getColorRes(R.color.dark_tab));
 			((ImageView) layout.getChildAt(1)).setColorFilter(getColorRes(R.color.dark_tab));
 			(layout.getChildAt(2)).setVisibility(View.GONE);
-		}else{
+		} else {
 			((TextView) layout.getChildAt(0)).setTextColor(isDarkTheme ? getColorRes(R.color.dark_gray) : getColorRes(R.color.light_gray));
 			((ImageView) layout.getChildAt(1)).setColorFilter(isDarkTheme ? getColorRes(R.color.dark_gray) : getColorRes(R.color.light_gray));
 		}
 	}
 
-	private void setBadge(int tabPosition, int numBadger){
+	private void setBadge(int tabPosition, int numBadger) {
 		TabLayout.Tab tab = tabLayoutBottom.getTabAt(tabPosition);
 		RelativeLayout layout = (RelativeLayout) tab.getCustomView();
 		TextView textView = (TextView) layout.getChildAt(2);
@@ -178,12 +174,12 @@ public class MainActivity extends BaseActivity {
 		textView.setText(String.valueOf(numBadger));
 	}
 
-	private void clearNews(){
-		if(selectedTab == Constant.TAB_NEWS){
+	private void clearNews() {
+		if (selectedTab == Constant.TAB_NEWS) {
 			numNews = 0;
 			AppPreference.INSTANCE.clearNumNews();
 			setBadge(Constant.TAB_NEWS, numNews);
-		}else if(selectedTab == Constant.TAB_EVENT){
+		} else if (selectedTab == Constant.TAB_EVENT) {
 			numEvents = 0;
 			AppPreference.INSTANCE.clearNumEvents();
 			setBadge(Constant.TAB_EVENT, numEvents);

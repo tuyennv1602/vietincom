@@ -173,15 +173,13 @@ public class FavoriteFragment extends BaseFragment implements ItemClickListener,
 	}
 
 	private void checkUpdateData() {
+		if(allCoins.size() == 0) return;
 		if (allCoins.get(allCoins.size() - 1).getRank() < lastRank) {
-			Log.d("__favourite", "checkUpdateData: UPDATED");
 			return;
 		}
 		for (int i = allCoins.size() - 1; i >= 0; i--) {
 			if(allCoins.get(i).getRank() > lastRank){
-				// call api
 				getCoinDetail(allCoins.get(i).getId(), i);
-				Log.d("__favourite", "checkUpdateData: REQUEST" + allCoins.get(i).getId());
 			}else{
 				break;
 			}

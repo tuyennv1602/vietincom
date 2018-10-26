@@ -1,11 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:orientation="vertical"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/layoutRoot"
-	android:layout_height="match_parent">
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
 
 	<include layout="@layout/navi_top_bar"/>
 
+	<com.app.vietincome.view.HighLightLinearLayout
+		android:id="@+id/layoutProfile"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<com.github.siyamed.shapeimageview.CircularImageView
+			android:id="@+id/imgAvatar"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_margin="15dp"
+			android:scaleType="centerCrop"
+			android:src="@drawable/favicon"
+			app:siBorderWidth="0dp"/>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_weight="1"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/tvUsername"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:fontFamily="@font/roboto_medium"
+				android:text="Username"
+				android:textSize="18sp"/>
+
+			<TextView
+				android:id="@+id/tvAccountType"
+				style="@style/DefaultTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Free"
+				android:textSize="17sp"/>
+
+
+		</LinearLayout>
+
+		<ImageView
+			android:id="@+id/imgNext"
+			android:layout_width="20dp"
+			android:layout_height="30dp"
+			android:layout_gravity="center_vertical"
+			android:layout_marginEnd="10dp"
+			android:src="@drawable/next"/>
+
+	</com.app.vietincome.view.HighLightLinearLayout>
+
+	<View
+		android:id="@+id/view1"
+		android:layout_width="match_parent"
+		android:layout_height="10dp"
+		android:background="@color/black_background"
+		android:visibility="visible"/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp">
+
+		<TextView
+			android:id="@+id/tvWallet"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:text="My wallet"
+			android:textSize="16sp"/>
+
+		<TextView
+			android:id="@+id/tvWalletValue"
+			style="@style/DefaultTextView"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentEnd="true"
+			android:gravity="center_vertical"
+			android:text="0VIC"
+			android:fontFamily="@font/roboto_medium"
+			android:textSize="16sp"/>
+
+	</RelativeLayout>
+
+	<include layout="@layout/view_line"/>
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvInviteFriend"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height"
+		android:drawableEnd="@drawable/next"
+		android:gravity="center_vertical"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:text="@string/invite_friend"
+		android:textSize="16sp"/>
+
+	<include layout="@layout/view_line"/>
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvBecomeVip"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height"
+		android:drawableEnd="@drawable/next"
+		android:gravity="center_vertical"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:text="@string/become_vip"
+		android:textSize="16sp"/>
+
+	<include layout="@layout/view_line"/>
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvSignal"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height"
+		android:drawableEnd="@drawable/next"
+		android:gravity="center_vertical"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:text="@string/signal_vip_only"
+		android:textSize="16sp"/>
+
+	<include layout="@layout/view_line"/>
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvChangePass"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height"
+		android:drawableEnd="@drawable/next"
+		android:gravity="center_vertical"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:text="@string/change_password"
+		android:textSize="16sp"/>
+
+	<View
+		android:id="@+id/view2"
+		android:layout_width="match_parent"
+		android:layout_height="10dp"
+		android:background="@color/black_background"
+		android:visibility="visible"/>
+
+	<com.app.vietincome.view.HighLightTextView
+		android:id="@+id/tvLogout"
+		style="@style/DefaultTextView"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/item_setting_height"
+		android:gravity="center"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:text="@string/logout"
+		android:textSize="16sp"/>
+
+	<View
+		android:id="@+id/view3"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/black_background"
+		android:visibility="visible"/>
 </LinearLayout>

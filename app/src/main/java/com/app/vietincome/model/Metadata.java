@@ -10,25 +10,25 @@ public class Metadata implements Parcelable {
 
 	@SerializedName("timestamp")
 	@Expose
-	private Integer timestamp;
+	private int timestamp;
 	@SerializedName("num_cryptocurrencies")
 	@Expose
-	private Integer numCryptocurrencies;
+	private int numCryptocurrencies;
 	@SerializedName("error")
 	@Expose
 	private String error;
 	@SerializedName("page")
 	@Expose
-	private Integer page;
+	private int page;
 	@SerializedName("max")
 	@Expose
-	private Integer max;
+	private int max;
 	@SerializedName("total_count")
 	@Expose
-	private Integer totalCount;
+	private int totalCount;
 	@SerializedName("page_count")
 	@Expose
-	private Integer pageCount;
+	private int pageCount;
 	public final static Parcelable.Creator<Metadata> CREATOR = new Creator<Metadata>() {
 
 
@@ -46,31 +46,31 @@ public class Metadata implements Parcelable {
 	};
 
 	protected Metadata(Parcel in) {
-		this.timestamp = ((Integer) in.readValue((Integer.class.getClassLoader())));
-		this.numCryptocurrencies = ((Integer) in.readValue((Integer.class.getClassLoader())));
+		this.timestamp = ((int) in.readValue((int.class.getClassLoader())));
+		this.numCryptocurrencies = ((int) in.readValue((int.class.getClassLoader())));
 		this.error = ((String) in.readValue((String.class.getClassLoader())));
-		this.page = ((Integer) in.readValue((Integer.class.getClassLoader())));
-		this.max = ((Integer) in.readValue((Integer.class.getClassLoader())));
-		this.totalCount = ((Integer) in.readValue((Integer.class.getClassLoader())));
-		this.pageCount = ((Integer) in.readValue((Integer.class.getClassLoader())));
+		this.page = ((int) in.readValue((int.class.getClassLoader())));
+		this.max = ((int) in.readValue((int.class.getClassLoader())));
+		this.totalCount = ((int) in.readValue((int.class.getClassLoader())));
+		this.pageCount = ((int) in.readValue((int.class.getClassLoader())));
 	}
 
 	public Metadata() {
 	}
 
-	public Integer getTimestamp() {
+	public int getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Integer timestamp) {
+	public void setTimestamp(int timestamp) {
 		this.timestamp = timestamp;
 	}
 
-	public Integer getNumCryptocurrencies() {
+	public int getNumCryptocurrencies() {
 		return numCryptocurrencies;
 	}
 
-	public void setNumCryptocurrencies(Integer numCryptocurrencies) {
+	public void setNumCryptocurrencies(int numCryptocurrencies) {
 		this.numCryptocurrencies = numCryptocurrencies;
 	}
 
@@ -82,35 +82,35 @@ public class Metadata implements Parcelable {
 		this.error = error;
 	}
 
-	public Integer getPage() {
+	public int getPage() {
 		return page;
 	}
 
-	public void setPage(Integer page) {
+	public void setPage(int page) {
 		this.page = page;
 	}
 
-	public Integer getMax() {
+	public int getMax() {
 		return max;
 	}
 
-	public void setMax(Integer max) {
+	public void setMax(int max) {
 		this.max = max;
 	}
 
-	public Integer getTotalCount() {
+	public int getTotalCount() {
 		return totalCount;
 	}
 
-	public void setTotalCount(Integer totalCount) {
+	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
 
-	public Integer getPageCount() {
+	public int getPageCount() {
 		return pageCount;
 	}
 
-	public void setPageCount(Integer pageCount) {
+	public void setPageCount(int pageCount) {
 		this.pageCount = pageCount;
 	}
 

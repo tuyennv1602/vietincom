@@ -141,17 +141,17 @@ public class AllCoinFragment extends BaseFragment {
 			}
 
 			@Override
-			public void onTabReselected(TabLayout.Tab tab){
+			public void onTabReselected(TabLayout.Tab tab) {
 			}
 		});
 	}
 
 	private void changeHighLightTab(TabLayout.Tab tab, boolean isSelected) {
 		LinearLayout layout = (LinearLayout) tab.getCustomView();
-		if(isSelected){
-			((ImageView) layout.getChildAt(0)).setColorFilter(getColor(R.color.dark_tab));
-			((TextView) layout.getChildAt(1)).setTextColor(getColor(R.color.dark_tab));
-		}else{
+		if (isSelected) {
+			((ImageView) layout.getChildAt(0)).setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+			((TextView) layout.getChildAt(1)).setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		} else {
 			((ImageView) layout.getChildAt(0)).setColorFilter(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 			((TextView) layout.getChildAt(1)).setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 		}
@@ -218,13 +218,14 @@ public class AllCoinFragment extends BaseFragment {
 				.toList()
 				.subscribe(data -> {
 					EventBus.getDefault().post(new EventBusListener.SearchCoin((ArrayList<Data>) data, false, selectedTab));
-				}, throwable ->{});
+				}, throwable -> {
+				});
 	}
 
 	@Override
 	public void onUpdatedTheme() {
 		tabLayoutTop.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
-		tabLayoutTop.setSelectedTabIndicatorColor(getColor(R.color.dark_tab));
+		tabLayoutTop.setSelectedTabIndicatorColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 	}
 
 	public void getRate() {
@@ -256,7 +257,7 @@ public class AllCoinFragment extends BaseFragment {
 		}
 	}
 
-	public void getGainerCoin(){
+	public void getGainerCoin() {
 		navigationTopBar.showProgressBar();
 		ApiClient.getAllCoinService().getGainerChange().enqueue(new Callback<CoinResponse>() {
 			@Override
@@ -326,9 +327,9 @@ public class AllCoinFragment extends BaseFragment {
 		}
 	}
 
-	private void updateFavorite(ArrayList<Data> coins){
-		if(favoriteCoins.size() == 0) return;
-		for(Data data : coins){
+	private void updateFavorite(ArrayList<Data> coins) {
+		if (favoriteCoins.size() == 0) return;
+		for (Data data : coins) {
 			for (int i = favoriteCoins.size() - 1; i >= 0; i--) {
 				if (data.getId() == favoriteCoins.get(i).getId()) {
 					AppPreference.INSTANCE.updateFavorite(data);

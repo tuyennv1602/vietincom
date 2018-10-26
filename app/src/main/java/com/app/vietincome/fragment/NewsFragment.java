@@ -1,11 +1,7 @@
 package com.app.vietincome.fragment;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -16,30 +12,19 @@ import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.manager.interfaces.ItemClickListener;
 import com.app.vietincome.model.News;
-import com.app.vietincome.model.responses.CoinResponse;
 import com.app.vietincome.model.responses.NewsResponse;
 import com.app.vietincome.network.ApiClient;
+import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.NavigationTopBar;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
-import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener;
-import com.google.android.gms.common.api.Api;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,6 +41,9 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	private ArrayList<News> news;
 	private int page = 1;
 	private boolean needReload = true;
+	private boolean canLoadMore;
+	private boolean isLoading;
+	private LinearLayoutManager layoutNews;
 
 	public static NewsFragment newInstance() {
 		NewsFragment fragment = new NewsFragment();
@@ -67,6 +55,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		NewsFragment fragment = new NewsFragment();
 		fragment.news = news;
 		fragment.needReload = false;
+		fragment.canLoadMore = true;
 		return fragment;
 	}
 
@@ -74,6 +63,14 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	public void onEventUpdateNews(EventBusListener.UpdateNews event) {
 		page = 1;
 		getNews(false);
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onEventRefreshData(EventBusListener.RefreshData event) {
+		if (event.tab == Constant.TAB_NEWS) {
+			page = 1;
+			getNews(false);
+		}
 	}
 
 	@Override
@@ -90,15 +87,22 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 			newsAdapter = new NewsAdapter(news, this);
 			newsAdapter.setDarkTheme(isDarkTheme);
 		}
-		rcvNews.setLayoutManager(new LinearLayoutManager(getContext()));
+		layoutNews = new LinearLayoutManager(getContext());
+		rcvNews.setLayoutManager(layoutNews);
 		rcvNews.addItemDecoration(new CustomItemDecoration(2));
 		rcvNews.setDemoShimmerDuration(1000000);
-		rcvNews.setNestedScrollingEnabled(false);
 		rcvNews.setDemoLayoutReference(isDarkTheme ? R.layout.layout_demo_news_dark : R.layout.layout_demo_news_light);
 		rcvNews.setAdapter(newsAdapter);
-		if (needReload) {
-			getNews(true);
-		}
+		getNews(needReload);
+		rcvNews.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				int last = layoutNews.findLastVisibleItemPosition();
+				if (last >= newsAdapter.getItemCount() - 1 && canLoadMore && !isLoading)
+					loadMoreNews();
+			}
+		});
 	}
 
 	@Override
@@ -134,30 +138,32 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 	}
 
 	private void getNews(boolean showShimmer) {
+		isLoading = true;
 		navigationTopBar.showProgressBar();
 		if (showShimmer) {
 			rcvNews.showShimmerAdapter();
 		}
-		ApiClient.getNewsService().getNews().enqueue(new Callback<NewsResponse>() {
+		ApiClient.getNewsService().getNews(page).enqueue(new Callback<NewsResponse>() {
 			@Override
 			public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
 				navigationTopBar.hideProgressBar();
 				rcvNews.hideShimmerAdapter();
+				isLoading = false;
 				if (response.isSuccessful()) {
 					if (response.body().isSuccess()) {
 						news.clear();
 						news.addAll(response.body().getNews());
-						AppPreference.INSTANCE.setNews(news);
+						AppPreference.INSTANCE.setNews(new ArrayList<>(news));
 						newsAdapter.notifyDataSetChanged();
-						if (response.body().getPages() > 1) {
-							getNextPage(response.body().getPages());
-						}
+						canLoadMore = response.body().getCurrentPage() != response.body().getMaxPages();
+						page++;
 					}
 				}
 			}
 
 			@Override
 			public void onFailure(Call<NewsResponse> call, Throwable t) {
+				isLoading = false;
 				navigationTopBar.hideProgressBar();
 				rcvNews.hideShimmerAdapter();
 				showAlert("Failed", "Get News: " + t.getMessage());
@@ -165,39 +171,31 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		});
 	}
 
-	@SuppressLint("CheckResult")
-	private void getNextPage(int totalPage) {
-		Observable.range(2, totalPage - 1)
-				.subscribeOn(Schedulers.io())
-				.concatMap((Function<Integer, ObservableSource<NewsResponse>>) integer -> ApiClient.getNewsService().getNewsInPage(integer))
-				.doOnError(throwable -> {
-					Log.d("__news", "getNextPage: error");
-				})
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribeWith(new Observer<NewsResponse>() {
-					@Override
-					public void onSubscribe(Disposable d) {
-
-					}
-
-					@Override
-					public void onNext(NewsResponse newsResponse) {
-						page++;
-						news.addAll(newsResponse.getNews());
+	private void loadMoreNews() {
+		isLoading = true;
+		showBottomDialog();
+		ApiClient.getNewsService().getNews(page).enqueue(new Callback<NewsResponse>() {
+			@Override
+			public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+				hideProgressDialog();
+				isLoading = false;
+				if (response.isSuccessful()) {
+					if (response.body().isSuccess()) {
+						news.addAll(response.body().getNews());
 						newsAdapter.notifyItemRangeChanged((page - 1) * 10, news.size());
-						AppPreference.INSTANCE.setNews(news);
+						canLoadMore = response.body().getCurrentPage() != response.body().getMaxPages();
+						page++;
 					}
+				}
+			}
 
-					@Override
-					public void onError(Throwable e) {
-						showAlert("Failed", "Get News: " + e.getMessage());
-					}
-
-					@Override
-					public void onComplete() {
-
-					}
-				});
+			@Override
+			public void onFailure(Call<NewsResponse> call, Throwable t) {
+				isLoading = false;
+				hideProgressDialog();
+				showAlert("Failed", "Get News: " + t.getMessage());
+			}
+		});
 	}
 
 	@Override
@@ -206,6 +204,5 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 		newsAdapter.notifyItemChanged(position);
 		openLink(news.get(position).getUrl());
 	}
-
 
 }

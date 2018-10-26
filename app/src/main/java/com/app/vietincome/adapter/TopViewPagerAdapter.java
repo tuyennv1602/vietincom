@@ -56,8 +56,8 @@ public class TopViewPagerAdapter extends FragmentStatePagerAdapter {
 		ImageView imgIcon = view.findViewById(R.id.imgTabHome);
 		imgIcon.setImageResource(getIcon(position));
 		if (position == selectedTab) {
-			imgIcon.setColorFilter(getColor(R.color.dark_tab));
-			textView.setTextColor(getColor(R.color.dark_tab));
+			imgIcon.setColorFilter(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+			textView.setTextColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
 		} else {
 			imgIcon.setColorFilter(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));
 			textView.setTextColor(isDarkTheme ? getColor(R.color.dark_gray) : getColor(R.color.light_gray));

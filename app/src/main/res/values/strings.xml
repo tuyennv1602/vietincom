@@ -25,4 +25,12 @@
 	<string name="email_resetpass">You will be sent an email with instructions to reset your password.</string>
 	<string name="already_sign_up_login">Already Sign up? Login</string>
 	<string name="i_agree_to_vietincome_s_terms_of_use">I agree to Vietincome’s Terms of Use</string>
+	<string name="invite_friend">Invite friends</string>
+	<string name="become_vip">Become VIP</string>
+	<string name="signal_vip_only">Signal (VIP only)</string>
+	<string name="change_password">Change password</string>
+	<string name="logout">Logout</string>
+	<string name="intro_invite">Step 1: Copy Your Invite Code and send Your Friend\n\nStep 2: Instructions Your friends download the Vietincome App and enter Your Invite Code when Your Friends Sign Up\n\nStep 3: Your Friends enter Your Invite Code, You and Your Friends both get 50 VIC</string>
+	<string name="active_now">Active now</string>
+	<string name="note">\- Currently VIP member ONLY available for VIC purchase\n\n\- Benefit for VIP member: Early access All Signal for VIP and Support direct from Vietincome Team\n\n\- One month validity applies to 30 Calendar days.</string>
 </resources>
