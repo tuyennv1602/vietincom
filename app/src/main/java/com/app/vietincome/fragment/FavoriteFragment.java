@@ -163,7 +163,7 @@ public class FavoriteFragment extends BaseFragment implements ItemClickListener,
 
 	@Override
 	public void onItemClicked(int position) {
-		pushFragment(CoinDetailFragment.newInstance(allCoins.get(position)), R.anim.zoom_in, R.anim.zoom_out);
+		pushFragment(CoinDetailFragment.newInstance(allCoins.get(position), true), R.anim.zoom_in, R.anim.zoom_out);
 	}
 
 	@Override
@@ -203,7 +203,7 @@ public class FavoriteFragment extends BaseFragment implements ItemClickListener,
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}

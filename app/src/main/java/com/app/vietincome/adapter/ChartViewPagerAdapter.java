@@ -15,13 +15,13 @@ public class ChartViewPagerAdapter extends FragmentStatePagerAdapter {
 	private ArrayList<Fragment> fragments;
 	private ArrayList<String> labelTime = new ArrayList<>(Arrays.asList("24H", "7D", "1M", "3M", "1Y", "ALL"));
 
-	public ChartViewPagerAdapter(Context context, FragmentManager fm, String coinId, double price, double rate) {
+	public ChartViewPagerAdapter(Context context, FragmentManager fm, String coinId, double price, double rate, boolean isShowPrice) {
 		super(fm);
 		this.context  = context;
 		if (fragments == null) {
 			fragments = new ArrayList<>();
 			for(int i = 0; i < labelTime.size(); i++){
-				fragments.add(CoinChartFragment.newInstance(coinId, i, price, rate));
+				fragments.add(CoinChartFragment.newInstance(coinId, i, price, rate, isShowPrice));
 			}
 		}
 	}

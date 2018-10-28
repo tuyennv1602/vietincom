@@ -187,6 +187,7 @@ public class VolumeFragment extends BaseFragment implements ItemClickListener, A
 		if (isLoading) return;
 		Intent parent = new Intent(getContext(), ParentActivity.class);
 		parent.putExtra("coin", isSearch ? coinSearched.get(position) : allCoins.get(position));
+		parent.putExtra("price", false);
 		parent.putExtra(Constant.KEY_SCREEN, Constant.COIN_DETAIL);
 		startActivity(parent);
 	}
@@ -194,9 +195,9 @@ public class VolumeFragment extends BaseFragment implements ItemClickListener, A
 	@Override
 	public void onChangeFavorite(int position) {
 		if (allCoins.get(position).isFavourite()) {
-			AppPreference.INSTANCE.removeFavourite(allCoins.get(position));
+			AppPreference.INSTANCE.removeFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
 		} else {
-			AppPreference.INSTANCE.addFavourite(allCoins.get(position));
+			AppPreference.INSTANCE.addFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
 		}
 	}
 }

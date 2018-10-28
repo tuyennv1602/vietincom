@@ -110,7 +110,7 @@ public class SelectCoinFragment extends BaseFragment implements ItemClickListene
 		Observable.fromIterable(coins)
 				.observeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
-				.filter(data -> data.getName().contains(key) || data.getSymbol().contains(key.toUpperCase()))
+				.filter(data -> data.getName().toLowerCase().contains(key.toLowerCase()) || data.getSymbol().toLowerCase().contains(key.toLowerCase()))
 				.toList()
 				.subscribe(data -> {
 					searchCoins = (ArrayList<Data>) data;

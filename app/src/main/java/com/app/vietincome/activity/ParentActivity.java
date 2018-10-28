@@ -80,7 +80,8 @@ public class ParentActivity extends BaseActivity {
 			switch (screen) {
 				case Constant.COIN_DETAIL: {
 					Data data = getIntent().getParcelableExtra("coin");
-					pushFragment(CoinDetailFragment.newInstance(data), R.anim.zoom_in, R.anim.zoom_out);
+					boolean isPrice = getIntent().getBooleanExtra("price", true);
+					pushFragment(CoinDetailFragment.newInstance(data, isPrice), R.anim.zoom_in, R.anim.zoom_out);
 					break;
 				}
 				case Constant.GLOBAL_MARKET: {

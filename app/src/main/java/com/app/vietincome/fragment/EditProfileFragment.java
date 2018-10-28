@@ -135,7 +135,7 @@ public class EditProfileFragment extends BaseFragment implements SelectPickupIma
 		if (profile.getBio() != null) {
 			edtBio.setText(profile.getBio());
 		}
-		GlideImage.loadImage(profile.getAvatar() != null ? profile.getAvatar() : "", R.drawable.favicon, imgAvatar);
+		GlideImage.loadImage(profile.getAvatar(), R.drawable.favicon, imgAvatar);
 	}
 
 	public void openCamera() {
@@ -278,7 +278,7 @@ public class EditProfileFragment extends BaseFragment implements SelectPickupIma
 				@Override
 				public void onFailure(Call<BaseResponse> call, Throwable t) {
 					hideProgressDialog();
-					showAlert("Failed", t.getMessage());
+					Log.d("__", "onFailure: " + t.getMessage());
 				}
 			});
 		}
@@ -324,7 +324,7 @@ public class EditProfileFragment extends BaseFragment implements SelectPickupIma
 			@Override
 			public void onFailure(Call<AvatarResponse> call, Throwable t) {
 				hideProgressDialog();
-				showAlert("Failed", t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}

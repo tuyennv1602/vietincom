@@ -6,6 +6,7 @@ public class Volume {
 
 	public Volume(long time, float price) {
 		this.price = price;
+		this.time = time;
 	}
 
 	public float getPrice() {

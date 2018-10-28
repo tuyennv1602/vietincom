@@ -188,6 +188,7 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 		if (isLoading) return;
 		Intent parent = new Intent(getContext(), ParentActivity.class);
 		parent.putExtra("coin", isSearch ? coinSearched.get(position) : allCoins.get(position));
+		parent.putExtra("price", true);
 		parent.putExtra(Constant.KEY_SCREEN, Constant.COIN_DETAIL);
 		startActivity(parent);
 	}
@@ -195,9 +196,9 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 	@Override
 	public void onChangeFavorite(int position) {
 		if (allCoins.get(position).isFavourite()) {
-			AppPreference.INSTANCE.removeFavourite(allCoins.get(position));
+			AppPreference.INSTANCE.removeFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
 		} else {
-			AppPreference.INSTANCE.addFavourite(allCoins.get(position));
+			AppPreference.INSTANCE.addFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
 		}
 	}
 }

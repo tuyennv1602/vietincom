@@ -1,5 +1,6 @@
 package com.app.vietincome.fragment;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -123,7 +124,7 @@ public class ChangePasswordFragment extends BaseFragment {
 				@Override
 				public void onFailure(Call<BaseResponse> call, Throwable t) {
 					hideProgressDialog();
-					showAlert("Failed", t.getMessage());
+					Log.d("__", "onFailure: " + t.getMessage());
 				}
 			});
 		}

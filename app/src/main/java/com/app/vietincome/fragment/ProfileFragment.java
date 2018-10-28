@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -147,7 +148,8 @@ public class ProfileFragment extends BaseFragment {
 	private void initData() {
 		profile = AppPreference.INSTANCE.getProfile();
 		if (profile == null) return;
-		GlideImage.loadImage(profile.getAvatar() != null ? profile.getAvatar() : "", R.drawable.favicon, imgAvatar);
+		Log.d("__profile", "initData: " + profile.getAvatar());
+		GlideImage.loadImage(profile.getAvatar(), R.drawable.favicon, imgAvatar);
 		tvUsername.setText(profile.getName());
 		tvWalletValue.setText(profile.getVic());
 		tvAccountType.setText(profile.getVip());
@@ -226,7 +228,6 @@ public class ProfileFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<UserResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failed", t.getMessage());
 			}
 		});
 	}

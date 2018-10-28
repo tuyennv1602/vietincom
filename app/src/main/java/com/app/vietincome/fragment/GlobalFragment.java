@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -218,7 +219,7 @@ public class GlobalFragment extends BaseFragment {
 
 	private void initChartView() {
 		if (chartViewPagerAdapter == null) {
-			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), "global", 0, rate);
+			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), "global", 0, rate, true);
 		}
 		viewPagerChart.setAdapter(chartViewPagerAdapter);
 		viewPagerChart.setOffscreenPageLimit(6);
@@ -301,7 +302,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", "Get TopMarkets: " +t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -325,7 +326,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", "Get TopVolumes: " +t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -348,7 +349,7 @@ public class GlobalFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<GlobalResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure","Get Global Data: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}

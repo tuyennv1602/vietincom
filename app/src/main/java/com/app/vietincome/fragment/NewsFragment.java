@@ -2,6 +2,7 @@ package com.app.vietincome.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -166,7 +167,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 				isLoading = false;
 				navigationTopBar.hideProgressBar();
 				rcvNews.hideShimmerAdapter();
-				showAlert("Failed", "Get News: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -193,7 +194,7 @@ public class NewsFragment extends BaseFragment implements ItemClickListener {
 			public void onFailure(Call<NewsResponse> call, Throwable t) {
 				isLoading = false;
 				hideProgressDialog();
-				showAlert("Failed", "Get News: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}

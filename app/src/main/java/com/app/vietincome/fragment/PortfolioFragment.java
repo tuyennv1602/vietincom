@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -250,7 +251,7 @@ public class PortfolioFragment extends BaseFragment implements ItemClickListener
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}

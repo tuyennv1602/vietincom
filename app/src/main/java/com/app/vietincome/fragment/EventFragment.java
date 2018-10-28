@@ -173,7 +173,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 			public void onFailure(Call<TokenResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
 				rcvEvent.hideShimmerAdapter();
-				showAlert("Failure", "Get Token: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -214,7 +214,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 				navigationTopBar.hideProgressBar();
 				rcvEvent.hideShimmerAdapter();
 				isLoading = false;
-				showAlert("Failed", "Get Events: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -247,7 +247,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 			public void onFailure(Call<EventResponse> call, Throwable t) {
 				hideProgressDialog();
 				isLoading = false;
-				showAlert("Failed", "Get Events: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -269,7 +269,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 
 			@Override
 			public void onFailure(Call<List<Coin>> call, Throwable t) {
-				showAlert("Failure", t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 
@@ -368,6 +368,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 	@Override
 	public void onSelectedCoin(String coinId, String name) {
 		this.coin = coinId;
+		page = 1;
 		tvCoinValue.setText(name);
 		getEvents(true, false);
 	}

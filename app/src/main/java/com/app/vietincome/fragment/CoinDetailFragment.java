@@ -25,6 +25,7 @@ import com.app.vietincome.model.Data;
 import com.app.vietincome.model.Market;
 import com.app.vietincome.model.News;
 import com.app.vietincome.model.USD;
+import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.view.CustomItemDecoration;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
@@ -121,11 +122,13 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 	private ArrayList<Market> markets;
 	private TopMarketAdapter topMarketAdapter;
 	private boolean isLineChart = true;
+	private boolean isShowPrice;
 
-	public static CoinDetailFragment newInstance(Data data) {
+	public static CoinDetailFragment newInstance(Data data, boolean isShowPrice) {
 		CoinDetailFragment fragment = new CoinDetailFragment();
 		fragment.data = data;
 		fragment.rate = AppPreference.INSTANCE.getRate();
+		fragment.isShowPrice = isShowPrice;
 		return fragment;
 	}
 
@@ -153,15 +156,20 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 
 	private void initPrice() {
 		USD usd = data.getQuotes().getUSD();
-		double priceValue = AppPreference.INSTANCE.getCurrency().getCode().equals("USD") ? usd.getPrice() : usd.getPrice() * rate;
+		double priceValue;
+		if (isShowPrice) {
+			priceValue = AppPreference.INSTANCE.getCurrency().getCode().equals("USD") ? usd.getPrice() : usd.getPrice() * rate;
+		} else {
+			priceValue = AppPreference.INSTANCE.getCurrency().getCode().equals("USD") ? usd.getVolume24h() : usd.getVolume24h() * rate;
+		}
 		String price;
 		String path;
 		String endPrice = "";
-		if (usd.getPrice() < 1.0) {
+		if (priceValue < 1.0) {
 			path = String.format(Locale.US, "%.4f", priceValue);
 			price = String.valueOf(path.charAt(0));
 			endPrice = path.substring(1);
-		} else if (usd.getPrice() < 1000) {
+		} else if (priceValue < 1000) {
 			path = String.format(Locale.US, "%.2f", priceValue);
 			price = path.substring(0, path.length() - 3);
 			endPrice = path.substring(path.length() - 3);
@@ -173,16 +181,19 @@ public class CoinDetailFragment extends BaseFragment implements ItemClickListene
 		tvPrice.setText(price);
 		tvSymbol.setText(currency.getSymbol());
 		tvEndPrice.setText(endPrice);
-
+		double btcPrice = isShowPrice ? data.getQuotes().getBTC().getPrice() : data.getQuotes().getBTC().getVolume24h();
 		StringBuilder bitcoin = new StringBuilder();
 		bitcoin.append(getContext().getString(R.string.bitcoin));
-		bitcoin.append(String.format(Locale.US, "%.8f", (data.getQuotes().getBTC().getPrice())));
+		bitcoin.append(CommonUtil.formatCurrency(btcPrice, false));
 		tvBitcoin.setText(bitcoin.toString());
 	}
 
 	private void initChartView() {
 		if (chartViewPagerAdapter == null) {
-			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), data.getSymbol(), data.getQuotes().getUSD().getPrice(), rate);
+			chartViewPagerAdapter = new ChartViewPagerAdapter(getContext(), getChildFragmentManager(), data.getSymbol(),
+					isShowPrice ? data.getQuotes().getUSD().getPrice() : data.getQuotes().getUSD().getVolume24h(),
+					rate,
+					isShowPrice);
 		}
 		viewPagerChart.setAdapter(chartViewPagerAdapter);
 		viewPagerChart.setOffscreenPageLimit(6);

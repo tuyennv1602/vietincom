@@ -1,5 +1,6 @@
 package com.app.vietincome.fragment;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -160,7 +161,7 @@ public class BecomeVipFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<BaseResponse> call, Throwable t) {
 				hideProgressDialog();
-				showAlert("Failed", t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}

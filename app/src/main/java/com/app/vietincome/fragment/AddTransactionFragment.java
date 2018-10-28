@@ -218,7 +218,6 @@ public class AddTransactionFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", t.getMessage());
 			}
 		});
 	}

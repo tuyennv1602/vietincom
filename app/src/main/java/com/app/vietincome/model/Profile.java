@@ -80,6 +80,7 @@ public class Profile implements Parcelable {
 	}
 
 	public String getAvatar() {
+		if(avatar == null || avatar.isEmpty()) return "";
 		return "https://vietincome.com/apiv2/user/avatar/" + avatar;
 	}
 
@@ -88,7 +89,7 @@ public class Profile implements Parcelable {
 	}
 
 	public String getBio() {
-		if (bio == null) return "";
+		if (bio == null || bio.isEmpty()) return "";
 		return bio;
 	}
 
@@ -97,7 +98,7 @@ public class Profile implements Parcelable {
 	}
 
 	public String getVic() {
-		if (vic == null) return "0 VIC";
+		if (vic == null || bio.isEmpty()) return "0 VIC";
 		return vic + " VIC";
 	}
 

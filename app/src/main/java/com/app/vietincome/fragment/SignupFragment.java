@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -218,7 +219,7 @@ public class SignupFragment extends BaseFragment {
 				@Override
 				public void onFailure(Call<UserResponse> call, Throwable t) {
 					hideProgressDialog();
-					showAlert("Failed", t.getMessage());
+					Log.d("__", "onFailure: " + t.getMessage());
 				}
 			});
 		}

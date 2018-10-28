@@ -97,7 +97,6 @@ public class AllCoinFragment extends BaseFragment {
 
 	@Override
 	public void onFragmentReady(View view) {
-		onUpdatedTheme();
 		getData(true);
 		if (topViewPagerAdapter == null) {
 			topViewPagerAdapter = new TopViewPagerAdapter(getContext(), getChildFragmentManager());
@@ -128,7 +127,6 @@ public class AllCoinFragment extends BaseFragment {
 
 			}
 		});
-		viewPagerTop.setCurrentItem(selectedTab);
 		viewPagerTop.setOffscreenPageLimit(3);
 		tabLayoutTop.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 			@Override
@@ -145,6 +143,7 @@ public class AllCoinFragment extends BaseFragment {
 			public void onTabReselected(TabLayout.Tab tab) {
 			}
 		});
+		onUpdatedTheme();
 	}
 
 	private void changeHighLightTab(TabLayout.Tab tab, boolean isSelected) {
@@ -227,6 +226,7 @@ public class AllCoinFragment extends BaseFragment {
 	public void onUpdatedTheme() {
 		tabLayoutTop.setBackgroundColor(isDarkTheme ? getColor(R.color.dark_background) : getColor(R.color.light_background));
 		tabLayoutTop.setSelectedTabIndicatorColor(isDarkTheme ? getColor(R.color.dark_image) : getColor(R.color.light_image));
+		changeHighLightTab(tabLayoutTop.getTabAt(selectedTab), true);
 	}
 
 	public void getRate() {
@@ -244,7 +244,7 @@ public class AllCoinFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<RateResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", "Get Rate: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -276,7 +276,7 @@ public class AllCoinFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", "Get Coins: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -307,7 +307,7 @@ public class AllCoinFragment extends BaseFragment {
 			@Override
 			public void onFailure(Call<CoinResponse> call, Throwable t) {
 				navigationTopBar.hideProgressBar();
-				showAlert("Failure", "Get Coins: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -359,7 +359,7 @@ public class AllCoinFragment extends BaseFragment {
 					EventBus.getDefault().post(new EventBusListener.UpdateCoin(coinResponse.getData(), navigationTopBar.isSearch(), false, false));
 					updatePortfolioId(coinResponse.getData());
 					updateFavorite(coinResponse.getData());
-				}, throwable -> showAlert("Failed", "Get Coins: " + throwable.getMessage()));
+				}, throwable -> Log.d("__", "getNextPage: " + throwable.getMessage()));
 		disposable.add(subscribe);
 	}
 

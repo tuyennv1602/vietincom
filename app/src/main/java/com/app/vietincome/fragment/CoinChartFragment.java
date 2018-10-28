@@ -12,6 +12,7 @@ import com.app.vietincome.bases.BaseFragment;
 import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.model.Currency;
+import com.app.vietincome.model.MarketCap;
 import com.app.vietincome.model.Price;
 import com.app.vietincome.model.Volume;
 import com.app.vietincome.model.responses.ChartResponse;
@@ -85,13 +86,15 @@ public class CoinChartFragment extends BaseFragment {
 	private double rate;
 	private double price;
 	private Currency currency = AppPreference.INSTANCE.getCurrency();
+	private boolean isShowPrice;
 
-	public static CoinChartFragment newInstance(String symbol, int time, double price, double rate) {
+	public static CoinChartFragment newInstance(String symbol, int time, double price, double rate, boolean isShowPrice) {
 		CoinChartFragment fragment = new CoinChartFragment();
 		fragment.symbol = symbol;
 		fragment.time = time;
 		fragment.rate = rate;
 		fragment.price = price;
+		fragment.isShowPrice = isShowPrice;
 		return fragment;
 	}
 
@@ -180,7 +183,7 @@ public class CoinChartFragment extends BaseFragment {
 		chart.setDrawOrder(new CombinedChart.DrawOrder[]{
 				CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE});
 
-		PriceAxisValueFormatter custom = new PriceAxisValueFormatter(rate);
+		PriceAxisValueFormatter custom = new PriceAxisValueFormatter(rate, isShowPrice);
 
 		YAxis yRight = chart.getAxisRight();
 		yRight.setLabelCount(4, false);
@@ -221,7 +224,7 @@ public class CoinChartFragment extends BaseFragment {
 
 			@Override
 			public void onFailure(Call<ChartResponse> call, Throwable t) {
-				showAlert("Failure", "Get History: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -238,7 +241,7 @@ public class CoinChartFragment extends BaseFragment {
 
 			@Override
 			public void onFailure(Call<ChartResponse> call, Throwable t) {
-				showAlert("Failure", "Get History: " + t.getMessage());
+				Log.d("__", "onFailure: " + t.getMessage());
 			}
 		});
 	}
@@ -261,20 +264,20 @@ public class CoinChartFragment extends BaseFragment {
 			return;
 		}
 		CombinedData data = new CombinedData();
-		data.setData(generateLineData(chartResponse.getPrices()));
+		data.setData(generateLineData(chartResponse));
 		if (AppPreference.INSTANCE.isVolume()) {
-			data.setData(generateBarChart(chartResponse.getVolumes()));
+			data.setData(generateBarChart(chartResponse));
 			chart.getAxisLeft().setAxisMaximum(data.getYMax(YAxis.AxisDependency.LEFT) * 4);
 		}
 		tvLowValue.setText(CommonUtil.formatCurrency(data.getYMin(YAxis.AxisDependency.RIGHT), rate, currency));
 		tvHighValue.setText(CommonUtil.formatCurrency(data.getYMax(YAxis.AxisDependency.RIGHT), rate, currency));
-		getPricePercent(data.getYMin(YAxis.AxisDependency.RIGHT));
+		getAnalytic(data.getYMin(YAxis.AxisDependency.RIGHT));
 		chart.setData(data);
 		chart.animateXY(1000, 1000);
 		chart.invalidate();
 	}
 
-	private void getPricePercent(double lowPrice) {
+	private void getAnalytic(double lowPrice) {
 		double delta = price - lowPrice;
 		float percent = (float) (delta / price) * 100;
 		String price = CommonUtil.formatCurrency(Math.abs(delta), rate, currency);
@@ -288,7 +291,7 @@ public class CoinChartFragment extends BaseFragment {
 		}
 	}
 
-	private LineData generateLineData(ArrayList<Price> prices) {
+	private ArrayList<Entry> getPriceLine(ArrayList<Price> prices){
 		ArrayList<Entry> yVals = new ArrayList<>();
 		if (prices != null && prices.size() > 0) {
 			for (int i = 0; i < prices.size(); i++) {
@@ -299,7 +302,25 @@ public class CoinChartFragment extends BaseFragment {
 				yVals.add(new Entry(i, 0));
 			}
 		}
-		LineDataSet set1 = new LineDataSet(yVals, "");
+		return yVals;
+	}
+
+	private ArrayList<Entry> getVolumeLine(ArrayList<Volume> volumes){
+		ArrayList<Entry> yVals = new ArrayList<>();
+		if (volumes != null && volumes.size() > 0) {
+			for (int i = 0; i < volumes.size(); i++) {
+				yVals.add(new Entry(i, volumes.get(i).getPrice()));
+			}
+		} else {
+			for (int i = 0; i <= 100; i++) {
+				yVals.add(new Entry(i, 0));
+			}
+		}
+		return yVals;
+	}
+
+	private LineData generateLineData(ChartResponse chartResponse) {
+		LineDataSet set1 = new LineDataSet(isShowPrice ? getPriceLine(chartResponse.getPrices()) : getVolumeLine(chartResponse.getVolumes()), "");
 		set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 		set1.setCubicIntensity(0.2f);
 		set1.setDrawCircles(false);
@@ -310,18 +331,36 @@ public class CoinChartFragment extends BaseFragment {
 		set1.setHighlightLineWidth(1.5f);
 		set1.enableDashedHighlightLine(10f, 5f, 0f);
 		set1.setDrawHorizontalHighlightIndicator(false);
-		if (prices != null && prices.size() > 0) {
-			chart.getXAxis().setValueFormatter((value, axis) -> {
-				if(value > prices.size()) return "";
-				if (time == Constant.HIS_24H) {
-					return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_HOURS);
-				}
-				if (time == Constant.HIS_ALL) {
-					return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_MONTH_OF_YEAR);
-				}
-				return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_DAY_OF_MONTH);
-			});
+		if(isShowPrice){
+			ArrayList<Price> prices = chartResponse.getPrices();
+			if (prices != null && prices.size() > 0) {
+				chart.getXAxis().setValueFormatter((value, axis) -> {
+					if(value > prices.size()) return "";
+					if (time == Constant.HIS_24H) {
+						return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_HOURS);
+					}
+					if (time == Constant.HIS_ALL) {
+						return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_MONTH_OF_YEAR);
+					}
+					return DateUtil.getStringTime(prices.get((int) value).getTime(), DateUtil.FORMAT_DAY_OF_MONTH);
+				});
+			}
+		}else{
+			ArrayList<Volume> volumes = chartResponse.getVolumes();
+			if (volumes != null && volumes.size() > 0) {
+				chart.getXAxis().setValueFormatter((value, axis) -> {
+					if(value > volumes.size()) return "";
+					if (time == Constant.HIS_24H) {
+						return DateUtil.getStringTime(volumes.get((int) value).getTime(), DateUtil.FORMAT_HOURS);
+					}
+					if (time == Constant.HIS_ALL) {
+						return DateUtil.getStringTime(volumes.get((int) value).getTime(), DateUtil.FORMAT_MONTH_OF_YEAR);
+					}
+					return DateUtil.getStringTime(volumes.get((int) value).getTime(), DateUtil.FORMAT_DAY_OF_MONTH);
+				});
+			}
 		}
+
 		if(chart.getXAxis().getValueFormatter() != null && getContext() != null) {
 			MyMarkerView mv = new MyMarkerView(getContext(), chart.getXAxis().getValueFormatter(), R.layout.custom_marker_view);
 			chart.setMarker(mv);
@@ -331,7 +370,7 @@ public class CoinChartFragment extends BaseFragment {
 		return data;
 	}
 
-	private BarData generateBarChart(ArrayList<Volume> volumes) {
+	private ArrayList<BarEntry> getVolumeBar(ArrayList<Volume> volumes){
 		ArrayList<BarEntry> entries = new ArrayList<>();
 		if (volumes != null && volumes.size() > 0) {
 			for (int i = 0; i < volumes.size(); i++) {
@@ -339,7 +378,22 @@ public class CoinChartFragment extends BaseFragment {
 					entries.add(new BarEntry(i, volumes.get(i).getPrice()));
 			}
 		}
-		BarDataSet set = new BarDataSet(entries, "Bar 1");
+		return entries;
+	}
+
+	private ArrayList<BarEntry> getMarketBar(ArrayList<MarketCap> marketCaps){
+		ArrayList<BarEntry> entries = new ArrayList<>();
+		if (marketCaps != null && marketCaps.size() > 0) {
+			for (int i = 0; i < marketCaps.size(); i++) {
+				if (i % 5 == 0)
+					entries.add(new BarEntry(i, marketCaps.get(i).getPrice()));
+			}
+		}
+		return entries;
+	}
+
+	private BarData generateBarChart(ChartResponse chartResponse) {
+		BarDataSet set = new BarDataSet(isShowPrice ? getVolumeBar(chartResponse.getVolumes()) : getMarketBar(chartResponse.getMarketCaps()), "Bar 1");
 		set.setColor(isDarkTheme ? Color.parseColor("#a9a2a2") : Color.parseColor("#929da9"));
 		set.setAxisDependency(YAxis.AxisDependency.LEFT);
 		BarData data = new BarData(set);
