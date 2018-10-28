@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
+import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 
@@ -43,6 +44,7 @@ public class InviteFriendFragment extends BaseFragment {
 	@Override
 	public void onFragmentReady(View view) {
 		onUpdatedTheme();
+		tvRefCodeValue.setText(AppPreference.INSTANCE.getProfile().getInviteCode());
 	}
 
 	@Override
@@ -72,7 +74,7 @@ public class InviteFriendFragment extends BaseFragment {
 	@OnClick(R.id.tvCopyCode)
 	void onCopyCode(){
 		ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-		ClipData clip = ClipData.newPlainText("invite", "113");
+		ClipData clip = ClipData.newPlainText("invite", AppPreference.INSTANCE.getProfile().getInviteCode());
 		clipboard.setPrimaryClip(clip);
 		showToast("Copied invite code!");
 	}

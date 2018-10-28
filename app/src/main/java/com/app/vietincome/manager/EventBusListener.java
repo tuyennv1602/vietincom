@@ -76,11 +76,13 @@ public class EventBusListener {
 		public ArrayList<Data> data;
 		public boolean isGainerTab;
 		public boolean isSearch;
+		public boolean isClear;
 
-		public UpdateCoin(ArrayList<Data> data, boolean isSearch, boolean isGainerTab) {
+		public UpdateCoin(ArrayList<Data> data, boolean isSearch, boolean isGainerTab, boolean isClear) {
 			this.isSearch = isSearch;
 			this.data = data;
 			this.isGainerTab = isGainerTab;
+			this.isClear = isClear;
 		}
 	}
 

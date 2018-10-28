@@ -76,4 +76,5 @@ public class FileUtil {
 	public static File convertToJPEGImageFile(Activity activity, Bitmap bitmap){
 		return convertBitmapToFile(activity, bitmap, Bitmap.CompressFormat.JPEG);
 	}
+
 }

@@ -3,11 +3,11 @@ package com.app.vietincome.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.app.vietincome.utils.Constant;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Profile implements Parcelable
-{
+public class Profile implements Parcelable {
 
 	@SerializedName("session_id")
 	@Expose
@@ -47,8 +47,7 @@ public class Profile implements Parcelable
 			return (new Profile[size]);
 		}
 
-	}
-			;
+	};
 
 	protected Profile(Parcel in) {
 		this.sessionId = ((String) in.readValue((String.class.getClassLoader())));
@@ -81,7 +80,7 @@ public class Profile implements Parcelable
 	}
 
 	public String getAvatar() {
-		return avatar;
+		return "https://vietincome.com/apiv2/user/avatar/" + avatar;
 	}
 
 	public void setAvatar(String avatar) {
@@ -89,7 +88,7 @@ public class Profile implements Parcelable
 	}
 
 	public String getBio() {
-		if(bio == null) return "";
+		if (bio == null) return "";
 		return bio;
 	}
 
@@ -98,15 +97,19 @@ public class Profile implements Parcelable
 	}
 
 	public String getVic() {
-		if(vic == null) return "0 VIC";
+		if (vic == null) return "0 VIC";
 		return vic + " VIC";
 	}
 
 	public String getVip() {
-		if(vip == 1) return "VIP1";
-		if(vip == 2) return "VIP2";
-		if(vip == 3) return "VIP3";
+		if (vip == Constant.VIP1) return "VIP1";
+		if (vip == Constant.VIP2) return "VIP2";
+		if (vip == Constant.VIP3) return "VIP3";
 		return "Free";
+	}
+
+	public boolean isVip() {
+		return vip != 0;
 	}
 
 	public void setVip(int vip) {

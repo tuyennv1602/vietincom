@@ -28,4 +28,8 @@ public class BaseResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	public boolean isExpired(){
+		return message.equals("Your account is expired");
+	}
 }

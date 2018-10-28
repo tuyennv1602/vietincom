@@ -266,7 +266,7 @@ public class AllCoinFragment extends BaseFragment {
 				navigationTopBar.hideProgressBar();
 				if (response.isSuccessful()) {
 					if (response.body().getMetadata().isSuccess()) {
-						EventBus.getDefault().post(new EventBusListener.UpdateCoin(response.body().getData(), navigationTopBar.isSearch(), true));
+						EventBus.getDefault().post(new EventBusListener.UpdateCoin(response.body().getData(), navigationTopBar.isSearch(), true, true));
 						gainerCoins.clear();
 						gainerCoins.addAll(response.body().getData());
 					}
@@ -291,7 +291,7 @@ public class AllCoinFragment extends BaseFragment {
 				navigationTopBar.hideProgressBar();
 				if (response.isSuccessful()) {
 					if (response.body().getMetadata().isSuccess()) {
-						EventBus.getDefault().post(new EventBusListener.UpdateCoin(response.body().getData(), navigationTopBar.isSearch(), false));
+						EventBus.getDefault().post(new EventBusListener.UpdateCoin(response.body().getData(), navigationTopBar.isSearch(), false, true));
 						allCoins.clear();
 						allCoins.addAll(response.body().getData());
 						start += perPage;
@@ -356,7 +356,7 @@ public class AllCoinFragment extends BaseFragment {
 				.subscribe(coinResponse -> {
 					start += perPage;
 					allCoins.addAll(coinResponse.getData());
-					EventBus.getDefault().post(new EventBusListener.UpdateCoin(coinResponse.getData(), navigationTopBar.isSearch(), false));
+					EventBus.getDefault().post(new EventBusListener.UpdateCoin(coinResponse.getData(), navigationTopBar.isSearch(), false, false));
 					updatePortfolioId(coinResponse.getData());
 					updateFavorite(coinResponse.getData());
 				}, throwable -> showAlert("Failed", "Get Coins: " + throwable.getMessage()));

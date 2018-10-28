@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity {
 	RelativeLayout mainLayout;
 
 	private HomeViewpagerAdapter homeViewPagerAdapter;
-	private int selectedTab = Constant.TAB_SETTING;
+	private int selectedTab = Constant.TAB_ALL_COIN;
 	private Stack<Fragment> backStack = new Stack<>();
 	private int numNews = AppPreference.INSTANCE.getNumNews();
 	private int numEvents = AppPreference.INSTANCE.getNumEvents();

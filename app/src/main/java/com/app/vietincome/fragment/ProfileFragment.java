@@ -16,6 +16,7 @@ import com.app.vietincome.manager.AppPreference;
 import com.app.vietincome.manager.EventBusListener;
 import com.app.vietincome.model.Profile;
 import com.app.vietincome.model.responses.BaseResponse;
+import com.app.vietincome.model.responses.UserResponse;
 import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.utils.Constant;
 import com.app.vietincome.utils.GlideImage;
@@ -24,6 +25,8 @@ import com.app.vietincome.view.NavigationTopBar;
 import com.github.siyamed.shapeimageview.CircularImageView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -78,9 +81,18 @@ public class ProfileFragment extends BaseFragment {
 	@BindView(R.id.view3)
 	View view3;
 
-	public static ProfileFragment newInstance() {
+	private boolean isNeedUpdate;
+	private Profile profile;
+
+	public static ProfileFragment newInstance(boolean isNeedUpdate) {
 		ProfileFragment fragment = new ProfileFragment();
+		fragment.isNeedUpdate = isNeedUpdate;
 		return fragment;
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onEventProfile(EventBusListener.ProfileListener event){
+		initData();
 	}
 
 	@Override
@@ -92,6 +104,9 @@ public class ProfileFragment extends BaseFragment {
 	public void onFragmentReady(View view) {
 		onUpdatedTheme();
 		initData();
+		if(isNeedUpdate){
+			getProfile();
+		}
 	}
 
 	@Override
@@ -130,7 +145,7 @@ public class ProfileFragment extends BaseFragment {
 	}
 
 	private void initData() {
-		Profile profile = AppPreference.INSTANCE.getProfile();
+		profile = AppPreference.INSTANCE.getProfile();
 		if (profile == null) return;
 		GlideImage.loadImage(profile.getAvatar() != null ? profile.getAvatar() : "", R.drawable.favicon, imgAvatar);
 		tvUsername.setText(profile.getName());
@@ -166,18 +181,51 @@ public class ProfileFragment extends BaseFragment {
 			public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
 				hideProgressDialog();
 				if (response.isSuccessful()) {
-					if (response.body().isSuccess()) {
-						AppPreference.INSTANCE.setProfile(null);
-						EventBus.getDefault().post(new EventBusListener.ProfileListener());
-					} else {
-						showAlert("Failed", response.body().getMessage());
-					}
+					AppPreference.INSTANCE.setProfile(null);
+					EventBus.getDefault().post(new EventBusListener.ProfileListener());
 				}
 			}
 
 			@Override
 			public void onFailure(Call<BaseResponse> call, Throwable t) {
 				hideProgressDialog();
+				showAlert("Failed", t.getMessage());
+			}
+		});
+	}
+
+	@OnClick(R.id.tvSignal)
+	void onSignal(){
+		if(profile.isVip()){
+			showToast("Comming soon");
+		}else{
+			showToast("You aren't VIP");
+		}
+	}
+
+	private void getProfile(){
+		navigationTopBar.showProgressBar();
+		ApiClient.getApiV2Service().getProfile().enqueue(new Callback<UserResponse>() {
+			@Override
+			public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+				navigationTopBar.hideProgressBar();
+				if(response.isSuccessful()){
+					if(response.body().isSuccess()){
+						AppPreference.INSTANCE.updateProfile(response.body().getProfile());
+						initData();
+					}else{
+						showAlert("Failed", response.body().getMessage());
+						if(response.body().isExpired()){
+							AppPreference.INSTANCE.setProfile(null);
+							EventBus.getDefault().post(new EventBusListener.ProfileListener());
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(Call<UserResponse> call, Throwable t) {
+				navigationTopBar.hideProgressBar();
 				showAlert("Failed", t.getMessage());
 			}
 		});

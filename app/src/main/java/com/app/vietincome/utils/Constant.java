@@ -45,4 +45,8 @@ public class Constant {
 	public static final int REQUEST_GALLERY_PHOTO = 1266;
 	public static final int PERMISSIONS_CAMERA = 172;
 	public static final int READ_EXTERNAL_PERMISSION = 521;
+
+	public static final int VIP1 = 1;
+	public static final int VIP2 = 2;
+	public static final int VIP3 = 3;
 }

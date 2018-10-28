@@ -16,7 +16,7 @@ public class EmptyFragment extends BaseFragment {
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onEventProfile(EventBusListener.ProfileListener event){
-		initView();
+		updateView();
 	}
 
 	@Override
@@ -42,7 +42,14 @@ public class EmptyFragment extends BaseFragment {
 	private void initView() {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.addToBackStack(null);
-		ft.replace(R.id.empty, AppPreference.INSTANCE.getProfile() != null ? new ProfileFragment() : new LoginFragment());
+		ft.replace(R.id.empty, AppPreference.INSTANCE.getProfile() != null ? ProfileFragment.newInstance(true) : new LoginFragment());
+		ft.commit();
+	}
+
+	private void updateView(){
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.addToBackStack(null);
+		ft.replace(R.id.empty, AppPreference.INSTANCE.getProfile() != null ? ProfileFragment.newInstance(false) : new LoginFragment());
 		ft.commit();
 	}
 

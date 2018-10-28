@@ -85,6 +85,9 @@ public class GainerFragment extends BaseFragment implements ItemClickListener, A
 	public void onUpdateCoin(EventBusListener.UpdateCoin event) {
 		if(!event.isGainerTab) return;
 		isLoading = false;
+		if(event.isClear){
+			allCoins.clear();
+		}
 		allCoins.addAll(event.data);
 		if (!event.isSearch) {
 			rcvAllCoin.hideShimmerAdapter();

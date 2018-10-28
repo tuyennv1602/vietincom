@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -86,6 +87,9 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 	public void onUpdateCoin(EventBusListener.UpdateCoin event) {
 		if(event.isGainerTab) return;
 		isLoading = false;
+		if(event.isClear){
+			allCoins.clear();
+		}
 		allCoins.addAll(event.data);
 		if (!event.isSearch) {
 			if (event.data.get(0).getRank() == 1) {
@@ -144,7 +148,12 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 
 	@OnClick(R.id.layoutReverse)
 	void onReverse() {
-		Collections.reverse(allCoins);
+		Collections.sort(allCoins, (i1, i2) -> {
+			if(isSortUp){
+				return i2.getRank() - i1.getRank();
+			}
+			return i1.getRank() - i2.getRank();
+		});
 		allCoinAdapter.setCoins(allCoins);
 		isSortUp = !isSortUp;
 		imgSortName.setImageResource(isSortUp ? R.drawable.sort_up : R.drawable.sort_down);

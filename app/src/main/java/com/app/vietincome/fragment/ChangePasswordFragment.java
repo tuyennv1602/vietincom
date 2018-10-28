@@ -7,12 +7,24 @@ import android.widget.TextView;
 
 import com.app.vietincome.R;
 import com.app.vietincome.bases.BaseFragment;
+import com.app.vietincome.manager.AppPreference;
+import com.app.vietincome.manager.EventBusListener;
+import com.app.vietincome.model.responses.BaseResponse;
+import com.app.vietincome.network.ApiClient;
 import com.app.vietincome.utils.CommonUtil;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
+import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChangePasswordFragment extends BaseFragment {
 
@@ -82,6 +94,39 @@ public class ChangePasswordFragment extends BaseFragment {
 	void changeNewPass(CharSequence text){
 		this.newPass = String.valueOf(text);
 		changeBtnSubmit();
+	}
+
+	@OnClick(R.id.tvSubmit)
+	void onSubmit(){
+		if(isFilledData()){
+			hideKeyboard();
+			showProgressDialog();
+			RequestBody requestBody = new MultipartBody.Builder()
+					.setType(MultipartBody.FORM)
+					.addFormDataPart("oldpassword", oldPass)
+					.addFormDataPart("newpassword", newPass)
+					.build();
+			ApiClient.getApiV2Service().changePassword(requestBody).enqueue(new Callback<BaseResponse>() {
+				@Override
+				public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+					hideProgressDialog();
+					if(response.isSuccessful()){
+						if(response.body().isSuccess()){
+							showToast("Success");
+							goBack();
+						}else{
+							showAlert("Failed", response.body().getMessage());
+						}
+					}
+				}
+
+				@Override
+				public void onFailure(Call<BaseResponse> call, Throwable t) {
+					hideProgressDialog();
+					showAlert("Failed", t.getMessage());
+				}
+			});
+		}
 	}
 
 	private boolean isFilledData() {
