@@ -205,6 +205,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 						eventAdapter.notifyDataSetChanged();
 						canLoadMore = response.body().getMetadata().getPage() != response.body().getMetadata().getPageCount();
 						page++;
+						tvNotFound.setVisibility(response.body().getEvents().size() == 0 ? View.VISIBLE : View.GONE);
 					}
 				}
 			}
@@ -376,6 +377,7 @@ public class EventFragment extends BaseFragment implements EventClickListener, O
 	@Override
 	public void onCancel() {
 		this.coin = "";
+		page = 1;
 		tvCoinValue.setText("All");
 		getEvents(true, false);
 	}
