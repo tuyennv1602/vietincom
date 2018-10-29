@@ -184,7 +184,7 @@ public class GainerFragment extends BaseFragment implements ItemClickListener, A
 
 	@Override
 	public void onChangeFavorite(int position) {
-		if (allCoins.get(position).isFavourite()) {
+		if (isSearch ? coinSearched.get(position).isFavourite() : allCoins.get(position).isFavourite()) {
 			AppPreference.INSTANCE.removeFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
 		} else {
 			AppPreference.INSTANCE.addFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));

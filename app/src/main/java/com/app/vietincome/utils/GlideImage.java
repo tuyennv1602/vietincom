@@ -40,14 +40,14 @@ public class GlideImage {
 	}
 
 	public static void loadImage(String url, @DrawableRes int placeHolder,  ImageView view) {
-		loadImage(url, view, placeHolder, R.color.gray);
+		loadImage(url, view, placeHolder, R.drawable.avatar_default);
 	}
 
 	public static void loadImage(File file, ImageView view) {
-		loadImage(file, view, R.color.gray, R.color.gray);
+		loadImage(file, view, R.drawable.avatar_default,  R.drawable.avatar_default);
 	}
 
 	public static void loadImage(@DrawableRes int drawable, ImageView view) {
-		loadImage(drawable, view, R.color.gray, R.color.gray);
+		loadImage(drawable, view, R.drawable.avatar_default, R.drawable.avatar_default);
 	}
 }

@@ -34,7 +34,6 @@ import com.app.vietincome.utils.FileUtil;
 import com.app.vietincome.utils.GlideImage;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
-import com.github.siyamed.shapeimageview.CircularImageView;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -43,13 +42,12 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -59,7 +57,7 @@ import retrofit2.Response;
 public class EditProfileFragment extends BaseFragment implements SelectPickupImageListener {
 
 	@BindView(R.id.imgAvatar)
-	CircularImageView imgAvatar;
+	CircleImageView imgAvatar;
 
 	@BindView(R.id.tvChangeAvatar)
 	HighLightTextView tvChangeAvatar;
@@ -70,8 +68,8 @@ public class EditProfileFragment extends BaseFragment implements SelectPickupIma
 	@BindView(R.id.tvName)
 	TextView tvName;
 
-	@BindView(R.id.edtUsername)
-	EditText edtUserName;
+	@BindView(R.id.tvUsername)
+	TextView tvUserName;
 
 	@BindView(R.id.tvBio)
 	TextView tvBio;
@@ -123,19 +121,19 @@ public class EditProfileFragment extends BaseFragment implements SelectPickupIma
 		setTextColor(tvName);
 		setTextColor(tvBio);
 		edtBio.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
-		edtUserName.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
+		tvUserName.setTextColor(isDarkTheme ? getColor(R.color.dark_text) : getColor(R.color.light_text));
 		changeBtnSave();
 	}
 
 	private void initData() {
 		this.bio = profile.getBio();
 		this.username = profile.getName();
-		edtUserName.setText(profile.getName());
-		edtUserName.setSelection(edtUserName.length());
+		tvUserName.setText(profile.getName());
 		if (profile.getBio() != null) {
 			edtBio.setText(profile.getBio());
 		}
-		GlideImage.loadImage(profile.getAvatar(), R.drawable.favicon, imgAvatar);
+		edtBio.setSelection(edtBio.length());
+		GlideImage.loadImage(profile.getAvatar(), R.drawable.avatar_default, imgAvatar);
 	}
 
 	public void openCamera() {
@@ -241,12 +239,6 @@ public class EditProfileFragment extends BaseFragment implements SelectPickupIma
 		changeBtnSave();
 	}
 
-	@OnTextChanged(R.id.edtUsername)
-	void changeUsername(CharSequence text) {
-		this.username = String.valueOf(text);
-		changeBtnSave();
-	}
-
 	@OnClick(R.id.tvSave)
 	void onSaveChange() {
 		if (isFilledData()) {
@@ -285,8 +277,7 @@ public class EditProfileFragment extends BaseFragment implements SelectPickupIma
 	}
 
 	private boolean isFilledData() {
-		return (!bio.trim().isEmpty() && !bio.trim().equals(profile.getBio()))
-				|| (!username.trim().isEmpty() && !username.trim().equals(profile.getName()));
+		return !bio.trim().isEmpty() && !bio.trim().equals(profile.getBio());
 	}
 
 	private void changeBtnSave() {

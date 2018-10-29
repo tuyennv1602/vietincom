@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +42,7 @@ public class ProfileFragment extends BaseFragment {
 	LinearLayout layoutRoot;
 
 	@BindView(R.id.imgAvatar)
-	CircularImageView imgAvatar;
+	CircleImageView imgAvatar;
 
 	@BindView(R.id.tvUsername)
 	TextView tvUsername;
@@ -148,8 +149,7 @@ public class ProfileFragment extends BaseFragment {
 	private void initData() {
 		profile = AppPreference.INSTANCE.getProfile();
 		if (profile == null) return;
-		Log.d("__profile", "initData: " + profile.getAvatar());
-		GlideImage.loadImage(profile.getAvatar(), R.drawable.favicon, imgAvatar);
+		GlideImage.loadImage(profile.getAvatar(), R.drawable.avatar_default, imgAvatar);
 		tvUsername.setText(profile.getName());
 		tvWalletValue.setText(profile.getVic());
 		tvAccountType.setText(profile.getVip());

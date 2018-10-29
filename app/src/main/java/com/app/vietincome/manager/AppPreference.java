@@ -3,6 +3,7 @@ package com.app.vietincome.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.app.vietincome.model.Currency;
 import com.app.vietincome.model.Data;
@@ -175,6 +176,7 @@ public enum AppPreference {
 	}
 
 	public void addFavourite(Data data) {
+		Log.d("__favorite", "onChangeFavorite: " + data.getName());
 		favouriteCoin.add(data);
 		Collections.sort(favouriteCoin, (i1, i2) -> i1.getRank() - i2.getRank());
 		preferences.edit().putString(KEY_FAVOURITE, mGson.toJson(favouriteCoin)).apply();

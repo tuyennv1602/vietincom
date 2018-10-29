@@ -117,5 +117,5 @@ dependencies {
     implementation "com.daimajia.swipelayout:library:1.2.0@aar"
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     implementation "id.zelory:compressor:2.1.0"
-
+    implementation "de.hdodenhof:circleimageview:2.2.0"
 }
