@@ -94,7 +94,7 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 		if (!event.isSearch) {
 			if (event.data.get(0).getRank() == 1) {
 				rcvAllCoin.hideShimmerAdapter();
-				allCoinAdapter.notifyDataSetChanged();
+				allCoinAdapter.setCoins(allCoins);
 			} else {
 				allCoinAdapter.notifyItemRangeChanged(event.data.get(0).getRank() - 1, allCoins.size());
 			}
@@ -113,6 +113,7 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 		isSearch = !event.isClosed;
 		coinSearched = event.data;
 		allCoinAdapter.setCoins(event.isClosed ? allCoins : coinSearched);
+		Log.d("__home", "onSearchedCoin: " + isSearch);
 	}
 
 	@Override
@@ -182,7 +183,6 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 		allCoinAdapter.setDarkTheme(isDarkTheme);
 	}
 
-
 	@Override
 	public void onItemClicked(int position) {
 		if (isLoading) return;
@@ -195,10 +195,11 @@ public class MarketCapFragment extends BaseFragment implements ItemClickListener
 
 	@Override
 	public void onChangeFavorite(int position) {
-		if (isSearch ? coinSearched.get(position).isFavourite() : allCoins.get(position).isFavourite()) {
-			AppPreference.INSTANCE.removeFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
+		Data coin = isSearch ? coinSearched.get(position) : allCoins.get(position);
+		if (coin.isFavourite()) {
+			AppPreference.INSTANCE.removeFavourite(coin);
 		} else {
-			AppPreference.INSTANCE.addFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
+			AppPreference.INSTANCE.addFavourite(coin);
 		}
 	}
 }

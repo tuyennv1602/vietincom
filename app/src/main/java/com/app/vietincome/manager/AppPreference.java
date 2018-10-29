@@ -176,13 +176,14 @@ public enum AppPreference {
 	}
 
 	public void addFavourite(Data data) {
-		Log.d("__favorite", "onChangeFavorite: " + data.getName());
+		Log.d("__favorite", "onAddFavorite: " + data.getName());
 		favouriteCoin.add(data);
 		Collections.sort(favouriteCoin, (i1, i2) -> i1.getRank() - i2.getRank());
 		preferences.edit().putString(KEY_FAVOURITE, mGson.toJson(favouriteCoin)).apply();
 	}
 
 	public void removeFavourite(Data data) {
+		Log.d("__favorite", "onRemoveFavorite: " + data.getName());
 		for (int i = favouriteCoin.size() - 1; i >= 0; i--) {
 			if (favouriteCoin.get(i).getId() == data.getId()) {
 				favouriteCoin.remove(i);

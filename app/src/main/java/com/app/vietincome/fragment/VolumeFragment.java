@@ -92,7 +92,7 @@ public class VolumeFragment extends BaseFragment implements ItemClickListener, A
 		if (!event.isSearch) {
 			if (event.data.get(0).getRank() == 1) {
 				rcvAllCoin.hideShimmerAdapter();
-				allCoinAdapter.notifyDataSetChanged();
+				allCoinAdapter.setCoins(allCoins);
 			} else {
 				allCoinAdapter.notifyItemRangeChanged(event.data.get(0).getRank() - 1, allCoins.size());
 			}
@@ -194,10 +194,11 @@ public class VolumeFragment extends BaseFragment implements ItemClickListener, A
 
 	@Override
 	public void onChangeFavorite(int position) {
-		if (isSearch ? coinSearched.get(position).isFavourite() : allCoins.get(position).isFavourite()) {
-			AppPreference.INSTANCE.removeFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
+		Data coin = isSearch ? coinSearched.get(position) : allCoins.get(position);
+		if (coin.isFavourite()) {
+			AppPreference.INSTANCE.removeFavourite(coin);
 		} else {
-			AppPreference.INSTANCE.addFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
+			AppPreference.INSTANCE.addFavourite(coin);
 		}
 	}
 }

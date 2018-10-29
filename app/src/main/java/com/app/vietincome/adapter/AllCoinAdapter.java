@@ -227,7 +227,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 
 		private void showFavoriteView(int position) {
 			YoYo.with(Techniques.SlideInRight)
-					.duration(300)
+					.duration(200)
 					.withListener(new Animator.AnimatorListener() {
 						@Override
 						public void onAnimationStart(Animator animator) {
@@ -258,7 +258,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.AllCoinV
 
 		void hideFavoriteView(int position) {
 			YoYo.with(Techniques.SlideOutLeft)
-					.duration(300)
+					.duration(200)
 					.withListener(new Animator.AnimatorListener() {
 						@Override
 						public void onAnimationStart(Animator animator) {

@@ -91,7 +91,7 @@ public class GainerFragment extends BaseFragment implements ItemClickListener, A
 		allCoins.addAll(event.data);
 		if (!event.isSearch) {
 			rcvAllCoin.hideShimmerAdapter();
-			allCoinAdapter.notifyDataSetChanged();
+			allCoinAdapter.setCoins(allCoins);
 		}
 	}
 
@@ -184,10 +184,11 @@ public class GainerFragment extends BaseFragment implements ItemClickListener, A
 
 	@Override
 	public void onChangeFavorite(int position) {
-		if (isSearch ? coinSearched.get(position).isFavourite() : allCoins.get(position).isFavourite()) {
-			AppPreference.INSTANCE.removeFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
+		Data coin = isSearch ? coinSearched.get(position) : allCoins.get(position);
+		if (coin.isFavourite()) {
+			AppPreference.INSTANCE.removeFavourite(coin);
 		} else {
-			AppPreference.INSTANCE.addFavourite(isSearch ? coinSearched.get(position) : allCoins.get(position));
+			AppPreference.INSTANCE.addFavourite(coin);
 		}
 	}
 }
