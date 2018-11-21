@@ -29,6 +29,7 @@ import com.app.vietincome.utils.Constant;
 import com.app.vietincome.view.HighLightImageView;
 import com.app.vietincome.view.HighLightTextView;
 import com.app.vietincome.view.NavigationTopBar;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -209,6 +210,7 @@ public class SignupFragment extends BaseFragment {
 						if(response.body().isSuccess()){
 							AppPreference.INSTANCE.setProfile(response.body().getProfile());
 							EventBus.getDefault().post(new EventBusListener.ProfileListener());
+							Log.d("__signup", "onResponse: " + new Gson().toJson(response.body()));
 							goBack();
 						}else{
 							showAlert("Failed", response.body().getMessage());

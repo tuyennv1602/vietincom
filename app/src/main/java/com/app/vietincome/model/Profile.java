@@ -98,7 +98,7 @@ public class Profile implements Parcelable {
 	}
 
 	public String getVic() {
-		if (vic == null || bio.isEmpty()) return "0 VIC";
+		if (vic == null || vic.isEmpty()) return "0 VIC";
 		return vic + " VIC";
 	}
 
